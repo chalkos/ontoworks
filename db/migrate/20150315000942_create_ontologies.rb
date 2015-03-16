@@ -9,5 +9,6 @@ class CreateOntologies < ActiveRecord::Migration
 
       t.timestamps null: false
     end
+    add_index :ontologies, :link, :unique => true
   end
 end
