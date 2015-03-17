@@ -1,3 +1,3 @@
 class Query < ActiveRecord::Base
-  :belongs_to :ontology
+  belongs_to :ontology
 end

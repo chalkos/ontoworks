@@ -1,5 +1,5 @@
 class Ontology < ActiveRecord::Base
-  :has_many :queries
+  has_many :queries
 
 
   # override
