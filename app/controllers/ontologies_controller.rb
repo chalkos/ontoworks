@@ -26,6 +26,28 @@ class OntologiesController < ApplicationController
   def create
     @ontology = Ontology.new(ontology_params)
 
+    @cenas = params[:ontology]
+
+    @cenas = @ontology
+
+    respond_to do |format|
+      if @ontology.save
+        format.html { redirect_to @ontology, notice: 'Ontology was successfully created.' }
+        format.json { render :show, status: :created, location: @ontology }
+      else
+        format.html { render :new }
+        format.json { render json: @ontology.errors, status: :unprocessable_entity }
+      end
+    end
+  end
+
+  # POST /ontologies
+  # POST /ontologies.json
+  def create_dont_use_this_one
+    return nil #just to be safe
+
+    @ontology = Ontology.new(ontology_params)
+
     @file = params[:ontology][:file]
 
     #@cenas = params[:ontology][:file].original_filename

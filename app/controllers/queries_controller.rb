@@ -5,6 +5,15 @@ class QueriesController < ApplicationController
   # GET /queries.json
   def index
     @queries = Query.all
+  end
+
+
+  # GET /queries
+  # GET /queries.json
+  def index_dont_use_this_one
+    return nil; #just to be safe
+
+    @queries = Query.all
 
 
     dir = File.dirname("#{Rails.root}/db/tdb/teste/dummy")
