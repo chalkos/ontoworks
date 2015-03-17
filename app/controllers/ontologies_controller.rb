@@ -26,10 +26,6 @@ class OntologiesController < ApplicationController
   def create
     @ontology = Ontology.new(ontology_params)
 
-    @cenas = params[:ontology]
-
-    @cenas = @ontology
-
     respond_to do |format|
       if @ontology.save
         format.html { redirect_to @ontology, notice: 'Ontology was successfully created.' }

@@ -15,7 +15,7 @@ ActiveRecord::Schema.define(version: 20150315023746) do
 
   create_table "ontologies", force: :cascade do |t|
     t.string   "name",       limit: 255,                 null: false
-    t.string   "hash",       limit: 255,                 null: false
+    t.string   "code",       limit: 255,                 null: false
     t.boolean  "unlisted",               default: false, null: false
     t.boolean  "extendable",             default: false, null: false
     t.datetime "expires",                                null: false
@@ -23,7 +23,7 @@ ActiveRecord::Schema.define(version: 20150315023746) do
     t.datetime "updated_at",                             null: false
   end
 
-  add_index "ontologies", ["hash"], name: "index_ontologies_on_hash", unique: true
+  add_index "ontologies", ["code"], name: "index_ontologies_on_code", unique: true
 
   create_table "queries", force: :cascade do |t|
     t.string   "name",        limit: 255,     null: false

@@ -4,7 +4,7 @@ table
   thead
     tr
       th Name
-      th Hash
+      th Code
       th Unlisted
       th Extendable
       th Expires
@@ -16,7 +16,7 @@ table
     - @ontologies.each do |ontology|
       tr
         td = ontology.name
-        td = ontology.hash
+        td = ontology.code
         td = ontology.unlisted
         td = ontology.extendable
         td = ontology.expires
