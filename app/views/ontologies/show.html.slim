@@ -1,10 +1,21 @@
-p#notice= notice
+p#notice = notice
+
 p
   strong Name:
   = @ontology.name
 p
-  strong Directory:
-  = @ontology.directory
+  strong Hash:
+  = @ontology.hash
+p
+  strong Unlisted:
+  = @ontology.unlisted
+p
+  strong Extendable:
+  = @ontology.extendable
+p
+  strong Expires:
+  = @ontology.expires
+
 = link_to 'Edit', edit_ontology_path(@ontology)
-| \
+'|
 = link_to 'Back', ontologies_path

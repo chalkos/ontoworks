@@ -1,19 +1,15 @@
-= form_for(@query) do |f|
+= form_for @query do |f|
   - if @query.errors.any?
     #error_explanation
-      h2
-        = pluralize(@query.errors.count, "error")
-        | prohibited this query from being saved:
+      h2 = "#{pluralize(@query.errors.count, "error")} prohibited this query from being saved:"
       ul
         - @query.errors.full_messages.each do |message|
-          li= message
+          li = message
+
   .field
     = f.label :name
-    br
     = f.text_field :name
   .field
     = f.label :content
-    br
     = f.text_area :content
-  .actions
-    = f.submit
+  .actions = f.submit

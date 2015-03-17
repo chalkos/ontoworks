@@ -1,18 +1,29 @@
-p#notice= notice
-h1 Listing Ontologies
+h1 Listing ontologies
+
 table
   thead
     tr
       th Name
-      th Directory
-      th colspan: "3" 
+      th Hash
+      th Unlisted
+      th Extendable
+      th Expires
+      th
+      th
+      th
+
   tbody
     - @ontologies.each do |ontology|
       tr
-        td= ontology.name
-        td= ontology.directory
-        td= link_to 'Show', ontology
-        td= link_to 'Edit', edit_ontology_path(ontology)
-        td= link_to 'Destroy', ontology, method: :delete, data:   confirm: 'Are you sure?'  
-br/
+        td = ontology.name
+        td = ontology.hash
+        td = ontology.unlisted
+        td = ontology.extendable
+        td = ontology.expires
+        td = link_to 'Show', ontology
+        td = link_to 'Edit', edit_ontology_path(ontology)
+        td = link_to 'Destroy', ontology, data: {:confirm => 'Are you sure?'}, :method => :delete
+
+br
+
 = link_to 'New Ontology', new_ontology_path
