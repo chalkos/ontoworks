@@ -1,0 +1,10 @@
+p#notice= notice
+p
+  strong Name:
+  = @ontology.name
+p
+  strong Directory:
+  = @ontology.directory
+= link_to 'Edit', edit_ontology_path(@ontology)
+| \
+= link_to 'Back', ontologies_path

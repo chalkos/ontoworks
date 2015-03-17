@@ -1,0 +1,15 @@
+= form_for(@ontology) do |f|
+  - if @ontology.errors.any?
+    #error_explanation
+      h2
+        = pluralize(@ontology.errors.count, "error")
+        | prohibited this ontology from being saved:
+      ul
+        - @ontology.errors.full_messages.each do |message|
+          li= message
+  .field
+    = f.label :file
+    br
+    = f.file_field :file
+  .actions
+    = f.submit
