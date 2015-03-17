@@ -1,0 +1,12 @@
+p#notice = notice
+
+p
+  strong Name:
+  = @query.name
+p
+  strong Content:
+  = @query.content
+
+= link_to 'Edit', edit_ontology_query_path(@ontology,@query)
+'|
+= link_to 'Back', ontology_queries_path

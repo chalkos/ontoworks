@@ -14,17 +14,23 @@
 ActiveRecord::Schema.define(version: 20150315023746) do
 
   create_table "ontologies", force: :cascade do |t|
-    t.string   "name",       limit: 255
-    t.string   "directory",  limit: 255
-    t.datetime "created_at",             null: false
-    t.datetime "updated_at",             null: false
+    t.string   "name",       limit: 255,                 null: false
+    t.string   "code",       limit: 255,                 null: false
+    t.boolean  "unlisted",               default: false, null: false
+    t.boolean  "extendable",             default: false, null: false
+    t.datetime "expires",                                null: false
+    t.datetime "created_at",                             null: false
+    t.datetime "updated_at",                             null: false
   end
 
+  add_index "ontologies", ["code"], name: "index_ontologies_on_code", unique: true
+
   create_table "queries", force: :cascade do |t|
-    t.string   "name",       limit: 255
-    t.text     "content"
-    t.datetime "created_at",             null: false
-    t.datetime "updated_at",             null: false
+    t.string   "name",        limit: 255,     null: false
+    t.text     "content",     limit: 1048576, null: false
+    t.integer  "ontology_id",                 null: false
+    t.datetime "created_at",                  null: false
+    t.datetime "updated_at",                  null: false
   end
 
 end

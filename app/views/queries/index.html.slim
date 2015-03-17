@@ -1,0 +1,23 @@
+h1 Listing queries
+
+table
+  thead
+    tr
+      th Name
+      th Content
+      th
+      th
+      th
+
+  tbody
+    - @queries.each do |query|
+      tr
+        td = query.name
+        td = query.content
+        td = link_to 'Show', ontology_query_path(@ontology, query)
+        td = link_to 'Edit', edit_ontology_query_path(@ontology,query)
+        td = link_to 'Destroy', ontology_query_path(@ontology, query), data: {:confirm => 'Are you sure?'}, :method => :delete
+
+br
+
+= link_to 'New Query', new_ontology_query_path

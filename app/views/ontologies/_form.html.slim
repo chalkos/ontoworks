@@ -1,0 +1,24 @@
+= form_for @ontology do |f|
+  - if @ontology.errors.any?
+    #error_explanation
+      h2 = "#{pluralize(@ontology.errors.count, "error")} prohibited this ontology from being saved:"
+      ul
+        - @ontology.errors.full_messages.each do |message|
+          li = message
+
+  .field
+    = f.label :name
+    = f.text_field :name
+  .field
+    = f.label :code
+    = f.text_field :code
+  .field
+    = f.label :unlisted
+    = f.check_box :unlisted
+  .field
+    = f.label :extendable
+    = f.check_box :extendable
+  .field
+    = f.label :expires
+    = f.datetime_select :expires
+  .actions = f.submit

@@ -3,6 +3,7 @@ source 'https://rubygems.org'
 # project specific:
 gem 'jena-jruby'
 
+gem 'slim-rails'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '4.2.0'

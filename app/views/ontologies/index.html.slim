@@ -1,0 +1,29 @@
+h1 Listing ontologies
+
+table
+  thead
+    tr
+      th Name
+      th Code
+      th Unlisted
+      th Extendable
+      th Expires
+      th
+      th
+      th
+
+  tbody
+    - @ontologies.each do |ontology|
+      tr
+        td = ontology.name
+        td = ontology.code
+        td = ontology.unlisted
+        td = ontology.extendable
+        td = ontology.expires
+        td = link_to 'Show', ontology
+        td = link_to 'Edit', edit_ontology_path(ontology)
+        td = link_to 'Destroy', ontology, data: {:confirm => 'Are you sure?'}, :method => :delete
+
+br
+
+= link_to 'New Ontology', new_ontology_path

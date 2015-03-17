@@ -26,6 +26,24 @@ class OntologiesController < ApplicationController
   def create
     @ontology = Ontology.new(ontology_params)
 
+    respond_to do |format|
+      if @ontology.save
+        format.html { redirect_to @ontology, notice: 'Ontology was successfully created.' }
+        format.json { render :show, status: :created, location: @ontology }
+      else
+        format.html { render :new }
+        format.json { render json: @ontology.errors, status: :unprocessable_entity }
+      end
+    end
+  end
+
+  # POST /ontologies
+  # POST /ontologies.json
+  def create_dont_use_this_one
+    return nil #just to be safe
+
+    @ontology = Ontology.new(ontology_params)
+
     @file = params[:ontology][:file]
 
     #@cenas = params[:ontology][:file].original_filename
@@ -107,11 +125,11 @@ class OntologiesController < ApplicationController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_ontology
-      @ontology = Ontology.find(params[:id])
+      @ontology = Ontology.where(code: params[:code]).first
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def ontology_params
-      params.require(:ontology).permit(:name, :directory)
+      params.require(:ontology).permit(:name, :code, :unlisted, :extendable, :expires)
     end
 end
