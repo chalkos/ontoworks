@@ -1,12 +1,16 @@
 class QueriesController < ApplicationController
   before_action :set_query, only: [:show, :edit, :update, :destroy]
+  before_action :get_ontology
+
+  def get_ontology
+    @ontology = Ontology.where(code: params[:ontology_code]).first
+  end
 
   # GET /queries
   # GET /queries.json
   def index
-    @queries = Query.all
+    @queries = @ontology.queries
   end
-
 
   # GET /queries
   # GET /queries.json
@@ -49,8 +53,6 @@ class QueriesController < ApplicationController
     rescue Exception => e
       puts "\n\n-------------------------\nGOT AN EXCEPTION!\n-------------------------\n\n"
     end
-
-
   end
 
   # GET /queries/1
@@ -71,10 +73,11 @@ class QueriesController < ApplicationController
   # POST /queries.json
   def create
     @query = Query.new(query_params)
+    @query.ontology = @ontology
 
     respond_to do |format|
       if @query.save
-        format.html { redirect_to @query, notice: 'Query was successfully created.' }
+        format.html { redirect_to ontology_query_path(@ontology, @query), notice: 'Query was successfully created.' }
         format.json { render :show, status: :created, location: @query }
       else
         format.html { render :new }
@@ -88,7 +91,7 @@ class QueriesController < ApplicationController
   def update
     respond_to do |format|
       if @query.update(query_params)
-        format.html { redirect_to @query, notice: 'Query was successfully updated.' }
+        format.html { redirect_to ontology_query_path(@ontology, @query), notice: 'Query was successfully updated.' }
         format.json { render :show, status: :ok, location: @query }
       else
         format.html { render :edit }
@@ -102,7 +105,7 @@ class QueriesController < ApplicationController
   def destroy
     @query.destroy
     respond_to do |format|
-      format.html { redirect_to queries_url, notice: 'Query was successfully destroyed.' }
+      format.html { redirect_to ontology_queries_url, notice: 'Query was successfully destroyed.' }
       format.json { head :no_content }
     end
   end
@@ -110,7 +113,7 @@ class QueriesController < ApplicationController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_query
-      @query = Query.find(params[:id])
+      @query = Query.joins(:ontology).where(ontologies: {code: params[:ontology_code]}, queries: {id: params[:id]}).first!
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.

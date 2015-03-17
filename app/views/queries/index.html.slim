@@ -14,10 +14,10 @@ table
       tr
         td = query.name
         td = query.content
-        td = link_to 'Show', query
-        td = link_to 'Edit', edit_query_path(query)
-        td = link_to 'Destroy', query, data: {:confirm => 'Are you sure?'}, :method => :delete
+        td = link_to 'Show', ontology_query_path(@ontology, query)
+        td = link_to 'Edit', edit_ontology_query_path(@ontology,query)
+        td = link_to 'Destroy', ontology_query_path(@ontology, query), data: {:confirm => 'Are you sure?'}, :method => :delete
 
 br
 
-= link_to 'New Query', new_query_path
+= link_to 'New Query', new_ontology_query_path

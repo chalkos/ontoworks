@@ -7,6 +7,6 @@ p
   strong Content:
   = @query.content
 
-= link_to 'Edit', edit_query_path(@query)
+= link_to 'Edit', edit_ontology_query_path(@ontology,@query)
 '|
-= link_to 'Back', queries_path
+= link_to 'Back', ontology_queries_path
