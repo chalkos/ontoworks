@@ -125,11 +125,11 @@ class OntologiesController < ApplicationController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_ontology
-      @ontology = Ontology.find(params[:id])
+      @ontology = Ontology.where(code: params[:code]).first
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def ontology_params
-      params.require(:ontology).permit(:name, :directory)
+      params.require(:ontology).permit(:name, :code, :unlisted, :extendable, :expires)
     end
 end

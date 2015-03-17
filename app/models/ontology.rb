@@ -1,9 +1,9 @@
 class Ontology < ActiveRecord::Base
+  validates_uniqueness_of :code
   has_many :queries
 
 
-  # override
   def to_param
-    hash
+    code
   end
 end

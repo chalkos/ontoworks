@@ -1,6 +1,6 @@
 Rails.application.routes.draw do
 
-  resources :ontologies, param: :hash do
+  resources :ontologies, param: :code do
     resources :queries
   end
 
