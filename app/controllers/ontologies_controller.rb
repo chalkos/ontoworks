@@ -23,8 +23,32 @@ class OntologiesController < ApplicationController
 
   # POST /ontologies
   # POST /ontologies.json
+
   def create
     @ontology = Ontology.new(ontology_params)
+    # @file = params[:ontology]['file'].path
+
+    # ## JENA
+    # require 'jena_jruby'
+
+    # dir = File.dirname("#{Rails.root}/db/tdb/#{@ontology.code}/ds")
+    # FileUtils.mkdir_p(dir) unless File.directory?(dir)
+
+    # dataset = Jena::TDB::TDBFactory.createDataset(dir)
+
+    # dataset.begin(Jena::Query::ReadWrite::WRITE)
+    # model = dataset.getDefaultModel()
+
+    # #open the ontology
+    # input = Jena::Util::FileManager.get().open(@file)
+
+    # #read the RDF/XML file
+    # model.read(input, nil)
+    # model.write(java.lang.System::out, "N-TRIPLE")
+
+    # input.close()
+    # dataset.commit()
+    # dataset.end()
 
     respond_to do |format|
       if @ontology.save
@@ -37,66 +61,7 @@ class OntologiesController < ApplicationController
     end
   end
 
-  # POST /ontologies
-  # POST /ontologies.json
-  def create_dont_use_this_one
-    return nil #just to be safe
 
-    @ontology = Ontology.new(ontology_params)
-
-    @file = params[:ontology][:file]
-
-    #@cenas = params[:ontology][:file].original_filename
-    @cenas = params[:ontology][:file]
-
-    dir = File.dirname("#{Rails.root}/db/tdb/teste/dummy")
-    FileUtils.mkdir_p(dir) unless File.directory?(dir)
-
-    
-
-
-    # e aqui começa a mistura de java com ruby
-    require 'jena_jruby'
-    
-    t1 = java.lang.System.currentTimeMillis()
-
-    dataset = Jena::TDB::TDBFactory.createDataset(dir)
-
-    dataset.begin(Jena::Query::ReadWrite::WRITE)
-    model = dataset.getDefaultModel()
-    
-    input = Jena::Util::FileManager.get().open( @file.tempfile.path )
-
-    t2 = java.lang.System.currentTimeMillis()
-    @tempo = {preparar: t2-t1}
-    #System.out.println("preparar o modelo: " + (t2 - t1) + " milliseconds.")
-
-    model.read(input, nil)
-    dataset.commit()
-    dataset.end()
-
-    input.close()
-
-    t3 = java.lang.System.currentTimeMillis()
-    @tempo[:carregar] = t3-t2
-    #System.out.println("carregar o modelo para disco: " + (t3 - t2) + " milliseconds.")
-
-
-
-    respond_to do |format|
-      format.html { render :new }
-    end
-
-    #respond_to do |format|
-    #  if @ontology.save
-    #    format.html { redirect_to @ontology, notice: 'Ontology was successfully created.' }
-    #    format.json { render :show, status: :created, location: @ontology }
-    #  else
-    #    format.html { render :new }
-    #    format.json { render json: @ontology.errors, status: :unprocessable_entity }
-    #  end
-    #end
-  end
 
   # PATCH/PUT /ontologies/1
   # PATCH/PUT /ontologies/1.json
