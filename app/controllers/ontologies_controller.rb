@@ -26,29 +26,28 @@ class OntologiesController < ApplicationController
 
   def create
     @ontology = Ontology.new(ontology_params)
-    # @file = params[:ontology]['file'].path
+    @file = params[:ontology]['file'].path
 
-    # ## JENA
-    # require 'jena_jruby'
+    ## JENA
+    require 'jena_jruby'
 
-    # dir = File.dirname("#{Rails.root}/db/tdb/#{@ontology.code}/ds")
-    # FileUtils.mkdir_p(dir) unless File.directory?(dir)
+    dir = File.dirname("#{Rails.root}/db/tdb/#{@ontology.code}/ds")
+    FileUtils.mkdir_p(dir) unless File.directory?(dir)
 
-    # dataset = Jena::TDB::TDBFactory.createDataset(dir)
+    dataset = Jena::TDB::TDBFactory.createDataset(dir)
 
-    # dataset.begin(Jena::Query::ReadWrite::WRITE)
-    # model = dataset.getDefaultModel()
+    dataset.begin(Jena::Query::ReadWrite::WRITE)
+    model = dataset.getDefaultModel()
 
-    # #open the ontology
-    # input = Jena::Util::FileManager.get().open(@file)
+    #open the ontology
+    input = Jena::Util::FileManager.get().open(@file)
 
-    # #read the RDF/XML file
-    # model.read(input, nil)
-    # model.write(java.lang.System::out, "N-TRIPLE")
+    #read the RDF/XML file
+    model.read(input, nil)
 
-    # input.close()
-    # dataset.commit()
-    # dataset.end()
+    input.close()
+    dataset.commit()
+    dataset.end()
 
     respond_to do |format|
       if @ontology.save
