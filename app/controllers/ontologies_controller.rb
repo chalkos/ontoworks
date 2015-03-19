@@ -26,9 +26,25 @@ class OntologiesController < ApplicationController
 
   def create
     @ontology = Ontology.new(ontology_params)
-    @file = params[:ontology]['file'].path
+    @ontology.code = @ontology.hash
 
-    ## JENA
+    @file = params[:ontology]['file']
+    ## UNZIP START, IF NECESSARY
+    require 'zip'
+    if File.extname(@file.original_filename) == ".zip"
+      # open zip file
+      Zip::File.open(@file.path) do |zip_file|
+        zip_file.each do |entry|
+          @file = File.join('public/', entry.name)
+          FileUtils.mkdir_p(File.dirname(@file))
+          zip_file.extract(entry, @file)
+        end
+      end
+    else
+      @file = params[:ontology]['file'].path
+    end
+
+    ## JENA START
     require 'jena_jruby'
 
     dir = File.dirname("#{Rails.root}/db/tdb/#{@ontology.code}/ds")
@@ -44,10 +60,15 @@ class OntologiesController < ApplicationController
 
     #read the RDF/XML file
     model.read(input, nil)
+    #model.write(java.lang.System::out, "N-TRIPLE")
 
     input.close()
     dataset.commit()
     dataset.end()
+    ## JENA END
+
+    # remove extracted/temporary file
+    File.delete(@file)
 
     respond_to do |format|
       if @ontology.save
@@ -59,7 +80,6 @@ class OntologiesController < ApplicationController
       end
     end
   end
-
 
 
   # PATCH/PUT /ontologies/1
