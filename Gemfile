@@ -5,7 +5,11 @@ gem 'jena-jruby'
 
 gem 'slim-rails'
 
+gem "font-awesome-rails"
+
 gem 'rubyzip'
+
+
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '4.2.0'
