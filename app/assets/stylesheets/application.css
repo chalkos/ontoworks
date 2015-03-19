@@ -13,5 +13,9 @@
  *= require_directory .
  *= require_self
  *= require font-awesome
+ *
  *= require style/style-blue.css
+ *
+ *= require syntax-highlighter-rails/shCore
+ *= require syntax-highlighter-rails/shThemeDefault
  */

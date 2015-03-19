@@ -9,7 +9,7 @@ gem "font-awesome-rails"
 
 gem 'rubyzip'
 
-
+gem 'syntax-highlighter-rails' #para os resultados da query
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '4.2.0'
