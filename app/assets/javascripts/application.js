@@ -10,10 +10,12 @@
 // Read Sprockets README (https://github.com/sstephenson/sprockets#sprockets-directives) for details
 // about supported directives.
 //
+//= require_directory .
+//
+//= require turbolinks
+//
 //= require jquery
 //= require jquery_ujs
-//= require turbolinks
-//= require_directory .
 //
 //= require syntax-highlighter-rails/shCore
 //= require syntax-highlighter-rails/shBrushXml
