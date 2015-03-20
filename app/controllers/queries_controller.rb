@@ -12,48 +12,6 @@ class QueriesController < ApplicationController
     @queries = @ontology.queries
   end
 
-  # GET /queries
-  # GET /queries.json
-  def index_dont_use_this_one
-    return nil; #just to be safe
-
-    @queries = Query.all
-
-
-    dir = File.dirname("#{Rails.root}/db/tdb/teste/dummy")
-
-
-    # e aqui começa a mistura de java com ruby
-    require 'jena_jruby'
-
-    t1 = java.lang.System.currentTimeMillis();
-
-    dataset = Jena::TDB::TDBFactory.createDataset(dir)
-    dataset.begin(Jena::Query::ReadWrite::READ)
-    model = dataset.getDefaultModel()
-    dataset.end()
-
-    t2 = java.lang.System.currentTimeMillis()
-    @tempo = {carregar: t2-t1}
-    #System.out.println("carregar o modelo: " + (t2 - t1) + " milliseconds.")
-
-    queryString = "select * where {?a ?b ?c} LIMIT 10"
-    query = Jena::Query::QueryFactory.create(queryString)
-
-    begin
-      qexec = Jena::Query::QueryExecutionFactory.create(query, model)
-      results = qexec.execSelect()
-
-      t3 = java.lang.System.currentTimeMillis()
-      #System.out.println("fazer a query e obter o resultado: " + (t3 - t2) + " milliseconds.")
-      @tempo[:query] = t3-t2
-
-      Jena::Query::ResultSetFormatter.out(java.lang.System.out, results, query)
-      puts "should have been done by now"
-    rescue Exception => e
-      puts "\n\n-------------------------\nGOT AN EXCEPTION!\n-------------------------\n\n"
-    end
-  end
 
   # GET /queries/1
   # GET /queries/1.json
@@ -69,16 +27,45 @@ class QueriesController < ApplicationController
   def edit
   end
 
+
+
+
   # POST /queries
   # POST /queries.json
   def create
     @query = Query.new(query_params)
     @query.ontology = @ontology
 
+    # get ontology dir
+    require 'jena_jruby'
+
+    dir = File.dirname("#{Rails.root}/db/tdb/#{@ontology.code}/dataSet")
+    dataset = Jena::TDB::TDBFactory.createDataset(dir)
+    dataset.begin(Jena::Query::ReadWrite::READ)
+
+    query = "SELECT * WHERE { ?a ?b ?c} LIMIT 10"
+    begin
+      query = Jena::Query::QueryFactory.create(query)
+      qexec = Jena::Query::QueryExecutionFactory.create(query, dataset)
+      res = qexec.execSelect()
+
+      # StringIO - org.jruby.util.IOOutputStream
+      @out = StringIO.new
+      stream = @out.to_outputstream
+
+      Jena::Query::ResultSetFormatter.outputAsJSON(stream,res)
+    rescue Exception => e
+      puts "------ ERROR ------- " + e.to_s
+    end
+
+    qexec.close()
+    dataset.end()
+
     respond_to do |format|
       if @query.save
-        format.html { redirect_to ontology_query_path(@ontology, @query), notice: 'Query was successfully created.' }
-        format.json { render :show, status: :created, location: @query }
+        #format.html { redirect_to ontology_query_path(@ontology, @query), notice: 'Query was successfully created.' }
+        #format.json { render , status: :created, location: @query }
+        format.html { render :text => @out.string}
       else
         format.html { render :new }
         format.json { render json: @query.errors, status: :unprocessable_entity }
@@ -99,6 +86,50 @@ class QueriesController < ApplicationController
       end
     end
   end
+
+
+    def resultset_to_hash(resultset)
+  meta = resultset.meta_data
+  rows = []
+
+  while resultset.next
+    row = {}
+
+    (1..meta.column_count).each do |i|
+      name = meta.column_name i
+      row[name]  =  case meta.column_type(i)
+                    when -6, -5, 5, 4
+                      # TINYINT, BIGINT, INTEGER
+                      resultset.get_int(i).to_i
+                    when 41
+                      # Date
+                      resultset.get_date(i)
+                    when 92
+                      # Time
+                      resultset.get_time(i).to_i
+                    when 93
+                      # Timestamp
+                      resultset.get_timestamp(i)
+                    when 2, 3, 6
+                      # NUMERIC, DECIMAL, FLOAT
+                      case meta.scale(i)
+                      when 0
+                        resultset.get_long(i).to_i
+                      else
+                        BigDecimal.new(resultset.get_string(i).to_s)
+                      end
+                    when 1, -15, -9, 12
+                      # CHAR, NCHAR, NVARCHAR, VARCHAR
+                      resultset.get_string(i).to_s
+                    else
+                      resultset.get_string(i).to_s
+                    end
+    end
+
+    rows << row
+  end
+  rows
+end
 
   # DELETE /queries/1
   # DELETE /queries/1.json
