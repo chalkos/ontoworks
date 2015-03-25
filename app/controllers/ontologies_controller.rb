@@ -59,7 +59,12 @@ class OntologiesController < ApplicationController
     input = Jena::Util::FileManager.get().open(@file)
 
     #read the RDF/XML file
-    model.read(input, nil)
+    begin
+      model.read(input, nil)
+    rescue Exception => e
+      puts "----- ERROR -----" + e
+    end
+
     #model.write(java.lang.System::out, "N-TRIPLE")
 
     input.close()
