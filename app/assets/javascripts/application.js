@@ -10,12 +10,13 @@
 // Read Sprockets README (https://github.com/sstephenson/sprockets#sprockets-directives) for details
 // about supported directives.
 //
-//= require_directory .
 //
 //= require turbolinks
 //
 //= require jquery
 //= require jquery_ujs
+//
+//= require_directory .
 //
 //= require syntax-highlighter-rails/shCore
 //= require syntax-highlighter-rails/shBrushXml
@@ -29,6 +30,12 @@ $(document).on('click','a.smooth', function(e){
         scrollTop: $(anchor).offset().top
     }, 1000);
 });
+
+(function($) {
+    $(document).ready(function() {
+      $.slidebars();
+    });
+}) (jQuery);
 
 // Syntax Enable
 SyntaxHighlighter.all();

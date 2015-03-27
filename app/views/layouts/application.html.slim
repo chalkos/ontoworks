@@ -1,9 +1,841 @@
 doctype html
 html
   head
-    title AppJenaTdb
+    title Generic Sparql Endpoint
+    meta charset="UTF-8" /
+    meta content="width=device-width, initial-scale=1" name="viewport" /
+    meta content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport" /
+    = favicon_link_tag 'favicon.png'
     = stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true
     = javascript_include_tag 'application', 'data-turbolinks-track' => true
     = csrf_meta_tags
+    | <!--[if lt IE 9]>
+    = javascript_include_tag 'ie/html5shiv.min', 'data-turbolinks-track' => true
+    = javascript_include_tag 'ie/respond.min', 'data-turbolinks-track' => true
+    | <![endif]-->
+  /! body
+    /! = yield
+
+    
+  /! Preloader
+  #preloader
+    #status &nbsp;
   body
-    = yield
+    #sb-site
+      .boxed
+        header#header-full-top.hidden-xs.header-full
+          .container
+            .header-full-title
+              h1.animated.fadeInRight
+                a.active href="index.html" 
+                  | artificial
+                  span reason
+              p.animated.fadeInRight Clean and elegant theme
+            nav.top-nav
+              ul.top-nav-social.hidden-sm
+                li
+                  a.animated.fadeIn.animation-delay-6.rss href="#" 
+                    i.fa.fa-rss
+                li
+                  a.animated.fadeIn.animation-delay-7.twitter href="#" 
+                    i.fa.fa-twitter
+                li
+                  a.animated.fadeIn.animation-delay-8.facebook href="#" 
+                    i.fa.fa-facebook
+                li
+                  a.animated.fadeIn.animation-delay-9.google-plus href="#" 
+                    i.fa.fa-google-plus
+                li
+                  a.animated.fadeIn.animation-delay-9.instagram href="#" 
+                    i.fa.fa-instagram
+                li
+                  a.animated.fadeIn.animation-delay-8.vine href="#" 
+                    i.fa.fa-vine
+                li
+                  a.animated.fadeIn.animation-delay-7.linkedin href="#" 
+                    i.fa.fa-linkedin
+                li
+                  a.animated.fadeIn.animation-delay-6.flickr href="#" 
+                    i.fa.fa-flickr
+              .dropdown.animated.fadeInDown.animation-delay-11
+                a.dropdown-toggle data-toggle="dropdown" href="#" 
+                  i.fa.fa-user
+                  | Login
+                .dropdown-menu.dropdown-menu-right.dropdown-login-box.animated.fadeInUp
+                  form role="form" 
+                    h4 Login Form
+                    .form-group
+                      .input-group.login-input
+                        span.input-group-addon
+                          i.fa.fa-user
+                        input.form-control placeholder="Username" type="text" /
+                      br/
+                      .input-group.login-input
+                        span.input-group-addon
+                          i.fa.fa-lock
+                        input.form-control placeholder="Password" type="password" /
+                      .checkbox.pull-left
+                        label
+                          input type="checkbox" /
+                          | Remember me
+                      button.btn.btn-ar.btn-primary.pull-right type="submit"  Login
+                      .clearfix
+              /! dropdown
+              .dropdown.animated.fadeInDown.animation-delay-13
+                a.dropdown-toggle data-toggle="dropdown" href="#" 
+                  i.fa.fa-search
+                .dropdown-menu.dropdown-menu-right.dropdown-search-box.animated.fadeInUp
+                  form role="form" 
+                    .input-group
+                      input.form-control placeholder="Search..." type="text" /
+                      span.input-group-btn
+                        button.btn.btn-ar.btn-primary type="button"  Go!
+                    /! /input-group
+              /! dropdown
+          /! container
+        /! header-full
+        nav#header.navbar.navbar-static-top.navbar-default.navbar-header-full.navbar-dark role="navigation" 
+          .container
+            /! Brand and toggle get grouped for better mobile display
+            .navbar-header
+              button.navbar-toggle data-target="#bs-example-navbar-collapse-1" data-toggle="collapse" type="button" 
+                span.sr-only Toggle navigation
+                i.fa.fa-bars
+              a.navbar-brand.hidden-lg.hidden-md.hidden-sm.active href="index.html" 
+                | Artificial
+                span Reason
+            /! navbar-header
+            /! Collect the nav links, forms, and other content for toggling
+            .pull-right
+              a.sb-icon-navbar.sb-toggle-right href="javascript:void(0);" 
+                i.fa.fa-bars
+            #bs-example-navbar-collapse-1.collapse.navbar-collapse
+              ul.nav.navbar-nav
+                li.dropdown
+                  a.dropdown-toggle data-toggle="dropdown" href="javascript:void(0);"  Home
+                  ul.dropdown-menu.dropdown-menu-left
+                    li
+                      a.active href="index.html"  Option 1: Default
+                    li
+                      a href="home_services.html"  Option 2: Services
+                    li
+                      a href="home_full.html"  Option 3: Full Intro
+                    li
+                      a href="home_only_full.html"  Option 4: Only Full Intro
+                    li
+                      a href="home_news.html"  Option 5: News
+                    li
+                      a href="home_profile.html"  Option 6: Professional Profile
+                    li
+                      a href="home_plan.html" 
+                        | Option 7: Subscribe
+                        span.label.label-success.pull-right New
+                    li.dropdown-header role="presentation"  Header Options
+                    li
+                      a href="configurator.html" 
+                        | Configurator
+                        span.label.label-success.pull-right New
+                li.dropdown
+                  a.dropdown-toggle data-toggle="dropdown" href="javascript:void(0);"  UI Elements
+                  ul.dropdown-menu.dropdown-menu-left
+                    li.dropdown-submenu
+                      a.has_children href="javascript:void(0);"  CSS
+                      ul.dropdown-menu.dropdown-menu-left
+                        li
+                          a href="css_typography.html"  Typography
+                        li
+                          a href="css_headers.html"  Headers
+                        li
+                          a href="css_dividers.html"  Dividers
+                        li
+                          a href="css_blockquotes.html"  Blockquotes
+                        li
+                          a href="css_forms.html"  Forms
+                        li
+                          a href="css_tables.html"  Tables
+                    li.dropdown-submenu
+                      a.has_children href="javascript:void(0);"  Buttons
+                      ul.dropdown-menu.dropdown-menu-left
+                        li
+                          a href="btn_basic_buttons.html"  Basic Buttons
+                        li
+                          a href="btn_library_buttons.html"  Buttons Library
+                        li
+                          a href="btn_social_buttons.html"  Social Buttons
+                    li.dropdown-submenu
+                      a.has_children href="javascript:void(0);"  Icons
+                      ul.dropdown-menu.dropdown-menu-left
+                        li
+                          a href="icons_artificial_reason.html"  Artificial Reason Icons
+                        li
+                          a href="icons_glyph.html"  Glyphicons Icons
+                        li
+                          a href="icons_awesome.html"  Font Awesome
+                        li
+                          a href="icons_social.html"  Social Icons
+                    li.dropdown-submenu
+                      a.has_children href="javascript:void(0);"  Components
+                      ul.dropdown-menu.dropdown-menu-left
+                        li
+                          a href="components_dropdowns.html"  Components Dropdowns
+                        li
+                          a href="components_panels.html"  Panels
+                        li
+                          a href="components_lists.html"  Lists
+                        li
+                          a href="components_paginations.html"  Paginations
+                        li
+                          a href="components_labels_badges.html"  Labels and Badges
+                        li
+                          a href="components_alerts_wells.html"  Alerts and Wells
+                        li
+                          a href="components_thumbnails.html"  Thumbnails
+                        li
+                          a href="components_modals.html"  Modals
+                        li
+                          a href="components_progress_bars.html"  Progress Bars
+                        li
+                          a href="components_tooltip_popover.html"  Tooltip &amp; Popover
+                    li
+                      a href="collapses_tabs.html"  Collapses &amp; Tabs
+                    li
+                      a href="components_vertical_tabs.html" 
+                        | Vertical Tabs
+                        span.label.label-success.pull-right New
+                    li
+                      a href="components_switch.html" 
+                        | Switch Controls
+                        span.label.label-success.pull-right New
+                    li
+                      a href="content_box.html"  Contents Box
+                    li
+                      a href="carousels.html"  Carousels
+                    li
+                      a href="charts.html"  Charts &amp; CountDowns
+                li.dropdown
+                  a.dropdown-toggle data-toggle="dropdown" href="javascript:void(0);"  Pages
+                  ul.dropdown-menu.dropdown-menu-left
+                    li.dropdown-submenu
+                      a.has_children href="javascript:void(0);"  About us &amp; Team
+                      ul.dropdown-menu.dropdown-menu-left
+                        li
+                          a href="page_about.html"  About us Option 1
+                        li
+                          a href="page_about2.html"  About us Option 2
+                        li
+                          a href="page_about3.html"  About us &amp; Team
+                        li.divider
+                        li
+                          a href="page_team.html"  Our Team Option 1
+                        li
+                          a href="page_team2.html"  Our Team Option 2
+                    li.dropdown-submenu
+                      a.has_children href="javascript:void(0);"  Form
+                      ul.dropdown-menu.dropdown-menu-left
+                        li
+                          a href="page_contact.html"  Contact Option 1
+                        li
+                          a href="page_contact2.html"  Contact Option 2
+                        li.divider
+                        li
+                          a href="page_login.html"  Login Integrated
+                        li
+                          a href="page_login_full.html"  Login Full Page
+                        li.divider
+                        li
+                          a href="page_login_register.html"  Login and Register
+                        li
+                          a href="page_register.html"  Register Option 1
+                    li.dropdown-submenu
+                      a.has_children href="javascript:void(0);"  Profiles
+                      ul.dropdown-menu.dropdown-menu-left
+                        li
+                          a href="page_profile.html"  User Profile Option 1
+                        li
+                          a href="page_profile2.html"  User Profile Option 2
+                    li.dropdown-submenu
+                      a.has_children href="javascript:void(0);"  Error
+                      ul.dropdown-menu.dropdown-menu-left
+                        li
+                          a href="page_404.html"  Error 404 Full Page
+                        li
+                          a href="page_404_2.html"  Error 404 Integrated
+                        li
+                          a href="page_500.html"  Error 500 Full Page
+                        li
+                          a href="page_500_2.html"  Error 500 Integrated
+                    li.dropdown-submenu
+                      a.has_children href="javascript:void(0);"  Bussiness &amp; Products
+                      ul.dropdown-menu.dropdown-menu-left
+                        li
+                          a href="page_testimonial.html"  Testimonials
+                        li
+                          a href="page_clients.html"  Our Clients
+                        li
+                          a href="page_product.html"  Products
+                        li
+                          a href="page_services.html"  Services
+                    li.dropdown-submenu
+                      a.has_children href="javascript:void(0);"  Pricing
+                      ul.dropdown-menu.dropdown-menu-left
+                        li
+                          a href="page_pricing.html"  Pricing Box
+                        li
+                          a href="page_pricing-mega.html"  Pricing Mega Table
+                    li.dropdown-submenu
+                      a.has_children href="javascript:void(0);"  FAQ &amp; Support
+                      ul.dropdown-menu.dropdown-menu-left
+                        li
+                          a href="page_support.html"  Support Center
+                        li
+                          a href="page_faq.html"  FAQ Option 1
+                        li
+                          a href="page_faq2.html"  FAQ Option 2
+                    li.dropdown-submenu
+                      a.has_children href="javascript:void(0);"  Coming Soon
+                      ul.dropdown-menu.dropdown-menu-left
+                        li
+                          a href="page_coming.html"  Coming Soon Option 1
+                        li
+                          a href="page_coming2.html"  Coming Soon Option 2
+                    li.dropdown-submenu
+                      a.has_children href="javascript:void(0);"  Timeline
+                      ul.dropdown-menu.dropdown-menu-left
+                        li
+                          a href="page_timeline_left.html"  Timeline Left
+                        li
+                          a href="page_timeline.html"  Timeline Center
+                li.dropdown
+                  a.dropdown-toggle data-toggle="dropdown" href="javascript:void(0);"  Blog
+                  ul.dropdown-menu.dropdown-menu-left
+                    li
+                      a href="blog.html"  Blog Right Sidebar
+                    li
+                      a href="blog_left.html"  Blog Left Sidebar
+                    li
+                      a href="blog_full.html"  Blog Full
+                    li
+                      a href="blog2.html"  Other Option
+                    li.divider
+                    li
+                      a href="single.html"  Blog Item
+                    li
+                      a href="single_full.html"  Blog Item Full
+                li.dropdown
+                  a.dropdown-toggle data-toggle="dropdown" href="javascript:void(0);"  E-commerce
+                  ul.dropdown-menu.dropdown-menu-left
+                    li
+                      a href="e-commerce_home.html"  E-commerce Home
+                    li
+                      a href="e-commerce.html"  E-commerce Filters
+                    li
+                      a href="e-commerce_product.html"  Product
+                    li
+                      a href="e-commerce_cart.html"  Cart
+                li.dropdown
+                  a.dropdown-toggle data-toggle="dropdown" href="javascript:void(0);"  Portfolio
+                  ul.dropdown-menu.dropdown-menu-left
+                    li
+                      a href="portfolio_sidebar.html"  Portfolio sidebar filters
+                    li
+                      a href="portfolio_topbar.html"  Portfolio topbar filters
+                    li
+                      a href="portfolio_caption_hover.html"  Portfolio with captions
+                    li.divider
+                    li
+                      a href="portfolio_item.html"  Portfolio item
+                    li
+                      a href="portfolio_item_devices.html"  Portfolio item device
+            /! navbar-collapse
+          /! container
+        section.carousel-section
+          #carousel-example-generic.carousel.carousel-razon.slide data-interval="5000" data-ride="carousel" 
+            /! Indicators
+            ol.carousel-indicators
+              li.active data-slide-to="0" data-target="#carousel-example-generic" 
+              li data-slide-to="1" data-target="#carousel-example-generic" 
+              li data-slide-to="2" data-target="#carousel-example-generic" 
+            /! Wrapper for slides
+            .carousel-inner
+              .item.active
+                .container
+                  .row
+                    .col-md-6.col-sm-7
+                      .carousel-caption
+                        .carousel-text
+                          h1.animated.fadeInDownBig.animation-delay-7.carousel-title A template, infinite possibilities
+                          h2.animated.fadeInDownBig.animation-delay-5.crousel-subtitle We give you everything done, except the coffee
+                          ul.list-unstyled.carousel-list
+                            li.animated.bounceInLeft.animation-delay-11
+                              i.fa.fa-check
+                              | Built with Bootstrap
+                            li.animated.bounceInLeft.animation-delay-13
+                              i.fa.fa-check
+                              | HTML5 and CSS3
+                            li.animated.bounceInLeft.animation-delay-15
+                              i.fa.fa-check
+                              | Responsive Template
+                          p.animated.fadeInUpBig.animation-delay-17
+                            | Lorem ipsum dolor sit amet consectetur adipisicing elit. In rerum maxime quis tenetur dolor
+                            span recusandae a nulla
+                            | qui enim dolorem.
+                    .col-md-6.col-sm-5.hidden-xs.carousel-img-wrap
+                      .carousel-img
+                        img.img-responsive.animated.bounceInUp.animation-delay-3 alt="Image" src="../assets/img/demo/pre.png" /
+              .item
+                .container
+                  .row
+                    .col-md-6.col-sm-8
+                      .carousel-caption
+                        .carousel-text
+                          h1.animated.fadeInDownBig.animation-delay-7.carousel-title Customization extremes
+                          h2.animated.fadeInDownBig.animation-delay-5.crousel-subtitle Configure your own template in few easy steps
+                          ul.list-unstyled.carousel-list
+                            li.animated.bounceInLeft.animation-delay-11
+                              i.fa.fa-check
+                              | 25 default colors
+                            li.animated.bounceInLeft.animation-delay-13
+                              i.fa.fa-check
+                              | Variables less for all colors
+                            li.animated.bounceInLeft.animation-delay-15
+                              i.fa.fa-check
+                              | Full width and boxed mode
+                          p.animated.fadeInUpBig.animation-delay-17
+                            | Lorem ipsum dolor sit amet consectetur adipisicing elit. In rerum maxime quis tenetur dolor
+                            span recusandae a nulla
+                            | qui enim dolorem.
+                    .col-md-6.col-sm-4.hidden-xs.carousel-img-wrap
+                      .carousel-img
+                        img.img-responsive.animated.bounceInUp.animation-delay-3 alt="Image" src="../assets/img/demo/pre2.png" /
+              .item
+                .container
+                  .row
+                    .col-lg-6.col-md-7.col-sm-9
+                      .carousel-caption
+                        .carousel-text
+                          h1.animated.fadeInDownBig.animation-delay-7.carousel-title Templates for almost everything
+                          h2.animated.fadeInDownBig.animation-delay-5.crousel-subtitle Artificial Reason include over 80 HTML templates
+                          ul.list-unstyled.carousel-list
+                            li.animated.bounceInLeft.animation-delay-11
+                              i.fa.fa-check
+                              | 84 HTML Templates
+                            li.animated.bounceInLeft.animation-delay-13
+                              i.fa.fa-check
+                              | More than 50 components
+                            li.animated.bounceInLeft.animation-delay-15
+                              i.fa.fa-check
+                              | Extra CSS classes
+                          p.animated.fadeInUpBig.animation-delay-17
+                            | Lorem ipsum dolor sit amet consectetur adipisicing elit. In rerum maxime quis tenetur dolor
+                            span recusandae a nulla
+                            | qui enim dolorem.
+                    .col-lg-6.col-md-5.col-sm-3.hidden-xs.carousel-img-wrap
+                      .carousel-img
+                        img.img-responsive.animated.bounceInUp.animation-delay-3 alt="Image" src="../assets/img/demo/pre3.png" /
+            /! Controls
+            a.left.carousel-control data-slide="prev" href="#carousel-example-generic" 
+              span.glyphicon.glyphicon-chevron-left
+            a.right.carousel-control data-slide="next" href="#carousel-example-generic" 
+              span.glyphicon.glyphicon-chevron-right
+        /! carousel
+        section.margin-bottom
+          .container
+            .row
+              .col-md-3.col-sm-6
+                .content-box.box-default.animated.fadeInUp.animation-delay-10
+                  span.icon-ar.icon-ar-lg.icon-ar-round.icon-ar-inverse
+                    i.fa.fa-html5
+                  h4.content-box-title Lorem ipsum dolor
+                  p Consectetur adipisicing elit vritatis dolor rem officia molestiae atque eveniet inventore earum quas voluptates cumque
+              .col-md-3.col-sm-6
+                .content-box.box-default.animated.fadeInUp.animation-delay-14
+                  span.icon-ar.icon-ar-lg.icon-ar-round.icon-ar-inverse
+                    i.fa.fa-css3
+                  h4.content-box-title Lorem ipsum dolor
+                  p Consectetur adipisicing elit vritatis dolor rem officia molestiae atque eveniet inventore earum quas voluptates cumque
+              .col-md-3.col-sm-6
+                .content-box.box-default.animated.fadeInUp.animation-delay-16
+                  span.icon-ar.icon-ar-lg.icon-ar-round.icon-ar-inverse
+                    i.fa.fa-desktop
+                  h4.content-box-title Lorem ipsum dolor
+                  p Consectetur adipisicing elit vritatis dolor rem officia molestiae atque eveniet inventore earum quas voluptates cumque
+              .col-md-3.col-sm-6
+                .content-box.box-default.animated.fadeInUp.animation-delay-12
+                  span.icon-ar.icon-ar-lg.icon-ar-round.icon-ar-inverse
+                    i.fa.fa-flag
+                  h4.content-box-title Lorem ipsum dolor
+                  p Consectetur adipisicing elit vritatis dolor rem officia molestiae atque eveniet inventore earum quas voluptates cumque
+        section.section-lines
+          .container
+            .row
+              .col-md-4
+                .home-devices
+                  h3 The template for all devices
+                  p Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quasi, sapiente, nam sunt rem beatae architecto cupiditate numquam consectetur dolorum aliquam suscipit adipisci expedita vel quaerat illum aperiam facere inventore officia.
+                  p Consequuntur sed ipsum eius minima eum velit soluta accusamus omnis maiores modi quae mollitia consectetur adipisci.
+                  ul.icon-devices
+                    li.active
+                      a data-toggle="tab" href="#desktop" 
+                        i.fa.fa-desktop
+                    li
+                      a data-toggle="tab" href="#laptop" 
+                        i.fa.fa-laptop
+                    li
+                      a data-toggle="tab" href="#tablet" 
+                        i.fa.fa-tablet
+                    li
+                      a data-toggle="tab" href="#mobile" 
+                        i.fa.fa-mobile
+              .col-md-8
+                .tab-content
+                  #desktop.tab-pane.active
+                    img.img-responsive alt="" src="../assets/img/demo/mac.png" /
+                  #laptop.tab-pane
+                    img.img-responsive alt="" src="../assets/img/demo/macpro.png" /
+                  #tablet.tab-pane
+                    img.img-responsive alt="" src="../assets/img/demo/ipad.png" /
+                  #mobile.tab-pane
+                    img.img-responsive alt="" src="../assets/img/demo/iphone.png" /
+        .container
+          section.margin-bottom
+            p.lead.lead-lg.text-center.primary-color.margin-bottom
+              | Knows the
+              strong Artificial Reason
+              | and surprise yourself
+            .row
+              .col-md-6
+                h2.no-margin-top About us
+                p Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ipsa, alias, nihil molestias libero corporis perferendis a quasi at.
+                p Eos, illum, odit nulla provident sint atque quasi necessitatibus dolores voluptatibus perspiciatis aliquid tempora possimus laudantium. Blanditiis, deleniti!
+                p Saepe, laborum, eligendi vitae ad excepturi officiis vel omnis quidem et dolorum rem vero explicabo consequatur mollitia nihil!
+                p Fuga, omnis, quo, cumque, ipsa quasi facilis voluptatibus iure veniam nostrum voluptate accusantium dolore reprehenderit. Corrupti, mollitia, maiores!
+                p Lorem ipsum dolor sit amet, consectetur adipisicing elit ducimus, pariatur ad ipsam et quod numquam eveniet magni aspernatur.
+              .col-md-6
+                #accordion.panel-group
+                  .panel.panel-default
+                    .panel-heading.panel-heading-link
+                      a data-parent="#accordion" data-toggle="collapse" href="#collapseOne" 
+                        i.fa.fa-lightbulb-o
+                        | Talent and creativity
+                    #collapseOne.panel-collapse.collapse.in
+                      .panel-body
+                        p Lorem ipsum dolor sit amet, consectetur adipisicing elit. Obcaecati molestiae id ipsum ipsa repudiandae. Voluptatum, molestias, quas magnam repellat quos facilis sequi. Ullam optio eius deleniti dolore quasi doloribus ipsam incidunt perferendis.
+                        p Dolores, corrupti, laborum, officia sit aliquam doloremque accusantium nemo sunt veniam est incidunt perferendis minima obcaecati ex aperiam voluptatibus blanditiis eum suscipit magnam dolorum in adipisci nihil ipsam perspiciatis molestiae!
+                  .panel.panel-default
+                    .panel-heading.panel-heading-link
+                      a.collapsed data-parent="#accordion" data-toggle="collapse" href="#collapseTwo" 
+                        i.fa.fa-desktop
+                        | Design and code
+                    #collapseTwo.panel-collapse.collapse
+                      .panel-body
+                        p Lorem ipsum dolor sit amet, consectetur adipisicing elit. Suscipit dignissimos inventore cupiditate expedita saepe enim nobis nostrum? Laborum, laudantium, maiores, cupiditate, perspiciatis at ad accusamus corporis sed ipsam et velit!
+                        p Incidunt, harum itaque voluptatum asperiores recusandae explicabo maiores. Alias, quos, ex impedit at error id laborum fugit architecto qui beatae molestiae dolorum rem veritatis quia aliquam totam accusamus perferendis. Nulla!
+                  .panel.panel-default
+                    .panel-heading.panel-heading-link
+                      a.collapsed data-parent="#accordion" data-toggle="collapse" href="#collapseThree" 
+                        i.fa.fa-user
+                        | Quality and Support
+                    #collapseThree.panel-collapse.collapse
+                      .panel-body
+                        p Lorem ipsum dolor sit amet, consectetur adipisicing elit. Mollitia, rerum unde doloribus accusamus pariatur non expedita quibusdam velit totam obcaecati. Consequatur, deserunt, asperiores quam nisi earum voluptates animi labore tempore!
+                        p Dolorum, aliquam, totam labore saepe error a eum culpa assumenda sint laudantium ipsa iure ullam et dicta nesciunt repellendus optio voluptatibus reprehenderit odit officia fugiat necessitatibus recusandae architecto ad neque?
+          section.margin-bottom
+            h2.section-title Latest Works
+            .bxslider-controls
+              span#bx-prev4
+              span#bx-next4
+            ul#latest-works.bxslider
+              li
+                .img-caption-ar
+                  img.img-responsive alt="Image" src="../assets/img/demo/w1.jpg" /
+                  .caption-ar
+                    .caption-content
+                      a.animated.fadeInDown href="#" 
+                        i.fa.fa-search
+                        | More info
+                      h4.caption-title Title Caption
+              li
+                .img-caption-ar
+                  img.img-responsive alt="Image" src="../assets/img/demo/w2.jpg" /
+                  .caption-ar
+                    .caption-content
+                      a.animated.fadeInDown href="#" 
+                        i.fa.fa-search
+                        | More info
+                      h4.caption-title Title Caption
+              li
+                .img-caption-ar
+                  img.img-responsive alt="Image" src="../assets/img/demo/w3.jpg" /
+                  .caption-ar
+                    .caption-content
+                      a.animated.fadeInDown href="#" 
+                        i.fa.fa-search
+                        | More info
+                      h4.caption-title Title Caption
+              li
+                .img-caption-ar
+                  img.img-responsive alt="Image" src="../assets/img/demo/w4.jpg" /
+                  .caption-ar
+                    .caption-content
+                      a.animated.fadeInDown href="#" 
+                        i.fa.fa-search
+                        | More info
+                      h4.caption-title Title Caption
+              li
+                .img-caption-ar
+                  img.img-responsive alt="Image" src="../assets/img/demo/w5.jpg" /
+                  .caption-ar
+                    .caption-content
+                      a.animated.fadeInDown href="#" 
+                        i.fa.fa-search
+                        | More info
+                      h4.caption-title Title Caption
+              li
+                .img-caption-ar
+                  img.img-responsive alt="Image" src="../assets/img/demo/w6.jpg" /
+                  .caption-ar
+                    .caption-content
+                      a.animated.fadeInDown href="#" 
+                        i.fa.fa-search
+                        | More info
+                      h4.caption-title Title Caption
+              li
+                .img-caption-ar
+                  img.img-responsive alt="Image" src="../assets/img/demo/w7.jpg" /
+                  .caption-ar
+                    .caption-content
+                      a.animated.fadeInDown href="#" 
+                        i.fa.fa-search
+                        | More info
+                      h4.caption-title Title Caption
+              li
+                .img-caption-ar
+                  img.img-responsive alt="Image" src="../assets/img/demo/w8.jpg" /
+                  .caption-ar
+                    .caption-content
+                      a.animated.fadeInDown href="#" 
+                        i.fa.fa-search
+                        | More info
+                      h4.caption-title Title Caption
+              li
+                .img-caption-ar
+                  img.img-responsive alt="Image" src="../assets/img/demo/w9.jpg" /
+                  .caption-ar
+                    .caption-content
+                      a.animated.fadeInDown href="#" 
+                        i.fa.fa-search
+                        | More info
+                      h4.caption-title Title Caption
+              li
+                .img-caption-ar
+                  img.img-responsive alt="Image" src="../assets/img/demo/w10.jpg" /
+                  .caption-ar
+                    .caption-content
+                      a.animated.fadeInDown href="#" 
+                        i.fa.fa-search
+                        | More info
+                      h4.caption-title Title Caption
+              li
+                .img-caption-ar
+                  img.img-responsive alt="Image" src="../assets/img/demo/w11.jpg" /
+                  .caption-ar
+                    .caption-content
+                      a.animated.fadeInDown href="#" 
+                        i.fa.fa-search
+                        | More info
+                      h4.caption-title Title Caption
+              li
+                .img-caption-ar
+                  img.img-responsive alt="Image" src="../assets/img/demo/w12.jpg" /
+                  .caption-ar
+                    .caption-content
+                      a.animated.fadeInDown href="#" 
+                        i.fa.fa-search
+                        | More info
+                      h4.caption-title Title Caption
+          section
+            p.slogan.text-center
+              | Discover our projects and the rigorous process of
+              span creation
+              | Our principles are
+              span creativity
+              span design
+              span experience
+              | and
+              span knowledge
+              | We are backed by 20 years of
+              span research
+            h2.section-title Our Clients
+            .row
+              .col-md-6
+                .bxslider-controls
+                  span#bx-prev5
+                  span#bx-next5
+                ul#home-block.bxslider
+                  li
+                    blockquote.blockquote-color
+                      p Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer posuere erat a ante ultricies nisi vel augue quam semper libero.
+                      footer Brian Krzanich, Intel CEO
+                  li
+                    blockquote.blockquote-color
+                      p Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer posuere erat a ante ultricies nisi vel augue quam semper libero.
+                      footer Brian Krzanich, Intel CEO
+                  li
+                    blockquote.blockquote-color
+                      p Dolore totam at ea reiciendis suscipit a tempore cum nisi aspernatur nisi alias posuere erat a ante posuere erat a ante ultricies ultricies nisi vel augue quam semper conse erat quuntur.
+                      footer Sheldon Cooper, Physical Quantum
+                  li
+                    blockquote.blockquote-color
+                      p Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer posuere erat a ante ultricies nisi vel augue quam semper libero.
+                      footer Brian Krzanich, Intel CEO
+              .col-md-6
+                .row
+                  .col-md-3.col-sm-3.col-xs-6
+                    img.img-responsive alt="" src="../assets/img/demo/intel.png" /
+                  .col-md-3.col-sm-3.col-xs-6
+                    img.img-responsive alt="" src="../assets/img/demo/microsoft.png" /
+                  .col-md-3.col-sm-3.col-xs-6
+                    img.img-responsive alt="" src="../assets/img/demo/nokia.png" /
+                  .col-md-3.col-sm-3.col-xs-6
+                    img.img-responsive alt="" src="../assets/img/demo/samsung.png" /
+                .row
+                  .col-md-3.col-sm-3.col-xs-6
+                    img.img-responsive alt="" src="../assets/img/demo/anz.png" /
+                  .col-md-3.col-sm-3.col-xs-6
+                    img.img-responsive alt="" src="../assets/img/demo/maxis.png" /
+                  .col-md-3.col-sm-3.col-xs-6
+                    img.img-responsive alt="" src="../assets/img/demo/sony.png" /
+                  .col-md-3.col-sm-3.col-xs-6
+                    img.img-responsive alt="" src="../assets/img/demo/hp.png" /
+        aside#footer-widgets
+          .container
+            .row
+              .col-md-4
+                h3.footer-widget-title Sitemap
+                ul.list-unstyled.three_cols
+                  li
+                    a.active href="index.html"  Home
+                  li
+                    a href="blog.html"  Blog
+                  li
+                    a href="portfolio_sidebar.html"  Portafolio
+                  li
+                    a href="portfolio_topvar.html"  Works
+                  li
+                    a href="page_timeline_left.html"  Timeline
+                  li
+                    a href="page_pricing.html"  Pricing
+                  li
+                    a href="page_about2.html"  About Us
+                  li
+                    a href="page_team.html"  Our Team
+                  li
+                    a href="page_services.html"  Services
+                  li
+                    a href="page_support.html"  FAQ
+                  li
+                    a href="page_login_full.html"  Login
+                  li
+                    a href="page_contact.html"  Contact
+                h3.footer-widget-title Subscribe
+                p Lorem ipsum Amet fugiat elit nisi anim mollit minim labore ut esse Duis ullamco ad dolor veniam velit.
+                .input-group
+                  input.form-control placeholder=("Email Adress") type="text" /
+                  span.input-group-btn
+                    button.btn.btn-ar.btn-primary type="button"  Subscribe
+                /! /input-group
+              .col-md-4
+                .footer-widget
+                  h3.footer-widget-title Recent Post
+                  .media
+                    a.pull-left href="#" 
+                      img.media-object alt="image" height="75" src="../assets/img/demo/m2.jpg" width="75" /
+                    .media-body
+                      h4.media-heading
+                        a href="#"  Lorem ipsum Duis quis occaecat minim lorem ipsum tempor officia labor
+                      small August 18, 2013
+                  .media
+                    a.pull-left href="#" 
+                      img.media-object alt="image" height="75" src="../assets/img/demo/m11.jpg" width="75" /
+                    .media-body
+                      h4.media-heading
+                        a href="#"  Lorem ipsum dolor excepteur sunt in lorem ipsum cillum tempor
+                      small September 14, 2013
+                  .media
+                    a.pull-left href="#" 
+                      img.media-object alt="image" height="75" src="../assets/img/demo/m4.jpg" width="75" /
+                    .media-body
+                      h4.media-heading
+                        a href="#"  Lorem ipsum Dolor cupidatat minim adipisicing et fugiat
+                      small October 9, 2013
+              .col-md-4
+                .footer-widget
+                  h3.footer-widget-title Recent Works
+                  .row
+                    .col-lg-6.col-md-6.col-sm-3.col-xs-6
+                      a.thumbnail href="#" 
+                        img.img-responsive alt="Image" src="../assets/img/demo/wf1.jpg" /
+                    .col-lg-6.col-md-6.col-sm-3.col-xs-6
+                      a.thumbnail href="#" 
+                        img.img-responsive alt="Image" src="../assets/img/demo/wf2.jpg" /
+                    .col-lg-6.col-md-6.col-sm-3.col-xs-6
+                      a.thumbnail href="#" 
+                        img.img-responsive alt="Image" src="../assets/img/demo/wf3.jpg" /
+                    .col-lg-6.col-md-6.col-sm-3.col-xs-6
+                      a.thumbnail href="#" 
+                        img.img-responsive alt="Image" src="../assets/img/demo/wf4.jpg" /
+            /! row
+          /! container
+        /! footer-widgets
+        footer#footer
+          p
+            | \&copy; 2014
+            a href="#"  Artificial Reason
+            | inc. All rights reserved.
+      /! boxed
+    /! sb-site
+    .sb-slidebar.sb-right
+      .input-group
+        input.form-control placeholder="Search..." type="text" /
+        span.input-group-btn
+          button.btn.btn-default type="button" 
+            i.fa.fa-search
+      /! /input-group
+      h2.slidebar-header.no-margin-bottom Navigation
+      ul.slidebar-menu
+        li
+          a.active href="index.html"  Home
+        li
+          a href="portfolio_topbar.html"  Portfolio
+        li
+          a href="page_about3.html"  About us
+        li
+          a href="blog.html"  Blog
+        li
+          a href="page_contact.html"  Contact
+      h2.slidebar-header Social Media
+      .slidebar-social-icons
+        a.social-icon-ar.rss href="#" 
+          i.fa.fa-rss
+        a.social-icon-ar.facebook href="#" 
+          i.fa.fa-facebook
+        a.social-icon-ar.twitter href="#" 
+          i.fa.fa-twitter
+        a.social-icon-ar.pinterest href="#" 
+          i.fa.fa-pinterest
+        a.social-icon-ar.instagram href="#" 
+          i.fa.fa-instagram
+        a.social-icon-ar.wordpress href="#" 
+          i.fa.fa-wordpress
+        a.social-icon-ar.linkedin href="#" 
+          i.fa.fa-linkedin
+        a.social-icon-ar.flickr href="#" 
+          i.fa.fa-flickr
+        a.social-icon-ar.vine href="#" 
+          i.fa.fa-vine
+        a.social-icon-ar.dribbble href="#" 
+          i.fa.fa-dribbble
+    /! sb-slidebar sb-right
+    #back-top
+      a href="#header" 
+        i.fa.fa-chevron-up
