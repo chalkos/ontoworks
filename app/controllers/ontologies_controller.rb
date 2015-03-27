@@ -58,18 +58,10 @@ class OntologiesController < ApplicationController
 		    require 'zlib'
 		    tar_extract = Gem::Package::TarReader.new(Zlib::GzipReader.open(@file.path))
 		    tar_extract.rewind # The extract has to be rewinded after every iteration
-		    size = 0
 		    tar_extract.each do |entry|	
-		      size+=1
-		      #if size > 1 dar erro
-		      #else ler
-			@file = File.join('public/', entry.full_name)
+				@file = File.join('public/', entry.full_name)
           	  	FileUtils.mkdir_p(File.dirname(@file))
-		      puts entry.full_name
-		      puts entry.directory?
-		      puts entry.file?
-		      File.open(@file, 'w') { |file| file.write(entry.read)}
-                      puts @file
+		      	File.open(@file, 'w') { |file| file.write(entry.read)}
 		    end
 		    tar_extract.close
 		else
