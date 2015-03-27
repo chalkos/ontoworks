@@ -1,3 +1,7 @@
 .boxed {
   background-color: #fff;
 }
+
+body {
+  overflow: visible;
+}
