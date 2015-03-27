@@ -52,6 +52,8 @@ GEM
     coffee-script-source (1.9.1)
     erubis (2.7.0)
     execjs (2.4.0)
+    font-awesome-rails (4.3.0.0)
+      railties (>= 3.2, < 5.0)
     globalid (0.3.3)
       activesupport (>= 4.1.0)
     haml (4.0.6)
@@ -141,6 +143,8 @@ GEM
       actionpack (>= 3.0)
       activesupport (>= 3.0)
       sprockets (>= 2.8, < 4.0)
+    syntax-highlighter-rails (3.0.83.1.1)
+      railties
     temple (0.7.5)
     therubyrhino (2.0.4)
       therubyrhino_jar (>= 1.7.3)
@@ -166,6 +170,7 @@ PLATFORMS
 DEPENDENCIES
   activerecord-jdbcsqlite3-adapter
   coffee-rails (~> 4.1.0)
+  font-awesome-rails
   jbuilder (~> 2.0)
   jena-jruby
   jquery-rails
@@ -174,6 +179,7 @@ DEPENDENCIES
   sass-rails (~> 5.0)
   sdoc (~> 0.4.0)
   slim-rails
+  syntax-highlighter-rails
   therubyrhino
   turbolinks
   tzinfo-data

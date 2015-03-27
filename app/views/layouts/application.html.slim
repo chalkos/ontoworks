@@ -1,9 +1,133 @@
 doctype html
 html
   head
-    title AppJenaTdb
+    title Generic Sparql Endpoint
+    meta charset="UTF-8" /
+    meta content="width=device-width, initial-scale=1" name="viewport" /
+    meta content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport" /
+    = favicon_link_tag 'favicon.png'
     = stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true
     = javascript_include_tag 'application', 'data-turbolinks-track' => true
     = csrf_meta_tags
+    | <!--[if lt IE 9]>
+    = javascript_include_tag 'ie/html5shiv.min', 'data-turbolinks-track' => true
+    = javascript_include_tag 'ie/respond.min', 'data-turbolinks-track' => true
+    | <![endif]-->
   body
-    = yield
+    #sb-site
+      .boxed
+        header#header-full-top.hidden-xs.header-full
+          .container
+            .header-full-title
+              h1.animated.fadeInRight
+                a.active href="index.html" 
+                  | SPARQL
+                  span endpoint
+              p.animated.fadeInRight With a clean and elegant theme
+            nav.top-nav
+              ul.top-nav-social.hidden-sm
+                li
+                  a.animated.fadeIn.animation-delay-6.rss href="#" 
+                    i.fa.fa-rss
+                li
+                  a.animated.fadeIn.animation-delay-7.twitter href="#" 
+                    i.fa.fa-twitter
+                li
+                  a.animated.fadeIn.animation-delay-8.facebook href="#" 
+                    i.fa.fa-facebook
+                li
+                  a.animated.fadeIn.animation-delay-9.google-plus href="#" 
+                    i.fa.fa-google-plus
+                li
+                  a.animated.fadeIn.animation-delay-9.instagram href="#" 
+                    i.fa.fa-instagram
+                li
+                  a.animated.fadeIn.animation-delay-8.vine href="#" 
+                    i.fa.fa-vine
+                li
+                  a.animated.fadeIn.animation-delay-7.linkedin href="#" 
+                    i.fa.fa-linkedin
+                li
+                  a.animated.fadeIn.animation-delay-6.flickr href="#" 
+                    i.fa.fa-flickr
+              .dropdown.animated.fadeInDown.animation-delay-11
+                a.dropdown-toggle data-toggle="dropdown" href="#" 
+                  i.fa.fa-user
+                  | Login
+                .dropdown-menu.dropdown-menu-right.dropdown-login-box.animated.fadeInUp
+                  form role="form" 
+                    h4 Login Form
+                    .form-group
+                      .input-group.login-input
+                        span.input-group-addon
+                          i.fa.fa-user
+                        input.form-control placeholder="Username" type="text" /
+                      br/
+                      .input-group.login-input
+                        span.input-group-addon
+                          i.fa.fa-lock
+                        input.form-control placeholder="Password" type="password" /
+                      .checkbox.pull-left
+                        label
+                          input type="checkbox" /
+                          | Remember me
+                      button.btn.btn-ar.btn-primary.pull-right type="submit"  Login
+                      .clearfix
+              /! dropdown
+              .dropdown.animated.fadeInDown.animation-delay-13
+                a.dropdown-toggle data-toggle="dropdown" href="#" 
+                  i.fa.fa-search
+                .dropdown-menu.dropdown-menu-right.dropdown-search-box.animated.fadeInUp
+                  form role="form" 
+                    .input-group
+                      input.form-control placeholder="Search..." type="text" /
+                      span.input-group-btn
+                        button.btn.btn-ar.btn-primary type="button"  Go!
+                    /! /input-group
+              /! dropdown
+          /! container
+        /! header-full
+        nav#header.navbar.navbar-static-top.navbar-default.navbar-header-full.navbar-dark role="navigation" 
+          .container
+            /! Brand and toggle get grouped for better mobile display
+            .navbar-header
+              button.navbar-toggle data-target="#bs-example-navbar-collapse-1" data-toggle="collapse" type="button" 
+                span.sr-only Toggle navigation
+                i.fa.fa-bars
+              a.navbar-brand.hidden-lg.hidden-md.hidden-sm.active href="index.html" 
+                | Artificial
+                span Reason
+            /! navbar-header
+            #bs-example-navbar-collapse-1.collapse.navbar-collapse
+              ul.nav.navbar-nav
+                li.active
+                  a href="#" Home
+                li.dropdown
+                  a.dropdown-toggle data-toggle="dropdown" href="javascript:void(0);" Com dropdown
+                  ul.dropdown-menu.dropdown-menu-left
+                    li
+                      a href="#" Option 1
+                    li
+                      a href="#" Option 2
+                    li.active
+                      a href="#" Option 3 (actual)
+                    li
+                      a href="#" Option 4
+                    li
+                      a href="#" Option 5
+            /! navbar-collapse
+          /! container
+        section.margin-bottom.margin-top
+          .container
+            .row
+              .col-lg-12.col-md-12.col-sm-12.col-xs-12
+                = yield
+        footer#footer
+          p
+            | &copy; 2014
+            a href="#"  no-name-yet
+            |  All rights reserved.
+      /! boxed
+    #back-top
+      a href="#header" 
+        i.fa.fa-chevron-up
