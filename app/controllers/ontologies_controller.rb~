@@ -25,17 +25,8 @@ class OntologiesController < ApplicationController
   # POST /ontologies.json
 
   def create
-    require 'digest/md5'
-
     @ontology = Ontology.new(ontology_params)
-    
-    # ensure unique code
-    inc = 0
-    loop do
-      @ontology.code = Digest::MD5.hexdigest (@ontology.hash+inc).to_s
-      break if Ontology.where(:code => @ontology.code).empty?
-      inc += 1
-    end
+    @ontology.code = @ontology.hash
 
     @file = params[:ontology]['file']
     ## UNZIP START, IF NECESSARY
@@ -106,7 +97,7 @@ class OntologiesController < ApplicationController
     ## JENA END
 
     # remove extracted/temporary file
-    File.delete(@file)
+    #File.delete(@file)
 
     respond_to do |format|
       if @ontology.save
