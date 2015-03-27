@@ -41,7 +41,7 @@ class OntologiesController < ApplicationController
     ## UNZIP START, IF NECESSARY
     
     if File.extname(@file.original_filename) == ".zip"
-	  require 'zip'
+      require 'zip'
       # open zip file
       Zip::File.open(@file.path) do |zip_file|
         zip_file.each do |entry|
@@ -50,24 +50,20 @@ class OntologiesController < ApplicationController
           zip_file.extract(entry, @file)
         end
       end
+    elsif File.extname(@file.original_filename) == ".gz"
+      require 'rubygems/package'
+      require 'zlib'
+      tar_extract = Gem::Package::TarReader.new(Zlib::GzipReader.open(@file.path))
+      tar_extract.rewind # The extract has to be rewinded after every iteration
+      tar_extract.each do |entry|
+        @file = File.join('public/', entry.full_name)
+        FileUtils.mkdir_p(File.dirname(@file))
+        File.open(@file, 'w') { |file| file.write(entry.read)}
+      end
+      tar_extract.close
     else
-		##GZ START
-		nomeFile = @file.original_filename
-		if nomeFile.end_with? ".gz"
-		    require 'rubygems/package'
-		    require 'zlib'
-		    tar_extract = Gem::Package::TarReader.new(Zlib::GzipReader.open(@file.path))
-		    tar_extract.rewind # The extract has to be rewinded after every iteration
-		    tar_extract.each do |entry|	
-				@file = File.join('public/', entry.full_name)
-          	  	FileUtils.mkdir_p(File.dirname(@file))
-		      	File.open(@file, 'w') { |file| file.write(entry.read)}
-		    end
-		    tar_extract.close
-		else
-			@file = params[:ontology]['file'].path
-		end
-	end
+      @file = params[:ontology]['file'].path
+    end
 
     ## JENA START
     require 'jena_jruby'
