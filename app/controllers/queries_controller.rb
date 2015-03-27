@@ -12,48 +12,6 @@ class QueriesController < ApplicationController
     @queries = @ontology.queries
   end
 
-  # GET /queries
-  # GET /queries.json
-  def index_dont_use_this_one
-    return nil; #just to be safe
-
-    @queries = Query.all
-
-
-    dir = File.dirname("#{Rails.root}/db/tdb/teste/dummy")
-
-
-    # e aqui começa a mistura de java com ruby
-    require 'jena_jruby'
-
-    t1 = java.lang.System.currentTimeMillis();
-
-    dataset = Jena::TDB::TDBFactory.createDataset(dir)
-    dataset.begin(Jena::Query::ReadWrite::READ)
-    model = dataset.getDefaultModel()
-    dataset.end()
-
-    t2 = java.lang.System.currentTimeMillis()
-    @tempo = {carregar: t2-t1}
-    #System.out.println("carregar o modelo: " + (t2 - t1) + " milliseconds.")
-
-    queryString = "select * where {?a ?b ?c} LIMIT 10"
-    query = Jena::Query::QueryFactory.create(queryString)
-
-    begin
-      qexec = Jena::Query::QueryExecutionFactory.create(query, model)
-      results = qexec.execSelect()
-
-      t3 = java.lang.System.currentTimeMillis()
-      #System.out.println("fazer a query e obter o resultado: " + (t3 - t2) + " milliseconds.")
-      @tempo[:query] = t3-t2
-
-      Jena::Query::ResultSetFormatter.out(java.lang.System.out, results, query)
-      puts "should have been done by now"
-    rescue Exception => e
-      puts "\n\n-------------------------\nGOT AN EXCEPTION!\n-------------------------\n\n"
-    end
-  end
 
   # GET /queries/1
   # GET /queries/1.json
@@ -69,16 +27,50 @@ class QueriesController < ApplicationController
   def edit
   end
 
+
+  # Make a query
+  def execute
+    require 'jena_jruby'
+
+    dir = File.dirname("#{Rails.root}/db/tdb/#{@ontology.code}/dataSet")
+    dataset = Jena::TDB::TDBFactory.createDataset(dir)
+    dataset.begin(Jena::Query::ReadWrite::READ)
+
+    query = @query.content
+    begin
+      query = Jena::Query::QueryFactory.create(query)
+      qexec = Jena::Query::QueryExecutionFactory.create(query, dataset)
+      res = qexec.execSelect()
+
+      # StringIO - org.jruby.util.IOOutputStream
+      @out = StringIO.new
+      stream = @out.to_outputstream
+
+      Jena::Query::ResultSetFormatter.outputAsJSON(stream,res)
+      qexec.close()
+      dataset.end()
+    rescue Exception => e
+      puts "------ ERROR ------- " + e.to_s
+    end
+
+    @out
+  end
+
+
   # POST /queries
   # POST /queries.json
   def create
     @query = Query.new(query_params)
     @query.ontology = @ontology
 
+    # Method
+    execute
+
     respond_to do |format|
       if @query.save
-        format.html { redirect_to ontology_query_path(@ontology, @query), notice: 'Query was successfully created.' }
-        format.json { render :show, status: :created, location: @query }
+        #format.html { redirect_to ontology_query_path(@ontology, @query), notice: 'Query was successfully created.' }
+        #format.json { render , status: :created, location: @query }
+        format.html { render :text => @out.string}
       else
         format.html { render :new }
         format.json { render json: @query.errors, status: :unprocessable_entity }
