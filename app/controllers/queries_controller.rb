@@ -32,15 +32,18 @@ class QueriesController < ApplicationController
   def execute
     require 'jena_jruby'
 
-    dir = File.dirname("#{Rails.root}/db/tdb/#{@ontology.code}/dataSet")
+    dir = File.dirname("#{Rails.root}/db/tdb/geral/dataSet")
     dataset = Jena::TDB::TDBFactory.createDataset(dir)
     dataset.begin(Jena::Query::ReadWrite::READ)
+
+    model = dataset.getNamedModel(@ontology.code)
 
     query = @query.content
     begin
       query = Jena::Query::QueryFactory.create(query)
-      qexec = Jena::Query::QueryExecutionFactory.create(query, dataset)
+      qexec = Jena::Query::QueryExecutionFactory.create(query, model)
       res = qexec.execSelect()
+
 
       # StringIO - org.jruby.util.IOOutputStream
       @out = StringIO.new

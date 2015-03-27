@@ -47,13 +47,13 @@ class OntologiesController < ApplicationController
     ## JENA START
     require 'jena_jruby'
 
-    dir = File.dirname("#{Rails.root}/db/tdb/#{@ontology.code}/ds")
+    dir = File.dirname("#{Rails.root}/db/tdb/geral/dataSet")
     FileUtils.mkdir_p(dir) unless File.directory?(dir)
 
-    dataset = Jena::TDB::TDBFactory.createDataset(dir)
+    dataset = Jena::TDB::TDBFactory.createDataset(dir) #create or connect
 
     dataset.begin(Jena::Query::ReadWrite::WRITE)
-    model = dataset.getDefaultModel()
+    model = dataset.getNamedModel(@ontology.code)
 
     #open the ontology
     input = Jena::Util::FileManager.get().open(@file)
