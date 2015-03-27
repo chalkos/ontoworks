@@ -28,22 +28,15 @@ class QueriesController < ApplicationController
   end
 
 
-
-
-  # POST /queries
-  # POST /queries.json
-  def create
-    @query = Query.new(query_params)
-    @query.ontology = @ontology
-
-    # get ontology dir
+  # Make a query
+  def execute
     require 'jena_jruby'
 
     dir = File.dirname("#{Rails.root}/db/tdb/#{@ontology.code}/dataSet")
     dataset = Jena::TDB::TDBFactory.createDataset(dir)
     dataset.begin(Jena::Query::ReadWrite::READ)
 
-    query = "SELECT * WHERE { ?a ?b ?c} LIMIT 10"
+    query = @query.content
     begin
       query = Jena::Query::QueryFactory.create(query)
       qexec = Jena::Query::QueryExecutionFactory.create(query, dataset)
@@ -54,12 +47,24 @@ class QueriesController < ApplicationController
       stream = @out.to_outputstream
 
       Jena::Query::ResultSetFormatter.outputAsJSON(stream,res)
+      qexec.close()
+      dataset.end()
     rescue Exception => e
       puts "------ ERROR ------- " + e.to_s
     end
 
-    qexec.close()
-    dataset.end()
+    @out
+  end
+
+
+  # POST /queries
+  # POST /queries.json
+  def create
+    @query = Query.new(query_params)
+    @query.ontology = @ontology
+
+    # Method
+    execute
 
     respond_to do |format|
       if @query.save
