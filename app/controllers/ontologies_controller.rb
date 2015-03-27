@@ -39,7 +39,7 @@ class OntologiesController < ApplicationController
 
     @file = params[:ontology]['file']
     ## UNZIP START, IF NECESSARY
-    
+
     if File.extname(@file.original_filename) == ".zip"
       require 'zip'
       # open zip file
@@ -56,7 +56,7 @@ class OntologiesController < ApplicationController
       tar_extract = Gem::Package::TarReader.new(Zlib::GzipReader.open(@file.path))
       tar_extract.rewind # The extract has to be rewinded after every iteration
       tar_extract.each do |entry|
-        @file = File.join('public/', entry.full_name)
+        @file = File.join('tmp/extracted/', @ontology.code+entry.full_name)
         FileUtils.mkdir_p(File.dirname(@file))
         File.open(@file, 'w') { |file| file.write(entry.read)}
       end
