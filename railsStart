@@ -1,0 +1,18 @@
+#!/bin/bash
+
+echo "Usage: railsStart [max [min]]"
+
+if [ $# -eq 0 ]; then
+  min="512"
+  max="1024"
+elif [ $# -eq 1 ]; then
+  min="512"
+  max="$1"
+else
+  min="$2"
+  max="$1"
+fi
+
+echo "Running: jruby -J-Xms${min}m -J-Xmx${max}m -S rails s"
+
+jruby -J-Xms${min}m -J-Xmx${max}m -S rails s
