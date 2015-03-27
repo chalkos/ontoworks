@@ -3,17 +3,17 @@
 echo "Usage: railsStart [max [heap [min]]]"
 
 if [ $# -eq 0 ]; then
-  max="1024"
-  heap="1024"
-  min="512"
+  max="2048"
+  heap="512"
+  min="1024"
 elif [ $# -eq 1 ]; then
   max="$1"
-  heap="1024"
-  min="512"
+  heap="512"
+  min="1024"
 elif [ $# -eq 2 ]; then
   max="$1"
   heap="$2"
-  min="512"
+  min="1024"
 else
   max="$1"
   heap="$2"
