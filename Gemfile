@@ -5,6 +5,8 @@ gem 'jena-jruby'
 
 gem 'slim-rails'
 
+gem 'rubyzip'
+
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '4.2.0'
 # Use jdbcsqlite3 as the database for Active Record
