@@ -16,7 +16,7 @@
     label
       = f.check_box :unlisted
       = t('activerecord.attributes.ontology.unlisted')
-    p.em-warning Caution: Once an ontology is made public, it can not be made private
+    p.em-warning = t('forms.ontology.unlisted_warning')
   .form-group
     label for="ontology_file"
     input type="file" name="ontology[file]" id="ontology_file"
