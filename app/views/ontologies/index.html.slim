@@ -1,6 +1,6 @@
 h1.section-title
   | My ontologies
-  = link_to new_ontology_path, class: 'icon-ar icon-ar-round', style: 'margin-left:1em', data: {toggle: 'tooltip', placement:'top', 'original-title' => 'New Ontology'} do
+  = link_to new_ontology_path, class: 'icon-ar icon-ar-round', style: 'margin-left:1em' do
     i.fa.fa-plus
 
 == render 'list', onotologies: []
