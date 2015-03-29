@@ -26,7 +26,8 @@ class OntologiesController < ApplicationController
 
   def create
     require 'digest/md5'
-    @ontology = Ontology.new(ontology_params)
+
+    @ontology = Ontology.new(ontology_params.except :file)
 
     # ensure unique code
     inc = 0
@@ -161,7 +162,7 @@ class OntologiesController < ApplicationController
 
   # Never trust parameters from the scary internet, only allow the white list through.
   def ontology_params
-    params.require(:ontology).permit(:name, :desc, :unlisted, :extendable, :expires)
+    params.require(:ontology).permit(:name, :desc, :unlisted, :extendable, :expires, :file)
   end
 
   def validate_file(file)
@@ -176,6 +177,7 @@ class OntologiesController < ApplicationController
       :other
     end
   end
+
   def notify_and_back(note)
     flash[:notice] = note
     #redirect_to :back
