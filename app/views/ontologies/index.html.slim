@@ -1,25 +1,11 @@
-h1.section-title Listing ontologies
+h1.section-title
+  | My ontologies
+  = link_to new_ontology_path, class: 'icon-ar icon-ar-round', style: 'margin-left:1em', data: {toggle: 'tooltip', placement:'top', 'original-title' => 'New Ontology'} do
+    i.fa.fa-plus
 
-table
-  thead
-    tr
-      th Name
-      th Code
-      th Unlisted
-      th
-      th
-      th
+== render 'list', onotologies: []
 
-  tbody
-    - @ontologies.each do |ontology|
-      tr
-        td = ontology.name
-        td = ontology.code
-        td = ontology.unlisted
-        td = link_to 'Show', ontology
-        td = link_to 'Edit', edit_ontology_path(ontology)
-        td = link_to 'Destroy', ontology, data: {:confirm => 'Are you sure?'}, :method => :delete
+h1.section-title Public ontologies
 
-br
+== render 'list', onotologies: @ontologies
 
-= link_to 'New Ontology', new_ontology_path
