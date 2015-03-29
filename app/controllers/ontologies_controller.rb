@@ -134,7 +134,7 @@ class OntologiesController < ApplicationController
   # PATCH/PUT /ontologies/1.json
   def update
     respond_to do |format|
-      if @ontology.update(ontology_params)
+      if @ontology.update(ontology_params.slice(:description))
         format.html { redirect_to @ontology, notice: 'Ontology was successfully updated.' }
         format.json { render :show, status: :ok, location: @ontology }
       else

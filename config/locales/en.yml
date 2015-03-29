@@ -20,4 +20,20 @@
 # available at http://guides.rubyonrails.org/i18n.html.
 
 en:
-  hello: "Hello world"
+  activerecord:
+    attributes:
+      ontology:
+        unlisted: "Unlisted ontology"
+        extendable: "Extendable ontology"
+  forms:
+    ontology:
+      expires: "Ontology expiration"
+      file: "Ontology file"
+  helpers:
+    submit:
+      ontology:
+        create: "Submit ontology"
+  placeholders:
+    ontology:
+      description: 'A description for this ontology'
+      name: 'Name'
