@@ -11,16 +11,16 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150327154623) do
+ActiveRecord::Schema.define(version: 20150329042745) do
 
   create_table "ontologies", force: :cascade do |t|
-    t.string   "name",       limit: 255,                 null: false
-    t.string   "code",       limit: 255,                 null: false
-    t.boolean  "unlisted",               default: false, null: false
-    t.boolean  "extendable",             default: false, null: false
-    t.datetime "expires",                                null: false
-    t.datetime "created_at",                             null: false
-    t.datetime "updated_at",                             null: false
+    t.string   "name",        limit: 255,                 null: false
+    t.string   "code",        limit: 255,                 null: false
+    t.boolean  "unlisted",                default: false, null: false
+    t.boolean  "extendable",              default: false
+    t.datetime "expires"
+    t.datetime "created_at",                              null: false
+    t.datetime "updated_at",                              null: false
     t.text     "desc"
   end
 
