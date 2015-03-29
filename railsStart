@@ -1,0 +1,25 @@
+#!/bin/bash
+
+echo "Usage: railsStart [max [heap [min]]]"
+
+if [ $# -eq 0 ]; then
+  max="2048"
+  heap="512"
+  min="1024"
+elif [ $# -eq 1 ]; then
+  max="$1"
+  heap="512"
+  min="1024"
+elif [ $# -eq 2 ]; then
+  max="$1"
+  heap="$2"
+  min="1024"
+else
+  max="$1"
+  heap="$2"
+  min="$3"
+fi
+
+echo "Running: jruby -J-Xmn${heap}m -J-Xms${min}m -J-Xmx${max}m -S rails s"
+
+jruby -J-Xmn${heap}m -J-Xms${min}m -J-Xmx${max}m -S rails s
