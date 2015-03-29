@@ -36,5 +36,5 @@ en:
         create: "Submit ontology"
   placeholders:
     ontology:
-      description: 'A description for this ontology'
+      desc: 'A description for this ontology'
       name: 'Name'
