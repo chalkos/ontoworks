@@ -25,6 +25,7 @@ en:
       ontology:
         unlisted: "Unlisted ontology"
         extendable: "Extendable ontology"
+        desc: "Description"
   forms:
     ontology:
       expires: "Ontology expiration"
