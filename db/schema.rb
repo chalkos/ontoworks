@@ -19,8 +19,8 @@ ActiveRecord::Schema.define(version: 20150329042050) do
     t.boolean  "unlisted",               default: false, null: false
     t.boolean  "extendable",             default: false
     t.datetime "expires"
-    t.datetime "created_at",                              null: false
-    t.datetime "updated_at",                              null: false
+    t.datetime "created_at",                             null: false
+    t.datetime "updated_at",                             null: false
     t.text     "desc"
   end
 

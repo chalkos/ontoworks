@@ -29,7 +29,7 @@ en:
     ontology:
       expires: "Ontology expiration"
       file: "Ontology file"
-      unlisted_warning: 'Caution: Once an ontology is made public, it can not be made private'
+      unlisted_warning: 'Caution: A public ontology can not be changed back to private'
   helpers:
     submit:
       ontology:

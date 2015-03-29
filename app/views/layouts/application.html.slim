@@ -100,21 +100,9 @@ html
             /! navbar-header
             #bs-example-navbar-collapse-1.collapse.navbar-collapse
               ul.nav.navbar-nav
-                li.active
-                  a href="#" Home
-                li.dropdown
-                  a.dropdown-toggle data-toggle="dropdown" href="javascript:void(0);" Com dropdown
-                  ul.dropdown-menu.dropdown-menu-left
-                    li
-                      a href="#" Option 1
-                    li
-                      a href="#" Option 2
-                    li.active
-                      a href="#" Option 3 (actual)
-                    li
-                      a href="#" Option 4
-                    li
-                      a href="#" Option 5
+                = nav_link 'Home', root_path
+                = nav_link 'Ontologies', ontologies_path
+                = nav_link 'New Ontology', new_ontology_path
             /! navbar-collapse
           /! container
         section.margin-bottom.margin-top
