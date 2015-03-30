@@ -1,19 +1,15 @@
-table
+table.table
   thead
     tr
       th Name
-      th Code
-      th Unlisted
-      th
-      th
+      th Description
       th
 
   tbody
     - onotologies.each do |ontology|
       tr
-        td = ontology.name
-        td = ontology.code
-        td = ontology.unlisted
-        td = link_to 'Show', ontology
-        td = link_to 'Edit', edit_ontology_path(ontology)
-        td = link_to 'Destroy', ontology, data: {:confirm => 'Are you sure?'}, :method => :delete
+        td
+          = link_to ontology do
+            = ontology.name
+        td
+          = truncate ontology.desc, length: 50

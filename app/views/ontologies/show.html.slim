@@ -22,6 +22,8 @@ p
 = link_to 'Edit', edit_ontology_path(@ontology)
 '|
 = link_to 'Back', ontologies_path
+'|
+= link_to 'Destroy', @ontology, data: {:confirm => 'Are you sure?'}, :method => :delete
 
 br/
 
