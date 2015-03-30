@@ -1,30 +1,30 @@
-p#notice = notice
+- unless notice.nil? || notice.empty?
+  .row
+    .col-lg-12.col-md-12.col-sm-12.col-xs-12
+      div.alert.alert-success.alert-border
+        button.close type="button" data-dismiss="alert" aria-hidden="true" &times;
+        = notice
 
-p
-  strong Name:
-  = @ontology.name
-p
-  strong Description:
-  = @ontology.desc
-p
-  strong Code:
-  = @ontology.code
-p
-  strong Unlisted:
-  = @ontology.unlisted
-p
-  strong Extendable:
-  = @ontology.extendable
-p
-  strong Expires:
-  = @ontology.expires
+.row
+  .col-lg-6.col-md-6.col-sm-12.col-xs-12
+    h1.section-title
+      | Ontology
+      = link_to edit_ontology_path(@ontology), class: 'icon-ar icon-ar-round icon-ar-sm', style: 'margin-left:1em' do
+        i.fa.fa-pencil
+      = link_to @ontology, data: {:confirm => 'Are you sure?'}, :method => :delete, class: 'icon-ar icon-ar-round icon-ar-danger icon-ar-sm' do
+          i.fa.fa-trash
+    dl.dl-horizontal
+      dt Name
+      dd = @ontology.name
+      dt Description
+      dd = @ontology.desc
+      dt Unlisted
+      dd = @ontology.unlisted ? 'Yes' : 'No'
 
-= link_to 'Edit', edit_ontology_path(@ontology)
-'|
-= link_to 'Back', ontologies_path
-'|
-= link_to 'Destroy', @ontology, data: {:confirm => 'Are you sure?'}, :method => :delete
-
-br/
-
-= link_to 'Queries', ontology_queries_path(@ontology)
+  .col-lg-6.col-md-6.col-sm-12.col-xs-12
+    h1.section-title
+      | Saved Queries
+      = link_to '#todo', class: 'icon-ar icon-ar-round icon-ar-sm', style: 'margin-left:1em' do
+          i.fa.fa-plus
+    p
+      = link_to 'Queries', ontology_queries_path(@ontology)
