@@ -1,6 +1,19 @@
-h1.section-title Editing ontology
+h1.section-title
+  | Editing ontology
+  = link_to @ontology, class: 'icon-ar icon-ar-round icon-ar-sm', style: 'margin-left:1em' do
+    i.fa.fa-arrow-left
 
-== render 'edit'
+h3 = @ontology.name
 
-= link_to 'Show', @ontology
+= form_for(@ontology, :html => { role: 'form' }) do |f|
+  - if @ontology.errors.any?
+    #error_explanation
+      h2 = "#{pluralize(@ontology.errors.count, "error")} prohibited this ontology from being saved:"
+      ul
+        - @ontology.errors.full_messages.each do |message|
+          li = message
 
+  .form-group
+    = f.label :desc
+    = f.text_area :desc, class: 'form-control', rows: '5', placeholder: t('placeholders.ontology.desc')
+  button.btn.btn-ar.btn-primary type="submit" =t 'helpers.submit.ontology.create'
