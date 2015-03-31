@@ -26,6 +26,7 @@ class OntologiesController < ApplicationController
 
   def create
     require 'digest/md5'
+    puts "Estou no Create!"
 
     @ontology = Ontology.new(ontology_params)
 
@@ -43,11 +44,25 @@ class OntologiesController < ApplicationController
     if File.extname(@file.original_filename) == ".zip"
       require 'zip'
       # open zip file
+      size = 0;
       Zip::File.open(@file.path) do |zip_file|
         zip_file.each do |entry|
-          @file = File.join('tmp/extracted/', @ontology.code+entry.name)
-          FileUtils.mkdir_p(File.dirname(@file))
-          zip_file.extract(entry, @file)
+        	if size == 0 # on the first file: estract it to the tmp folder
+	          @file = File.join('tmp/extracted/', @ontology.code+entry.name)
+	          FileUtils.mkdir_p(File.dirname(@file))
+	          zip_file.extract(entry, @file)
+	          size += 1;
+          	else #on the second file
+          		# remove extracted/temporary file
+    			File.delete(@file)
+    			# notify user
+    			flash[:notice] = "Compressed file has more than one ontology!"
+				respond_to do |format|
+			        format.html { render :new }
+			        format.json { render json: @ontology.errors, status: :unprocessable_entity }
+			    end
+				return
+          	end
         end
       end
     elsif File.extname(@file.original_filename) == ".gz"
@@ -55,10 +70,24 @@ class OntologiesController < ApplicationController
       require 'zlib'
       tar_extract = Gem::Package::TarReader.new(Zlib::GzipReader.open(@file.path))
       tar_extract.rewind # The extract has to be rewinded after every iteration
+      size = 0 
       tar_extract.each do |entry|
-        @file = File.join('tmp/extracted/', @ontology.code+entry.full_name)
-        FileUtils.mkdir_p(File.dirname(@file))
-        File.open(@file, 'w') { |file| file.write(entry.read)}
+      	if size == 0 # on the first file: extract it to the tmp folder
+	        @file = File.join('tmp/extracted/', @ontology.code+entry.full_name)
+	        FileUtils.mkdir_p(File.dirname(@file))
+	        File.open(@file, 'w') { |file| file.write(entry.read)}
+	        size += 1;
+      	else # on the second file
+      		# remove extracted/temporary file
+			File.delete(@file)
+			# notify user
+			flash[:notice] = "Compressed file has more than one ontology!"
+			respond_to do |format|
+		        format.html { render :new }
+		        format.json { render json: @ontology.errors, status: :unprocessable_entity }
+		    end
+			return
+      	end
       end
       tar_extract.close
     else
@@ -67,6 +96,7 @@ class OntologiesController < ApplicationController
 
     ## JENA START
     require 'jena_jruby'
+
 
     dir = File.dirname("#{Rails.root}/db/tdb/#{@ontology.code}/ds")
     FileUtils.mkdir_p(dir) unless File.directory?(dir)
