@@ -99,9 +99,12 @@ class OntologiesController < ApplicationController
 
     #read the RDF/XML file
     begin
-      model.read(input, nil)
+        model.read(input, nil)
     rescue Exception => e
-      puts "----- ERROR -----" + e
+        input.close();
+        File.delete(@file)
+        notify_and_back("Error: " + e);
+      return;
     end
 
     #model.write(java.lang.System::out, "N-TRIPLE")
@@ -165,16 +168,11 @@ class OntologiesController < ApplicationController
 
     def validate_file(file)
         type = file.content_type
-        puts "File type:"
-        puts @file.content_type
         if type == "application/gzip"
-            puts "tipo 1"
             return 1
         elsif type == "application/zip"
-            puts "tipo 2"
             return 2
         elsif type.include? "xml"
-            puts "tipo 3"
             return 3;
         end
             return 0
