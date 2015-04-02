@@ -21,6 +21,8 @@
 //= require syntax-highlighter-rails/shCore
 //= require syntax-highlighter-rails/shBrushXml
 
+//= require queries
+
 /* Smooth scrolling for anchors */
 $(document).on('click','a.smooth', function(e){
     e.preventDefault();

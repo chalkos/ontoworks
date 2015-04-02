@@ -1,5 +1,12 @@
-h1 Listing queries
+h1 Make a Query
+= form_for :query, url: ontology_run_path(@ontology) do |f|
+  .field
+    = f.text_area :content
+  .actions = f.submit
 
+hr
+
+h1 Listing queries
 table
   thead
     tr
@@ -19,6 +26,8 @@ table
         td = link_to 'Destroy', ontology_query_path(@ontology, query), data: {:confirm => 'Are you sure?'}, :method => :delete
 
 br
+
+
 
 = link_to 'New Query', new_ontology_query_path
 br/

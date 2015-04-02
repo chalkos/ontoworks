@@ -1,14 +1,16 @@
 p#notice = notice
 
 p
-  strong Name:
+  strong#name Name:
   = @query.name
 p
   strong Content:
-  = @query.content
+  span#content
+    = @query.content
 
-= link_to 'Edit', edit_ontology_query_path(@ontology,@query)
-'|
-= link_to 'Back', ontology_queries_path
-br/
-= link_to 'Run'
+- if @query.blank?
+  = link_to 'Edit', edit_ontology_query_path(@ontology,@query)
+  '|
+  = link_to 'Back', ontology_queries_path
+  br/
+  = link_to "Run", '#', id: "run_query", data: { ontology: @ontology.code,  query: @query.content }
