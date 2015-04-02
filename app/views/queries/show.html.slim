@@ -5,12 +5,31 @@ p
   = @query.name
 p
   strong Content:
-  span#content
-    = @query.content
+  span
+    = form_for :query, url: ontology_run_path(@ontology) do |f|
+      .field
+        = f.text_area :content
+      .actions = f.submit
 
-- if @query.blank?
-  = link_to 'Edit', edit_ontology_query_path(@ontology,@query)
-  '|
-  = link_to 'Back', ontology_queries_path
-  br/
-  = link_to "Run", '#', id: "run_query", data: { ontology: @ontology.code,  query: @query.content }
+
+hr
+
+p
+  strong Resultados
+
+- n_head = @query.sparql['head']['vars'].size
+- keys = @query.sparql['head']['vars']
+- n_body = @query.sparql['results']['bindings'].size
+
+table
+  thead
+    tr
+      - for i in 0..n_head-1
+        th = @query.sparql['head']['vars'][i]
+  tbody
+    - for i in 0..n_body-1
+      tr
+        - for j in 0..n_head-1
+          th = @query.sparql['results']['bindings'][i][keys[j]]
+
+

@@ -14,11 +14,9 @@ class QueriesController < ApplicationController
     @queries = @ontology.queries
   end
 
-
   # GET /queries/1
   # GET /queries/1.json
   def show
-
   end
 
   # GET /queries/new
@@ -29,7 +27,6 @@ class QueriesController < ApplicationController
   # GET /queries/1/edit
   def edit
   end
-
 
   # POST /run
   def run_query
@@ -48,22 +45,26 @@ class QueriesController < ApplicationController
       res = qexec.execSelect()
 
       # StringIO - org.jruby.util.IOOutputStream
-      @out = StringIO.new
-      stream = @out.to_outputstream
+      out = StringIO.new
+      stream = out.to_outputstream
 
       Jena::Query::ResultSetFormatter.outputAsJSON(stream,res)
       qexec.close()
       dataset.end()
+
+      @query = Query.new
+      @query.name = "aaa"
+      @query.content = sparql
+      @query.sparql = JSON.parse out.string
+
+      respond_to do |format|
+        format.html { render :show, collection: @query }
+      end
     rescue Exception => e
-      puts "------ ERROR ------- " + e.to_s
+      respond_to do |format|
+        format.html { render :text => e.to_s }
+      end
     end
-
-    @query = Query.new
-    @query.name = "asdv"
-    @query.content = sparql
-    @query.sparql = @out.string
-
-
   end
 
 
