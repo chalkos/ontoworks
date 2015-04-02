@@ -2,6 +2,8 @@ class QueriesController < ApplicationController
   before_action :set_query, only: [:show, :edit, :update, :destroy]
   before_action :get_ontology
 
+  attr_accessor :sparql
+
   def get_ontology
     @ontology = Ontology.where(code: params[:ontology_code]).first
   end
@@ -16,6 +18,7 @@ class QueriesController < ApplicationController
   # GET /queries/1
   # GET /queries/1.json
   def show
+
   end
 
   # GET /queries/new
@@ -28,18 +31,20 @@ class QueriesController < ApplicationController
   end
 
 
-  # Make a query
-  def execute
+  # POST /run
+  def run_query
     require 'jena_jruby'
+
+    # Get a query
+    sparql = params[:query][:content]
 
     dir = File.dirname("#{Rails.root}/db/tdb/#{@ontology.code}/dataSet")
     dataset = Jena::TDB::TDBFactory.createDataset(dir)
     dataset.begin(Jena::Query::ReadWrite::READ)
 
-    query = @query.content
     begin
-      query = Jena::Query::QueryFactory.create(query)
-      qexec = Jena::Query::QueryExecutionFactory.create(query, dataset)
+      query = Jena::Query::QueryFactory.create(sparql)
+      qexec = Jena::Query::QueryExecutionFactory.create(sparql, dataset)
       res = qexec.execSelect()
 
       # StringIO - org.jruby.util.IOOutputStream
@@ -53,29 +58,41 @@ class QueriesController < ApplicationController
       puts "------ ERROR ------- " + e.to_s
     end
 
-    @out
+    @query = Query.new
+    @query.name = "asdv"
+    @query.content = sparql
+    @query.sparql = @out.string
+
+
   end
 
 
   # POST /queries
   # POST /queries.json
   def create
-    @query = Query.new(query_params)
-    @query.ontology = @ontology
 
-    # Method
-    execute
+    puts params
 
     respond_to do |format|
-      if @query.save
-        #format.html { redirect_to ontology_query_path(@ontology, @query), notice: 'Query was successfully created.' }
-        #format.json { render , status: :created, location: @query }
-        format.html { render :text => @out.string}
-      else
-        format.html { render :new }
-        format.json { render json: @query.errors, status: :unprocessable_entity }
-      end
+      format.html { render :text => "CREATE" }
     end
+
+    # @query = Query.new(query_params)
+    # @query.ontology = @ontology
+
+    # # Method
+    # execute
+
+    # respond_to do |format|
+    #   if @query.save
+    #     #format.html { redirect_to ontology_query_path(@ontology, @query), notice: 'Query was successfully created.' }
+    #     #format.json { render , status: :created, location: @query }
+    #     format.html { render :text => @out.string}
+    #   else
+    #     format.html { render :new }
+    #     format.json { render json: @query.errors, status: :unprocessable_entity }
+    #   end
+    # end
   end
 
   # PATCH/PUT /queries/1

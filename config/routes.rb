@@ -2,6 +2,7 @@ Rails.application.routes.draw do
 
   resources :ontologies, param: :code do
     resources :queries
+    match "/run" => "queries#run_query", :via => :post
   end
 
   # The priority is based upon order of creation: first created -> highest priority.
