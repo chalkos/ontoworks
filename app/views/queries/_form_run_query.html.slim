@@ -1,0 +1,5 @@
+= form_for :query, url: ontology_run_path(@ontology) do |f|
+
+  .field
+    = f.text_area :content
+  .actions = f.submit 'Run Query'

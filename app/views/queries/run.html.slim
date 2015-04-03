@@ -1,0 +1,20 @@
+p#notice = notice
+
+#form_save
+  #name_space
+
+  #desc_space
+
+  .field
+    label = :content
+    = render 'form_run_query'
+
+    a.btn.btn-default#button_save Save
+
+  #save_space data="#{@ontology.code}"
+
+hr
+
+= render 'query_results'
+
+= link_to 'Back', ontology_queries_path

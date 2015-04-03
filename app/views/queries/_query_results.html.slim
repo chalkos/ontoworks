@@ -1,22 +1,3 @@
-p#notice = notice
-
-p
-  strong#name Name:
-  = @query.name
-p
-  strong Description:
-  = @ontology.desc
-p
-  strong Content:
-  span
-    = form_for :query, url: ontology_run_path(@ontology) do |f|
-      .field
-        = f.text_area :content
-      .actions = f.submit
-
-
-hr
-
 p
   strong Resultados
 
@@ -24,7 +5,7 @@ p
 - keys = @query.sparql['head']['vars']
 - n_body = @query.sparql['results']['bindings'].size
 
-table
+table.table-bordered
   thead
     tr
       - for i in 0..n_head-1
@@ -34,5 +15,3 @@ table
       tr
         - for j in 0..n_head-1
           th = @query.sparql['results']['bindings'][i][keys[j]]
-
-
