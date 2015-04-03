@@ -26,7 +26,6 @@ class OntologiesController < ApplicationController
 
   def create
     require 'digest/md5'
-
     @ontology = Ontology.new(ontology_params)
 
     # ensure unique code
@@ -40,29 +39,48 @@ class OntologiesController < ApplicationController
     @file = params[:ontology]['file']
     ## UNZIP START, IF NECESSARY
 
-    if File.extname(@file.original_filename) == ".zip"
-      require 'zip'
-      # open zip file
-      Zip::File.open(@file.path) do |zip_file|
-        zip_file.each do |entry|
-          @file = File.join('tmp/extracted/', @ontology.code+entry.name)
-          FileUtils.mkdir_p(File.dirname(@file))
-          zip_file.extract(entry, @file)
-        end
-      end
-    elsif File.extname(@file.original_filename) == ".gz"
+    case validate_file(@file)
+    when :gz # if the file is in the gzip format
       require 'rubygems/package'
       require 'zlib'
       tar_extract = Gem::Package::TarReader.new(Zlib::GzipReader.open(@file.path))
       tar_extract.rewind # The extract has to be rewinded after every iteration
+      size = 0
       tar_extract.each do |entry|
-        @file = File.join('tmp/extracted/', @ontology.code+entry.full_name)
-        FileUtils.mkdir_p(File.dirname(@file))
-        File.open(@file, 'w') { |file| file.write(entry.read)}
+        if size == 0 # on the first file: extract it to the tmp folder
+          @file = File.join('tmp/extracted/', @ontology.code+entry.full_name)
+          FileUtils.mkdir_p(File.dirname(@file))
+          File.open(@file, 'w') { |file| file.write(entry.read)}
+          size += 1
+        else # on the second file
+          File.delete(@file) # remove extracted/temporary file
+          notify_and_back("Compressed file has more than one ontology!")
+          return
+        end
       end
       tar_extract.close
-    else
+    when :zip # if the file is in the zip format
+      require 'zip'
+      size = 0;
+      Zip::File.open(@file.path) do |zip_file|
+        zip_file.each do |entry|
+          if size == 0 # on the first file: extract it to the tmp folder
+            @file = File.join('tmp/extracted/', @ontology.code+entry.name)
+            FileUtils.mkdir_p(File.dirname(@file))
+            zip_file.extract(entry, @file)
+            size += 1;
+          else #on the second file
+            File.delete(@file) # remove extracted/temporary file
+            notify_and_back("Compressed file has more than one ontology!")
+            return
+          end
+        end
+      end
+    when :xml # if the ontology is xml or one of its subtypes
       @file = params[:ontology]['file'].path
+    else
+      notify_and_back("Invalid file type!")
+      return
     end
 
     ## JENA START
@@ -83,7 +101,10 @@ class OntologiesController < ApplicationController
     begin
       model.read(input, nil)
     rescue Exception => e
-      puts "----- ERROR -----" + e
+      input.close();
+      File.delete(@file)
+      notify_and_back("Error: " + e);
+      return;
     end
 
     #model.write(java.lang.System::out, "N-TRIPLE")
@@ -133,13 +154,34 @@ class OntologiesController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_ontology
-      @ontology = Ontology.where(code: params[:code]).first
-    end
+  # Use callbacks to share common setup or constraints between actions.
+  def set_ontology
+    @ontology = Ontology.where(code: params[:code]).first
+  end
 
-    # Never trust parameters from the scary internet, only allow the white list through.
-    def ontology_params
-      params.require(:ontology).permit(:name, :desc, :unlisted, :extendable, :expires)
+  # Never trust parameters from the scary internet, only allow the white list through.
+  def ontology_params
+    params.require(:ontology).permit(:name, :desc, :unlisted, :extendable, :expires)
+  end
+
+  def validate_file(file)
+    type = file.content_type
+    if type == "application/gzip"
+      :gz
+    elsif type == "application/zip"
+      :zip
+    elsif type.include? "xml"
+      :xml
+    else
+      :other
     end
+  end
+  def notify_and_back(note)
+    flash[:notice] = note
+    #redirect_to :back
+    respond_to do |format|
+      format.html { render :new }
+      format.json { render json: @ontology.errors, status: :unprocessable_entity }
+    end
+  end
 end
