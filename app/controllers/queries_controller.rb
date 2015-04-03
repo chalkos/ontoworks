@@ -31,6 +31,8 @@ class QueriesController < ApplicationController
 
   # Auxiliar Method
   def execute_query
+    require 'jena_jruby'
+
     dir = File.dirname("#{Rails.root}/db/tdb/#{@ontology.code}/dataSet")
     dataset = Jena::TDB::TDBFactory.createDataset(dir)
     dataset.begin(Jena::Query::ReadWrite::READ)
@@ -57,8 +59,6 @@ class QueriesController < ApplicationController
 
   # POST /run
   def run_query
-    require 'jena_jruby'
-
     # Get a query
     @query = Query.new
     @query.content = params[:query][:content]
