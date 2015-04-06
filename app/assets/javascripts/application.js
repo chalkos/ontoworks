@@ -16,12 +16,21 @@
 //= require jquery
 //= require jquery_ujs
 //
-//= require_directory .
-//
 //= require syntax-highlighter-rails/shCore
 //= require syntax-highlighter-rails/shBrushXml
-
+//
+// APP
 //= require queries
+//
+// OTHERS
+//= bootstrap
+//= buttons
+//= circles
+//= lightbox
+//= slidebars
+//= wow
+//= ie/html5shiv
+//= ie/respond
 
 /* Smooth scrolling for anchors */
 $(document).on('click','a.smooth', function(e){

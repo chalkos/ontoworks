@@ -1,5 +1,5 @@
 class QueriesController < ApplicationController
-  before_action :set_query, only: [:show, :edit, :update, :destroy]
+  before_action :set_query, only: [:show, :destroy]
   before_action :get_ontology
 
   attr_accessor :sparql
@@ -17,54 +17,17 @@ class QueriesController < ApplicationController
   # GET /queries/1
   # GET /queries/1.json
   def show
-    execute_query
-  end
-
-  # GET /queries/new
-  def new
-    @query = Query.new
-  end
-
-  # GET /queries/1/edit
-  def edit
-  end
-
-  # Auxiliar Method
-  def execute_query
-    require 'jena_jruby'
-
-    dir = File.dirname("#{Rails.root}/db/tdb/#{@ontology.code}/dataSet")
-    dataset = Jena::TDB::TDBFactory.createDataset(dir)
-    dataset.begin(Jena::Query::ReadWrite::READ)
-
-    begin
-      query = Jena::Query::QueryFactory.create(@query.content)
-      qexec = Jena::Query::QueryExecutionFactory.create(@query.content, dataset)
-      res = qexec.execSelect()
-
-      # StringIO - org.jruby.util.IOOutputStream
-      out = StringIO.new
-      stream = out.to_outputstream
-
-      Jena::Query::ResultSetFormatter.outputAsJSON(stream,res)
-      qexec.close()
-      dataset.end()
-
-      @query.sparql = JSON.parse out.string
-      errors = ""
-    rescue Exception => e
-      errors = e.to_s
-    end
+    execute
   end
 
   # POST /run
-  def run_query
+  def run
     # Get a query
     @query = Query.new
     @query.content = params[:query][:content]
 
     # Method
-    errors = execute_query
+    errors = execute
 
     respond_to do |format|
       if errors.empty?
@@ -74,7 +37,6 @@ class QueriesController < ApplicationController
       end
     end
   end
-
 
   # POST /queries
   # POST /queries.json
@@ -94,17 +56,17 @@ class QueriesController < ApplicationController
 
   # PATCH/PUT /queries/1
   # PATCH/PUT /queries/1.json
-  def update
-    respond_to do |format|
-      if @query.update(query_params)
-        format.html { redirect_to ontology_query_path(@ontology, @query), notice: 'Query was successfully updated.' }
-        format.json { render :show, status: :ok, location: @query }
-      else
-        format.html { render :edit }
-        format.json { render json: @query.errors, status: :unprocessable_entity }
-      end
-    end
-  end
+  # def update
+  #   respond_to do |format|
+  #     if @query.update(query_params)
+  #       format.html { redirect_to ontology_query_path(@ontology, @query), notice: 'Query was successfully updated.' }
+  #       format.json { render :show, status: :ok, location: @query }
+  #     else
+  #       format.html { render :edit }
+  #       format.json { render json: @query.errors, status: :unprocessable_entity }
+  #     end
+  #   end
+  # end
 
   # DELETE /queries/1
   # DELETE /queries/1.json
@@ -125,5 +87,33 @@ class QueriesController < ApplicationController
     # Never trust parameters from the scary internet, only allow the white list through.
     def query_params
       params.require(:query).permit(:name, :desc, :content)
+    end
+
+    # Auxiliar Method
+    def execute
+      require 'jena_jruby'
+
+      dir = File.dirname("#{Rails.root}/db/tdb/#{@ontology.code}/dataSet")
+      dataset = Jena::TDB::TDBFactory.createDataset(dir)
+      dataset.begin(Jena::Query::ReadWrite::READ)
+
+      begin
+        query = Jena::Query::QueryFactory.create(@query.content)
+        qexec = Jena::Query::QueryExecutionFactory.create(@query.content, dataset)
+        res = qexec.execSelect()
+
+        # StringIO - org.jruby.util.IOOutputStream
+        out = StringIO.new
+        stream = out.to_outputstream
+
+        Jena::Query::ResultSetFormatter.outputAsJSON(stream,res)
+        qexec.close()
+        dataset.end()
+
+        @query.sparql = JSON.parse out.string
+        errors = ""
+      rescue Exception => e
+        errors = e.to_s
+      end
     end
 end
