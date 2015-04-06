@@ -23,14 +23,14 @@
 //= require queries
 //
 // OTHERS
-//= bootstrap
-//= buttons
-//= circles
-//= lightbox
-//= slidebars
-//= wow
-//= ie/html5shiv
-//= ie/respond
+//= require bootstrap
+//= require buttons
+//= require circles.min
+//= require lightbox.min
+//= require slidebars
+//= require wow.min
+//= require ie/html5shiv.min
+//= require ie/respond.min
 
 /* Smooth scrolling for anchors */
 $(document).on('click','a.smooth', function(e){
