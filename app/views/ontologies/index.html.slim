@@ -5,10 +5,10 @@
       | My ontologies
       = link_to new_ontology_path, class: 'icon-ar icon-ar-round', style: 'margin-left:1em' do
         i.fa.fa-plus
-    == render 'list', onotologies: []
+    == render 'list', ontologies: []
 
 .row
   .col-lg-12.col-md-12.col-sm-12.col-sm-12
     h1.section-title Public ontologies
-    == render 'list', onotologies: @ontologies
+    == render 'list', ontologies: @ontologies
 
