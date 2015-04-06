@@ -1,1 +1,1 @@
-json.extract! @query, :id, :name, :content, :created_at, :updated_at
+json.extract! @query, :id, :name, :desc, :content, :sparql, :created_at, :updated_at

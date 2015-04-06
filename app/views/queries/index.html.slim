@@ -1,9 +1,17 @@
-h1 Listing queries
+p#notice = notice
 
-table
+h1 Make a Query
+
+= render 'form_run_query'
+
+hr
+
+h1 Listing queries
+table.table-bordered
   thead
     tr
       th Name
+      th Description
       th Content
       th
       th
@@ -13,13 +21,12 @@ table
     - @queries.each do |query|
       tr
         td = query.name
+        td = query.desc
         td = query.content
         td = link_to 'Show', ontology_query_path(@ontology, query)
-        td = link_to 'Edit', edit_ontology_query_path(@ontology,query)
+
         td = link_to 'Destroy', ontology_query_path(@ontology, query), data: {:confirm => 'Are you sure?'}, :method => :delete
 
 br
 
-= link_to 'New Query', new_ontology_query_path
-br/
 = link_to 'Back Ontology', ontology_path(@ontology)

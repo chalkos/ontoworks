@@ -1,17 +1,8 @@
-p#notice = notice
+#form_save
+  = render 'post_save'
 
-p
-  strong Name:
-  = @query.name
-p
-  strong Description:
-  = @ontology.desc
-p
-  strong Content:
-  = @query.content
+hr
 
-= link_to 'Edit', edit_ontology_query_path(@ontology,@query)
-'|
+= render 'query_results'
+
 = link_to 'Back', ontology_queries_path
-br/
-= link_to 'Run'
