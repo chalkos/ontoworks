@@ -37,7 +37,18 @@ class OntologiesController < ApplicationController
       inc += 1
     end
 
+    # validate required fields
+    if(params[:ontology]['name'] == "")
+      notify_and_back("Please input a name!")
+      return
+    end
+
     @file = params[:ontology]['file']
+    if(@file.nil? )
+      notify_and_back("Please choose a file!")
+      return
+    end
+
     ## UNZIP START, IF NECESSARY
 
     case validate_file(@file)
@@ -51,7 +62,9 @@ class OntologiesController < ApplicationController
         if size == 0 # on the first file: extract it to the tmp folder
           @file = File.join('tmp/extracted/', @ontology.code+entry.full_name)
           FileUtils.mkdir_p(File.dirname(@file))
-          File.open(@file, 'w') { |file| file.write(entry.read)}
+          File.open(@file, 'w') {
+            |file| file.write(entry.read.force_encoding('UTF-8'))
+          }
           size += 1
         else # on the second file
           File.delete(@file) # remove extracted/temporary file

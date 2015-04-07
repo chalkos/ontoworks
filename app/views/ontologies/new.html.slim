@@ -1,3 +1,10 @@
+- unless notice.nil? || notice.empty?
+  .row
+    .col-lg-12.col-md-12.col-sm-12.col-xs-12
+      div.alert.alert-danger.alert-border
+        button.close type="button" data-dismiss="alert" aria-hidden="true" &times;
+        = notice
+
 h1.section-title New ontology
 
 == render 'new'
