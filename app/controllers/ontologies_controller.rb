@@ -26,7 +26,8 @@ class OntologiesController < ApplicationController
 
   def create
     require 'digest/md5'
-    @ontology = Ontology.new(ontology_params)
+
+    @ontology = Ontology.new(ontology_params.except :file)
 
     # ensure unique code
     inc = 0
@@ -133,7 +134,7 @@ class OntologiesController < ApplicationController
   # PATCH/PUT /ontologies/1.json
   def update
     respond_to do |format|
-      if @ontology.update(ontology_params)
+      if @ontology.update(ontology_params.slice(:desc))
         format.html { redirect_to @ontology, notice: 'Ontology was successfully updated.' }
         format.json { render :show, status: :ok, location: @ontology }
       else
@@ -161,7 +162,7 @@ class OntologiesController < ApplicationController
 
   # Never trust parameters from the scary internet, only allow the white list through.
   def ontology_params
-    params.require(:ontology).permit(:name, :desc, :unlisted, :extendable, :expires)
+    params.require(:ontology).permit(:name, :desc, :unlisted, :extendable, :expires, :file)
   end
 
   def validate_file(file)
@@ -176,6 +177,7 @@ class OntologiesController < ApplicationController
       :other
     end
   end
+
   def notify_and_back(note)
     flash[:notice] = note
     #redirect_to :back

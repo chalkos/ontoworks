@@ -1,5 +1,7 @@
 Rails.application.routes.draw do
 
+  root 'ontologies#index'
+
   resources :ontologies, param: :code do
     resources :queries, :except => [:edit, :new, :update]
     match "/run" => "queries#run", :via => :post

@@ -1,29 +1,14 @@
-h1 Listing ontologies
 
-table
-  thead
-    tr
-      th Name
-      th Code
-      th Unlisted
-      th Extendable
-      th Expires
-      th
-      th
-      th
+.row 
+  .col-lg-12.col-md-12.col-sm-12.col-sm-12
+    h1.section-title
+      | My ontologies
+      = link_to new_ontology_path, class: 'icon-ar icon-ar-round', style: 'margin-left:1em' do
+        i.fa.fa-plus
+    == render 'list', ontologies: []
 
-  tbody
-    - @ontologies.each do |ontology|
-      tr
-        td = ontology.name
-        td = ontology.code
-        td = ontology.unlisted
-        td = ontology.extendable
-        td = ontology.expires
-        td = link_to 'Show', ontology
-        td = link_to 'Edit', edit_ontology_path(ontology)
-        td = link_to 'Destroy', ontology, data: {:confirm => 'Are you sure?'}, :method => :delete
+.row
+  .col-lg-12.col-md-12.col-sm-12.col-sm-12
+    h1.section-title Public ontologies
+    == render 'list', ontologies: @ontologies
 
-br
-
-= link_to 'New Ontology', new_ontology_path

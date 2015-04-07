@@ -1,0 +1,15 @@
+table.table
+  thead
+    tr
+      th Name
+      th Description
+      th
+
+  tbody
+    - ontologies.each do |ontology|
+      tr
+        td
+          = link_to ontology do
+            = ontology.name
+        td
+          = truncate ontology.desc, length: 50

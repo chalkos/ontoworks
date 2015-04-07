@@ -20,4 +20,22 @@
 # available at http://guides.rubyonrails.org/i18n.html.
 
 en:
-  hello: "Hello world"
+  activerecord:
+    attributes:
+      ontology:
+        unlisted: "Unlisted ontology"
+        extendable: "Extendable ontology"
+        desc: "Description"
+  forms:
+    ontology:
+      expires: "Ontology expiration"
+      file: "Ontology file"
+      unlisted_warning: 'Caution: A public ontology can not be changed back to private'
+  helpers:
+    submit:
+      ontology:
+        create: "Submit ontology"
+  placeholders:
+    ontology:
+      desc: 'A description for this ontology'
+      name: 'Name'
