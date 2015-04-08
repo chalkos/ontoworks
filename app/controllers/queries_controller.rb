@@ -47,7 +47,17 @@ class QueriesController < ApplicationController
     @query.desc = params[:content][1]
     @query.content = params[:content][2]
 
-    errors = validate
+    # validate required fields
+    errors = ""
+    if(@query.name == "")
+      errors += "No query title! "
+    end
+    if(@query.content == "")
+      errors += "No query content! "
+    else
+      errors += validate
+    end
+    puts errors
 
     respond_to do |format|
       if errors == "" and @query.save
