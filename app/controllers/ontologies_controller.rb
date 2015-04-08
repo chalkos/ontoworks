@@ -62,9 +62,7 @@ class OntologiesController < ApplicationController
         if size == 0 # on the first file: extract it to the tmp folder
           @file = File.join('tmp/extracted/', @ontology.code+entry.full_name)
           FileUtils.mkdir_p(File.dirname(@file))
-          File.open(@file, 'w') {
-            |file| file.write(entry.read.force_encoding('UTF-8'))
-          }
+          File.open(@file, 'w') {|file| file.write(entry.read.force_encoding('UTF-8'))}
           size += 1
         else # on the second file
           File.delete(@file) # remove extracted/temporary file
@@ -168,35 +166,35 @@ class OntologiesController < ApplicationController
   end
 
   private
-  # Use callbacks to share common setup or constraints between actions.
-  def set_ontology
-    @ontology = Ontology.where(code: params[:code]).first
-  end
-
-  # Never trust parameters from the scary internet, only allow the white list through.
-  def ontology_params
-    params.require(:ontology).permit(:name, :desc, :unlisted, :extendable, :expires, :file)
-  end
-
-  def validate_file(file)
-    type = file.content_type
-    if type == "application/gzip"
-      :gz
-    elsif type == "application/zip"
-      :zip
-    elsif type.include? "xml"
-      :xml
-    else
-      :other
+    # Use callbacks to share common setup or constraints between actions.
+    def set_ontology
+      @ontology = Ontology.where(code: params[:code]).first
     end
-  end
 
-  def notify_and_back(note)
-    flash[:notice] = note
-    #redirect_to :back
-    respond_to do |format|
-      format.html { render :new }
-      format.json { render json: @ontology.errors, status: :unprocessable_entity }
+    # Never trust parameters from the scary internet, only allow the white list through.
+    def ontology_params
+      params.require(:ontology).permit(:name, :desc, :unlisted, :extendable, :expires, :file)
     end
-  end
+
+    def validate_file(file)
+      type = file.content_type
+      if type == "application/gzip"
+        :gz
+      elsif type == "application/zip"
+        :zip
+      elsif type.include? "xml"
+        :xml
+      else
+        :other
+      end
+    end
+
+    def notify_and_back(note)
+      flash[:notice] = note
+      #redirect_to :back
+      respond_to do |format|
+        format.html { render :new }
+        format.json { render json: @ontology.errors, status: :unprocessable_entity }
+      end
+    end
 end

@@ -57,7 +57,6 @@ class QueriesController < ApplicationController
     else
       errors += validate
     end
-    puts errors
 
     respond_to do |format|
       if errors == "" and @query.save
@@ -93,50 +92,50 @@ class QueriesController < ApplicationController
   end
 
   private
-  # Use callbacks to share common setup or constraints between actions.
-  def set_query
-    @query = Query.joins(:ontology).where(ontologies: {code: params[:ontology_code]}, queries: {id: params[:id]}).first!
-  end
-
-  # Never trust parameters from the scary internet, only allow the white list through.
-  def query_params
-    params.require(:query).permit(:name, :desc, :content)
-  end
-
-  # Auxiliar Method
-  def execute
-    require 'jena_jruby'
-
-    dir = File.dirname("#{Rails.root}/db/tdb/#{@ontology.code}/dataSet")
-    dataset = Jena::TDB::TDBFactory.createDataset(dir)
-    dataset.begin(Jena::Query::ReadWrite::READ)
-
-    begin
-      query = Jena::Query::QueryFactory.create(@query.content)
-      qexec = Jena::Query::QueryExecutionFactory.create(@query.content, dataset)
-      res = qexec.execSelect()
-
-      # StringIO - org.jruby.util.IOOutputStream
-      out = StringIO.new
-      stream = out.to_outputstream
-
-      Jena::Query::ResultSetFormatter.outputAsJSON(stream,res)
-      qexec.close()
-      dataset.end()
-
-      @query.sparql = JSON.parse out.string
-      errors = ""
-    rescue Exception => e
-      errors = e.to_s
+    # Use callbacks to share common setup or constraints between actions.
+    def set_query
+      @query = Query.joins(:ontology).where(ontologies: {code: params[:ontology_code]}, queries: {id: params[:id]}).first!
     end
-  end
 
-  def validate
-    begin
-      query = Jena::Query::QueryFactory.create(@query.content)
-      errors = ""
-    rescue Exception => e
-      errors = e.to_s
+    # Never trust parameters from the scary internet, only allow the white list through.
+    def query_params
+      params.require(:query).permit(:name, :desc, :content)
     end
-  end
+
+    # Auxiliar Method
+    def execute
+      require 'jena_jruby'
+
+      dir = File.dirname("#{Rails.root}/db/tdb/#{@ontology.code}/dataSet")
+      dataset = Jena::TDB::TDBFactory.createDataset(dir)
+      dataset.begin(Jena::Query::ReadWrite::READ)
+
+      begin
+        query = Jena::Query::QueryFactory.create(@query.content)
+        qexec = Jena::Query::QueryExecutionFactory.create(@query.content, dataset)
+        res = qexec.execSelect()
+
+        # StringIO - org.jruby.util.IOOutputStream
+        out = StringIO.new
+        stream = out.to_outputstream
+
+        Jena::Query::ResultSetFormatter.outputAsJSON(stream,res)
+        qexec.close()
+        dataset.end()
+
+        @query.sparql = JSON.parse out.string
+        errors = ""
+      rescue Exception => e
+        errors = e.to_s
+      end
+    end
+
+    def validate
+      begin
+        query = Jena::Query::QueryFactory.create(@query.content)
+        errors = ""
+      rescue Exception => e
+        errors = e.to_s
+      end
+    end
 end
