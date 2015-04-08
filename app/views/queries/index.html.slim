@@ -15,13 +15,13 @@
       a#new-query.icon-ar.icon-ar-round.icon-ar-sm href="#"
         i.fa.fa-plus
     p.lead.lead-sm
-      strong Ontology: 
+      strong Ontology:
       = link_to ontology_path(@ontology) do
         = @ontology.name
 
 .row#new-query-container style="display:none"
   .col-lg-12.col-md-12.col-sm-12.col-sm-12
-    = render 'form_run_query'
+    == render 'form_run_query'
 
 .row
   .col-lg-12.col-md-12.col-sm-12.col-sm-12
