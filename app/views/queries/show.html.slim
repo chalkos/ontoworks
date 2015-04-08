@@ -9,6 +9,10 @@
     dl.dl-horizontal
       dt Name
       dd = @query.name
+      dt Ontology
+      dd
+        = link_to ontology_path(@ontology) do
+          = @ontology.name
       dt Description
       dd = @query.desc
       dt Content
