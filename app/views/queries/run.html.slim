@@ -1,19 +1,64 @@
-p#notice = notice
+- unless notice.nil? || notice.empty?
+  .row
+    .col-lg-12.col-md-12.col-sm-12.col-xs-12
+      div.alert.alert-danger.alert-border
+        button.close type="button" data-dismiss="alert" aria-hidden="true" &times;
+        = notice
 
-#form_save
-  #name_space
 
-  #desc_space
+.row
+  .col-lg-12.col-md-12.col-sm-12.col-xs-12
+    h1.section-title
+      | Run this query
+      = link_to ontology_queries_path(@ontology), class: 'icon-ar icon-ar-round icon-ar-sm', style: 'margin-left:1em' do
+          i.fa.fa-list
 
-  .field
-    label = :content
-    = render 'form_run_query'
+.row
+  .col-lg-12.col-md-12.col-sm-12.col-xs-12
+    p.lead.lead-sm
+      strong Ontology:
+      = link_to ontology_path(@ontology) do
+        = @ontology.name
+    = render 'form_run_query', savebutton: true
 
-    a.btn.btn-default#button_save Save
+.row style="margin-top:1em"
+  .col-lg-12.col-md-12.col-sm-12.col-xs-12
+    #query_saved style="display:none"
+      div.alert.alert-success.alert-border
+        button.close type="button" data-dismiss="alert" aria-hidden="true" &times;
+        | Query was successfully created.
+      dl.dl-horizontal
+        dt Name
+        dd not_yet_implemented
+        dt Description
+        dd not_yet_implemented
+        dt Content
+        dd
+          pre not_yet_implemented
+    #query_saving style="display:none" data="#{@ontology.code}"
+      .form-group
+        label for="name" Name
+        input.form-control#name
+      .form-group
+        label for="desc" Description
+        textarea.form-control#desc rows="4"
+      button.btn.btn-ar.btn-info#query_start_save Save Query
 
-  #save_space data="#{@ontology.code}"
+/!
+  #form_save
+    #name_space
 
-hr
+    #desc_space
+
+    .field
+      label = :content
+      = render 'form_run_query'
+
+      a.btn.btn-default#button_save Save
+
+    #save_space data="#{@ontology.code}"
+
+  hr
 
 = render 'query_results'
 

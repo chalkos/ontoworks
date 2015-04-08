@@ -5,3 +5,5 @@
     = f.text_area :content, class: 'form-control monospace', spellcheck: false, rows: '5', value: (@query.nil? ? "select distinct ?Concept where {\n  [] a ?Concept\n} LIMIT 100" : @query.content)
 
   button.btn.btn-ar.btn-primary type="submit" Run Query
+  - if defined?(savebutton) and savebutton
+    button.btn.btn-ar.btn-info#query_start_save style="margin-left:1em" Save Query

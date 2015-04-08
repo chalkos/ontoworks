@@ -1,34 +1,32 @@
 $(document).ready(function(){
-  $("#button_save").click(function(){
-    var name = "<label>Title: </label><input id=\"name\" type=\"text\">";
-    var desc = "<label>Description: </label><input id=\"desc\" type=\"text\">";
-    var notice = "Necessários preencher próximos campos!";
-
-    $("#name_space").append(name);
-    $("#desc_space").append(desc);
-    $("#notice").append(notice);
-
-    $("#button_save").remove();
-    $("#save_space").append("<a>Save</a>")
+  $("#query_start_save").click(function(){
+    $(this).hide("fast");
+    $("#query_saving").show("fast");
   });
 
-  $("#save_space").click(function(){
-    var code = $('#save_space').attr('data');
+  $("#query_save").click(function(){
+    var code = $('#query_saving').attr('data');
 
     var name = $('#name').val();
     var desc = $('#desc').val()
     var query = $('#query_content').val();
-    var content = [name,desc,query];
 
     $.ajax({
       type: 'POST',
       url: '/ontologies/'+code+'/queries',
-      data: { content: content },
+      data: { content: [name,desc,query] },
       success: function (data) {
-        $("#notice").text("Query Saved!");
+        // if ok
+          // hide #query_saving
+          // clear #name value
+          // clear #desc value
+          // show #query_saved
+          // show #query_start_save
+        // else
+          // create alert-danger with errors
       },
       fail: function(data) {
-        $("#notice").text("Errors!");
+        // create alert-danger with errors
       }
     });
   });
