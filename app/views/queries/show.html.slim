@@ -1,8 +1,27 @@
-#form_save
-  = render 'post_save'
+.row
+  .col-lg-6.col-md-6.col-sm-12.col-xs-12
+    h1.section-title
+      | Query
+      = link_to ontology_queries_path(@ontology), class: 'icon-ar icon-ar-round icon-ar-sm', style: 'margin-left:1em' do
+          i.fa.fa-list
+      = link_to ontology_query_path(@ontology, @query), data: {:confirm => 'Are you sure?'}, :method => :delete, class: 'icon-ar icon-ar-round icon-ar-danger icon-ar-sm' do
+          i.fa.fa-trash
+    dl.dl-horizontal
+      dt Name
+      dd = @query.name
+      dt Description
+      dd = @query.desc
+      dt Content
+      dd
+        pre = @query.content
 
-hr
-
-= render 'query_results'
-
-= link_to 'Back', ontology_queries_path
+  .col-lg-6.col-md-6.col-sm-12.col-xs-12
+    .row
+      .col-lg-12.col-md-12.col-sm-12.col-xs-12
+        h1.section-title
+          | Run this query
+          span.icon-ar.icon-ar-round.icon-ar-sm style="background:initial;"
+            i.fa.fa-plus
+    .row
+      .col-lg-12.col-md-12.col-sm-12.col-xs-12
+        == render partial: '/queries/form_run_query'

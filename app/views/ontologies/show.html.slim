@@ -9,7 +9,9 @@
   .col-lg-6.col-md-6.col-sm-12.col-xs-12
     h1.section-title
       | Ontology
-      = link_to edit_ontology_path(@ontology), class: 'icon-ar icon-ar-round icon-ar-sm', style: 'margin-left:1em' do
+      = link_to ontologies_path, class: 'icon-ar icon-ar-round icon-ar-sm', style: 'margin-left:1em' do
+          i.fa.fa-list
+      = link_to edit_ontology_path(@ontology), class: 'icon-ar icon-ar-round icon-ar-sm' do
         i.fa.fa-pencil
       = link_to @ontology, data: {:confirm => 'Are you sure?'}, :method => :delete, class: 'icon-ar icon-ar-round icon-ar-danger icon-ar-sm' do
           i.fa.fa-trash
