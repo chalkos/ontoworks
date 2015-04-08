@@ -14,6 +14,10 @@
         i.fa.fa-arrow-left
       a.icon-ar.icon-ar-round.icon-ar-sm href="#"
         i.fa.fa-plus
+    p.lead.lead-sm
+      strong Ontology: 
+      = link_to ontology_path(@ontology) do
+        = @ontology.name
 
 h1 Make a Query
 
