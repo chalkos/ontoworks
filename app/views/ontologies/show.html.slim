@@ -22,9 +22,12 @@
       dd = @ontology.unlisted ? 'Yes' : 'No'
 
   .col-lg-6.col-md-6.col-sm-12.col-xs-12
-    h1.section-title
-      | Saved Queries
-      = link_to '#todo', class: 'icon-ar icon-ar-round icon-ar-sm', style: 'margin-left:1em' do
-          i.fa.fa-plus
-    p
-      = link_to 'Queries', ontology_queries_path(@ontology)
+    .row
+      .col-lg-12.col-md-12.col-sm-12.col-xs-12
+        h1.section-title
+          | Query
+          = link_to ontology_queries_path(@ontology), class: 'icon-ar icon-ar-round icon-ar-sm', style: 'margin-left:1em' do
+              i.fa.fa-list
+    .row
+      .col-lg-12.col-md-12.col-sm-12.col-xs-12
+        == render partial: '/queries/form_run_query'
