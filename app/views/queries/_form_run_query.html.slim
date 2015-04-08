@@ -1,5 +1,7 @@
-= form_for :query, url: ontology_run_path(@ontology) do |f|
+= form_for :query, url: ontology_run_path(@ontology), html: { role: 'form' } do |f|
 
-  .field
-    = f.text_area :content
-  .actions = f.submit 'Run Query'
+  .form-group
+    = f.label :content, 'Run a query on this ontology'
+    = f.text_area :content, class: 'form-control monospace', spellcheck: false, rows: '5', value: (@query.nil? ? "select distinct ?Concept where {\n  [] a ?Concept\n} LIMIT 100" : @query.content)
+
+  button.btn.btn-ar.btn-primary type="submit" Run Query
