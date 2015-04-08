@@ -12,16 +12,16 @@
       | Queries
       = link_to ontology_path(@ontology), class: 'icon-ar icon-ar-round icon-ar-sm', style: 'margin-left:1em' do
         i.fa.fa-arrow-left
-      a.icon-ar.icon-ar-round.icon-ar-sm href="#"
+      a#new-query.icon-ar.icon-ar-round.icon-ar-sm href="#"
         i.fa.fa-plus
     p.lead.lead-sm
       strong Ontology: 
       = link_to ontology_path(@ontology) do
         = @ontology.name
 
-h1 Make a Query
-
-= render 'form_run_query'
+.row#new-query-container style="display:none"
+  .col-lg-12.col-md-12.col-sm-12.col-sm-12
+    = render 'form_run_query'
 
 .row
   .col-lg-12.col-md-12.col-sm-12.col-sm-12

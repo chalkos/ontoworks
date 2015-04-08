@@ -32,4 +32,16 @@ $(document).ready(function(){
       }
     });
   });
+
+  $("#new-query").click(function(){
+    var container = $("#new-query-container");
+    if( $("#new-query-container").css('display') == 'none' ){
+      $("#new-query-container").show("fast");
+      $(this).children().first().removeClass("fa-plus").addClass("fa-minus");
+    }else{
+      $("#new-query-container").hide("fast");
+      $(this).children().first().removeClass("fa-minus").addClass("fa-plus");
+    }
+    return false;
+  });
 });
