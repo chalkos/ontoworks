@@ -4,6 +4,15 @@
     = f.label :content, 'Run a query on this ontology'
     = f.text_area :content, class: 'form-control monospace', spellcheck: false, rows: '5', value: (@query.nil? ? "select distinct ?Concept where {\n  [] a ?Concept\n} LIMIT 100" : @query.content)
 
-  button.btn.btn-ar.btn-primary type="submit" Run Query
-  - if defined?(savebutton) and savebutton
-    button.btn.btn-ar.btn-info#query_start_save style="margin-left:1em" type="button" Save Query
+  .form-inline
+    .form-group
+      label for="output" Output type
+      select.form-control#output style="margin-left:1em"
+        option value="html" HTML table
+        option value="xml" XML
+        option value="json" JSON
+        option value="txt" Plain text
+
+    button.btn.btn-ar.btn-primary style="margin-left:1em" type="submit" Run Query
+    - if defined?(savebutton) and savebutton
+      button.btn.btn-ar.btn-info#query_start_save style="margin-left:1em" type="button" Save Query
