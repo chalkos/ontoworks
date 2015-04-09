@@ -33,6 +33,17 @@
       button.btn.btn-ar.btn-info#query_save type="button" Save Query
       button.btn.btn-ar.btn-default#query_stop_save style="margin-left:1em" type="button" Cancel
 
-= render 'query_results'
+.row
+  .col-lg-12.col-md-12.col-sm-12.col-xs-12
+    h1.section-title Query results
 
-= link_to 'Back', ontology_queries_path
+    table.table
+      thead
+        tr
+          - @query.sparql['head']['vars'].each do |col|
+            th = col
+      tbody
+        - @query.sparql['results']['bindings'].each do |row|
+          tr
+            - @query.sparql['head']['vars'].each do |col|
+              td = row[col]
