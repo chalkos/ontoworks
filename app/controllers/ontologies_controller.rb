@@ -39,13 +39,13 @@ class OntologiesController < ApplicationController
 
     # validate required fields
     if(params[:ontology]['name'] == "")
-      notify_and_back("Please input a name!")
+      notify_and_back("Name can not be blank.")
       return
     end
 
     @file = params[:ontology]['file']
-    if(@file.nil? )
-      notify_and_back("Please choose a file!")
+    if(@file.nil?)
+      notify_and_back("A file must be submitted.")
       return
     end
 
@@ -66,7 +66,7 @@ class OntologiesController < ApplicationController
           size += 1
         else # on the second file
           File.delete(@file) # remove extracted/temporary file
-          notify_and_back("Compressed file has more than one ontology!")
+          notify_and_back("The uploaded package must contain a single file.")
           return
         end
       end
@@ -83,7 +83,7 @@ class OntologiesController < ApplicationController
             size += 1;
           else #on the second file
             File.delete(@file) # remove extracted/temporary file
-            notify_and_back("Compressed file has more than one ontology!")
+            notify_and_back("The uploaded package must contain a single file.")
             return
           end
         end
@@ -91,7 +91,7 @@ class OntologiesController < ApplicationController
     when :xml # if the ontology is xml or one of its subtypes
       @file = params[:ontology]['file'].path
     else
-      notify_and_back("Invalid file type!")
+      notify_and_back("Invalid file type. Valid formats are xml, zip and tar.gz.")
       return
     end
 
@@ -115,7 +115,7 @@ class OntologiesController < ApplicationController
     rescue Exception => e
       input.close();
       File.delete(@file)
-      notify_and_back("Error: " + e);
+      notify_and_back("An error occurred while importing the ontology: " + e);
       return;
     end
 
