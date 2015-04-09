@@ -59,10 +59,8 @@ class QueriesController < ApplicationController
     end
 
     respond_to do |format|
-      if errors == "" and @query.save
-        format.js {  render :run }
-      else
-        format.json { render json: ("Error: " + errors).to_json }
+      if @query.save
+        format.js { render :run }
       end
     end
   end

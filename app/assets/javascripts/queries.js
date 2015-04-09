@@ -25,9 +25,7 @@ $(document).ready(function(){
       url: '/ontologies/'+code+'/queries',
       data: { content: content },
       success: function (data) {
-        if (data.substring(0, 6) == "Error:") {
-            $("#notice").text(data);
-        }else $("#notice").text("Query Saved!");
+        $("#notice").text("Query Saved!");
       },
       fail: function(data) {
         $("#notice").text("Errors!");
