@@ -41,22 +41,8 @@ class QueriesController < ApplicationController
   # POST /queries
   # POST /queries.json
   def create
-    @query = Query.new
+    @query = Query.new(query_params)
     @query.ontology = @ontology
-    @query.name = params[:content][0]
-    @query.desc = params[:content][1]
-    @query.content = params[:content][2]
-
-    # validate required fields
-    errors = ""
-    if(@query.name == "")
-      errors += "No query title! "
-    end
-    if(@query.content == "")
-      errors += "No query content! "
-    else
-      errors += validate
-    end
 
     respond_to do |format|
       if @query.save
@@ -67,6 +53,8 @@ class QueriesController < ApplicationController
             url: ontology_query_path(@ontology, @query)
           }
         }
+      else
+        format.json { render json: { error: @query.errors.full_messages } }
       end
     end
   end
@@ -128,15 +116,6 @@ class QueriesController < ApplicationController
         dataset.end()
 
         @query.sparql = JSON.parse out.string
-        errors = ""
-      rescue Exception => e
-        errors = e.to_s
-      end
-    end
-
-    def validate
-      begin
-        query = Jena::Query::QueryFactory.create(@query.content)
         errors = ""
       rescue Exception => e
         errors = e.to_s

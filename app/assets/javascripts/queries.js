@@ -18,14 +18,20 @@ $(document).ready(function(){
 
     var name = $('#name').val();
     var desc = $('#desc').val();
-    var query = $('#query_content').val();
+    var content = $('#query_content').val();
 
     $.ajax({
       type: 'POST',
       url: '/ontologies/'+code+'/queries',
-      data: { content: [name,desc,query] },
+      data: {
+        query: {
+          name: name,
+          desc: desc,
+          content: content
+        }
+      },
       success: function (response) {
-        if(response.error){
+        if(response.error.length == 0){
           $('#query_saving').hide('fast');
           $('#query_start_save').show('fast');
           $('#name').val('');
@@ -63,7 +69,7 @@ $(document).ready(function(){
         $('#query_save_area').prepend(
           '<div class="alert alert-danger alert-border" style="display: none;">' +
           '<button class="close" type="button" data-dismiss="alert" aria-hidden="true">&times;</button>' +
-          '<ul><li>Error ' + status + ': ' + error + '</li></ul></div>'
+          '<ul><li>' + status + ': ' + error + '</li></ul></div>'
         );
         $('#query_save_area div.alert').show('fast');
       }
