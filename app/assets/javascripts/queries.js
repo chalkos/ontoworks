@@ -17,7 +17,7 @@ $(document).ready(function(){
     var code = $('#query_saving').attr('data');
 
     var name = $('#name').val();
-    var desc = $('#desc').val()
+    var desc = $('#desc').val();
     var query = $('#query_content').val();
 
     $.ajax({
