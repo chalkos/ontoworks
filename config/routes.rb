@@ -3,8 +3,8 @@ Rails.application.routes.draw do
   root 'ontologies#index'
 
   resources :ontologies, param: :code do
+    match "/queries/run" => "queries#run", :via => [:get, :post]
     resources :queries, :except => [:edit, :new, :update]
-    match "/queries/run" => "queries#run", :via => :post
   end
 
   # The priority is based upon order of creation: first created -> highest priority.

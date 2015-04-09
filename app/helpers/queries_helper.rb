@@ -18,4 +18,8 @@ module QueriesHelper
 
     text
   end
+
+  def default_query_content
+    "select distinct ?Concept where {\n  [] a ?Concept\n} LIMIT 100"
+  end
 end

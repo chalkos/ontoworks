@@ -1,4 +1,6 @@
 class QueriesController < ApplicationController
+  include QueriesHelper
+
   before_action :set_query, only: [:show, :destroy]
   before_action :get_ontology
 
@@ -17,14 +19,13 @@ class QueriesController < ApplicationController
   # GET /queries/1
   # GET /queries/1.json
   def show
-    execute
   end
 
   # POST /run
   def run
     # Get a query
     @query = Query.new
-    @query.content = params[:query][:content]
+    @query.content = request.post? ? params[:query][:content] : default_query_content
 
     # Method
     errors = execute
@@ -33,7 +34,7 @@ class QueriesController < ApplicationController
       if errors.empty?
         format.html { render :run, collection: @query }
       else
-        format.html { redirect_to ontology_queries_url, notice: errors }
+        format.html { redirect_to ontology_queries_run_url, notice: errors }
       end
     end
   end
