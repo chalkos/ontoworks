@@ -4,7 +4,16 @@ $(document).ready(function(){
     $("#query_saving").show("fast");
   });
 
+  $('#query_stop_save').click(function(){
+    $('#query_saving').hide('fast');
+    $('#query_start_save').show('fast');
+    $('#name').val('');
+    $('#desc').val('');
+  });
+
   $("#query_save").click(function(){
+    $(this).attr('disabled','disabled');
+
     var code = $('#query_saving').attr('data');
 
     var name = $('#name').val();
@@ -15,18 +24,48 @@ $(document).ready(function(){
       type: 'POST',
       url: '/ontologies/'+code+'/queries',
       data: { content: [name,desc,query] },
-      success: function (data) {
-        // if ok
-          // hide #query_saving
-          // clear #name value
-          // clear #desc value
-          // show #query_saved
-          // show #query_start_save
-        // else
-          // create alert-danger with errors
+      success: function (response) {
+        if(response.error){
+          $('#query_saving').hide('fast');
+          $('#query_start_save').show('fast');
+          $('#name').val('');
+          $('#desc').val('');
+          $("#query_save").removeAttr('disabled');
+
+          $('#query_save_area').prepend(
+            '<div class="alert alert-success alert-border" style="display: none;">' +
+            '<button class="close" type="button" data-dismiss="alert" aria-hidden="true">&times;</button>' +
+            'Query was successfully created. ' +
+            '<a href="' + response.url + '">View query</a></div>'
+          );
+
+          $('#query_save_area div.alert').show('fast');
+        }else{
+          $("#query_save").removeAttr('disabled');
+          $('#query_save_area').prepend(function(){
+            var html = '<div class="alert alert-danger alert-border" style="display: none;">' +
+            '<button class="close" type="button" data-dismiss="alert" aria-hidden="true">&times;</button>' +
+            '<ul>';
+
+            $.each(response.error, function(index, value){
+              html += '<li>' + value + '</li>';
+            });
+
+            html += '</ul></div>';
+            return html;
+          });
+
+          $('#query_save_area div.alert').show('fast');
+        }
       },
-      fail: function(data) {
-        // create alert-danger with errors
+      error: function(httpRequest, status, error) {
+        $("#query_save").removeAttr('disabled');
+        $('#query_save_area').prepend(
+          '<div class="alert alert-danger alert-border" style="display: none;">' +
+          '<button class="close" type="button" data-dismiss="alert" aria-hidden="true">&times;</button>' +
+          '<ul><li>Error ' + status + ': ' + error + '</li></ul></div>'
+        );
+        $('#query_save_area div.alert').show('fast');
       }
     });
   });

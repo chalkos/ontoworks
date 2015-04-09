@@ -60,7 +60,13 @@ class QueriesController < ApplicationController
 
     respond_to do |format|
       if @query.save
-        format.js { render :run }
+        format.json {
+          render json: {
+            error: [],
+            name: @query.name,
+            url: ontology_query_path(@ontology, @query)
+          }
+        }
       end
     end
   end
