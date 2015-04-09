@@ -166,35 +166,35 @@ class OntologiesController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_ontology
-      @ontology = Ontology.where(code: params[:code]).first
-    end
+  # Use callbacks to share common setup or constraints between actions.
+  def set_ontology
+    @ontology = Ontology.where(code: params[:code]).first
+  end
 
-    # Never trust parameters from the scary internet, only allow the white list through.
-    def ontology_params
-      params.require(:ontology).permit(:name, :desc, :unlisted, :extendable, :expires, :file)
-    end
+  # Never trust parameters from the scary internet, only allow the white list through.
+  def ontology_params
+    params.require(:ontology).permit(:name, :desc, :unlisted, :extendable, :expires, :file)
+  end
 
-    def validate_file(file)
-      type = file.content_type
-      if type == "application/gzip"
-        :gz
-      elsif type == "application/zip"
-        :zip
-      elsif type.include? "xml"
-        :xml
-      else
-        :other
-      end
+  def validate_file(file)
+    type = file.content_type
+    if type == "application/gzip"
+      :gz
+    elsif type == "application/zip"
+      :zip
+    elsif type.include? "xml"
+      :xml
+    else
+      :other
     end
+  end
 
-    def notify_and_back(note)
-      flash[:notice] = note
-      #redirect_to :back
-      respond_to do |format|
-        format.html { render :new }
-        format.json { render json: @ontology.errors, status: :unprocessable_entity }
-      end
+  def notify_and_back(note)
+    flash[:notice] = note
+    #redirect_to :back
+    respond_to do |format|
+      format.html { render :new }
+      format.json { render json: @ontology.errors, status: :unprocessable_entity }
     end
+  end
 end
