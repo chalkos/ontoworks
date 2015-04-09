@@ -190,7 +190,7 @@ class OntologiesController < ApplicationController
   end
 
   def notify_and_back(note)
-    flash[:notice] = note
+    flash.now[:notice] = note
     #redirect_to :back
     respond_to do |format|
       format.html { render :new }
