@@ -4,8 +4,6 @@ class QueriesController < ApplicationController
   before_action :set_query, only: [:show, :destroy]
   before_action :get_ontology
 
-  attr_accessor :sparql
-
   def get_ontology
     @ontology = Ontology.where(code: params[:ontology_code]).first
   end
