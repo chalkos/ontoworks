@@ -107,8 +107,7 @@ class QueriesController < ApplicationController
     def execute
       require 'jena_jruby'
 
-      dir = File.dirname("#{Rails.root}/db/tdb/#{@ontology.code}/dataSet")
-      dataset = Jena::TDB::TDBFactory.createDataset(dir)
+      dataset = Jena::TDB::TDBFactory.createDataset(@ontology.tdb_dir)
       dataset.begin(Jena::Query::ReadWrite::READ)
 
       begin

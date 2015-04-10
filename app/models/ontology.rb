@@ -6,4 +6,8 @@ class Ontology < ActiveRecord::Base
   def to_param
     code
   end
+
+  def tdb_dir
+    "#{Rails.root}/db/tdb/#{code}"
+  end
 end
