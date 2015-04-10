@@ -16,8 +16,9 @@
     label
       = f.check_box :unlisted
       = t('activerecord.attributes.ontology.unlisted')
-    p.em-warning = t('forms.ontology.unlisted_warning')
+    p.em-primary = t('forms.ontology.unlisted_warning')
   .form-group
-    label for="ontology_file"
+    label for="ontology_file" Ontology file
     input type="file" name="ontology[file]" id="ontology_file"
+    p.em-primary The file must be a derivative of the RDF format. A compressed (tar.gz or zip) file is also accepted, although it must only contain the ontology file.
   button.btn.btn-ar.btn-primary type="submit" =t 'helpers.submit.ontology.create'
