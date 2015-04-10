@@ -10,9 +10,9 @@
   .col-lg-12.col-md-12.col-sm-12.col-sm-12
     h1.section-title
       | Queries
-      = link_to ontology_path(@ontology), class: 'icon-ar icon-ar-round icon-ar-sm', style: 'margin-left:1em' do
+      = link_to ontology_path(@ontology), class: 'tt icon-ar icon-ar-round icon-ar-sm', style: 'margin-left:1em', title: 'Back to ontology' do
         i.fa.fa-arrow-left
-      a#new-query.icon-ar.icon-ar-round.icon-ar-sm href="#"
+      a#new-query.icon-ar.icon-ar-round.icon-ar-sm.tt href="#" title="New query"
         i.fa.fa-plus
     p.lead.lead-sm
       strong Ontology:
