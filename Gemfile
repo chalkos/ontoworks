@@ -1,5 +1,8 @@
 source 'https://rubygems.org'
 
+# web server
+gem 'puma'
+
 # project specific:
 gem 'jena-jruby'
 
