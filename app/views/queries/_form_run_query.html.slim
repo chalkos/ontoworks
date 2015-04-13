@@ -1,5 +1,16 @@
-= form_for :query, url: ontology_run_path(@ontology) do |f|
+= form_for :query, url: ontology_queries_run_path(@ontology), html: { role: 'form' } do |f|
 
-  .field
-    = f.text_area :content
-  .actions = f.submit 'Run Query'
+  .form-group
+    = f.label :content, 'Run a query on this ontology'
+    = f.text_area :content, class: 'form-control monospace', spellcheck: false, rows: '5', value: (@query.nil? ? default_query_content : @query.content)
+
+  .form-inline
+    .form-group
+      label for="output" Output type
+      select.form-control style="margin-left:1em" name="query[output]"
+        = options_for_select([['HTML Table', 'HTML'], ['XML'], ['JSON'], ['CSV'], ['Plain Text', 'TXT']])
+
+
+    button.btn.btn-ar.btn-primary style="margin-left:1em" type="submit" Run Query
+    - if defined?(savebutton) and savebutton
+      button.btn.btn-ar.btn-info#query_start_save style="margin-left:1em" type="button" Save Query

@@ -1,9 +1,15 @@
+- unless notice.nil? || notice.empty?
+  .row
+    .col-lg-12.col-md-12.col-sm-12.col-xs-12
+      div.alert.alert-success.alert-border
+        button.close type="button" data-dismiss="alert" aria-hidden="true" &times;
+        = notice
 
 .row 
   .col-lg-12.col-md-12.col-sm-12.col-sm-12
     h1.section-title
       | My ontologies
-      = link_to new_ontology_path, class: 'icon-ar icon-ar-round', style: 'margin-left:1em' do
+      = link_to new_ontology_path, class: 'tt icon-ar icon-ar-round', style: 'margin-left:1em', title: 'New ontology' do
         i.fa.fa-plus
     == render 'list', ontologies: []
 

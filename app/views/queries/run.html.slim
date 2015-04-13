@@ -1,20 +1,52 @@
-p#notice = notice
+- unless notice.nil? || notice.empty?
+  .row
+    .col-lg-12.col-md-12.col-sm-12.col-xs-12
+      div.alert.alert-danger.alert-border
+        button.close type="button" data-dismiss="alert" aria-hidden="true" &times;
+        = notice
 
-#form_save
-  #name_space
 
-  #desc_space
+.row
+  .col-lg-12.col-md-12.col-sm-12.col-xs-12
+    h1.section-title
+      | Run this query
+      = link_to ontology_queries_path(@ontology), class: 'tt icon-ar icon-ar-round icon-ar-sm', style: 'margin-left:1em', title: 'Back to query listing' do
+          i.fa.fa-list
 
-  .field
-    label = :content
-    = render 'form_run_query'
+.row
+  .col-lg-12.col-md-12.col-sm-12.col-xs-12
+    p.lead.lead-sm
+      strong Ontology:
+      = link_to ontology_path(@ontology) do
+        = @ontology.name
+    = render 'form_run_query', savebutton: true
 
-    a.btn.btn-default#button_save Save
+.row style="margin-top:1em"
+  .col-lg-12.col-md-12.col-sm-12.col-xs-12#query_save_area
+    .margin-bottom#query_saving style="display:none" data="#{@ontology.code}"
+      .form-group
+        label for="name" Name
+        input.form-control#name
+      .form-group
+        label for="desc" Description
+        textarea.form-control#desc rows="4"
+      button.btn.btn-ar.btn-info#query_save type="button" Save Query
+      button.btn.btn-ar.btn-default#query_stop_save style="margin-left:1em" type="button" Cancel
 
-  #save_space data="#{@ontology.code}"
+.row
+  .col-lg-12.col-md-12.col-sm-12.col-xs-12
+    h1.section-title
+      | Query results 
+      small = @query.sparql['results']['bindings'].count.to_s + " matches"
 
-hr
-
-= render 'query_results'
-
-= link_to 'Back', ontology_queries_path
+    .table-responsive
+      table.table#query-results
+        thead
+          tr
+            - @query.sparql['head']['vars'].each do |col|
+              th = col
+        tbody
+          - @query.sparql['results']['bindings'].each do |row|
+            tr
+              - @query.sparql['head']['vars'].each do |col|
+                td = format_result_cell row[col]

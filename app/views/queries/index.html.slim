@@ -1,32 +1,34 @@
-p#notice = notice
+- unless notice.nil? || notice.empty?
+  .row
+    .col-lg-12.col-md-12.col-sm-12.col-xs-12
+      div.alert.alert-success.alert-border
+        button.close type="button" data-dismiss="alert" aria-hidden="true" &times;
+        = notice
 
-h1 Make a Query
 
-= render 'form_run_query'
+.row
+  .col-lg-12.col-md-12.col-sm-12.col-sm-12
+    h1.section-title
+      | Queries
+      = link_to ontology_path(@ontology), class: 'tt icon-ar icon-ar-round icon-ar-sm', style: 'margin-left:1em', title: 'Back to ontology' do
+        i.fa.fa-arrow-left
+      a#new-query.icon-ar.icon-ar-round.icon-ar-sm.tt href="#" title="New query"
+        i.fa.fa-plus
+    p.lead.lead-sm
+      strong Ontology:
+      = link_to ontology_path(@ontology) do
+        = @ontology.name
 
-hr
+.row#new-query-container style="display:none"
+  .col-lg-12.col-md-12.col-sm-12.col-sm-12
+    == render 'form_run_query'
 
-h1 Listing queries
-table.table-bordered
-  thead
-    tr
-      th Name
-      th Description
-      th Content
-      th
-      th
-      th
+.row
+  .col-lg-12.col-md-12.col-sm-12.col-sm-12
+    h1.section-title My Queries
+    == render 'list', queries: @queries, authors: false, deletable: true, contents: true
 
-  tbody
-    - @queries.each do |query|
-      tr
-        td = query.name
-        td = query.desc
-        td = query.content
-        td = link_to 'Show', ontology_query_path(@ontology, query)
-
-        td = link_to 'Destroy', ontology_query_path(@ontology, query), data: {:confirm => 'Are you sure?'}, :method => :delete
-
-br
-
-= link_to 'Back Ontology', ontology_path(@ontology)
+.row
+  .col-lg-12.col-md-12.col-sm-12.col-sm-12
+    h1.section-title Other Queries
+    == render 'list', queries: [], authors: true, deletable: false, contents: false

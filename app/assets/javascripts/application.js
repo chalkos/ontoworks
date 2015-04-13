@@ -52,11 +52,6 @@ $(document).on('click','a.smooth', function(e){
 SyntaxHighlighter.all();
 
 jQuery(document).ready(function () {
-    // initialize all tooltips
-    $(function () {
-        $('[data-toggle="tooltip"]').tooltip()
-    })
-
     $('.nav').on('click mousedown mouseup touchstart touchmove', 'a.has_children', function () {
         if ( $(this).next('ul').hasClass('open_t') && !$(this).parents('ul').hasClass('open_t')) {
             $('.open_t').removeClass('open_t');
@@ -97,6 +92,11 @@ jQuery(document).ready(function () {
     });
 
 });
+
+// tooltips
+$('.tt').attr('data-toggle','tooltip').tooltip({'placement': 'top'});
+$('.tl').attr('data-toggle','tooltip').tooltip({'placement': 'left'});
+
 
 // WOW Activate
 new WOW().init();

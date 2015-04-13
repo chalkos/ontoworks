@@ -1,0 +1,29 @@
+.table-responsive
+  table.table
+    thead
+      tr
+        th Name
+        th Description
+        - if contents
+          th Content
+        - if authors
+          th Author
+        - if deletable
+          th width="1px"
+
+    tbody
+      - queries.each do |query|
+        tr
+          td
+            = link_to ontology_query_path(@ontology, query) do
+              = query.name
+          td
+            = query.desc
+          - if contents
+            td = query.content
+          - if authors
+            td username
+          - if deletable
+            td
+              = link_to ontology_query_path(@ontology, query), data: {:confirm => 'Are you sure?'}, :method => :delete, class: 'tl icon-ar icon-ar-round icon-ar-danger icon-ar-sm', title: 'Delete this query' do
+                  i.fa.fa-trash

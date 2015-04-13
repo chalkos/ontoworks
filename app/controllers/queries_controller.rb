@@ -1,8 +1,8 @@
 class QueriesController < ApplicationController
+  include QueriesHelper
+
   before_action :set_query, only: [:show, :destroy]
   before_action :get_ontology
-
-  attr_accessor :sparql
 
   def get_ontology
     @ontology = Ontology.where(code: params[:ontology_code]).first
@@ -17,50 +17,53 @@ class QueriesController < ApplicationController
   # GET /queries/1
   # GET /queries/1.json
   def show
-    execute
   end
 
   # POST /run
   def run
     # Get a query
     @query = Query.new
-    @query.content = params[:query][:content]
+    @query.content = request.post? ? params[:query][:content] : default_query_content
+    @out_format = request.post? ? params[:query][:output] : default_query_output
 
     # Method
     errors = execute
 
-    respond_to do |format|
-      if errors.empty?
-        format.html { render :run, collection: @query }
+    if errors.empty?
+      case @out_format
+      when "TXT"
+        send_data @query.sparql, :filename => "result.txt"
+      when "CSV"
+        send_data @query.sparql, :filename => "result.csv"
+      when "JSON"
+        render :json => @query.sparql
+      when "XML"
+        render :xml => @query.sparql
       else
-        format.html { redirect_to ontology_queries_url, notice: errors }
+        render :run, collection: @query
       end
+    else
+      redirect_to ontology_queries_run_url, notice: errors
     end
   end
 
   # POST /queries
   # POST /queries.json
   def create
-    @query = Query.new
+    @query = Query.new(query_params)
     @query.ontology = @ontology
-    @query.name = params[:content][0]
-    @query.desc = params[:content][1]
-    @query.content = params[:content][2]
-
-    # validate required fields
-    errors = ""
-    if(@query.name == "")
-      errors += "No query title! "
-    end
-    if(@query.content == "")
-      errors += "No query content! "
-    else
-      errors += validate
-    end
 
     respond_to do |format|
       if @query.save
-        format.js { render :run }
+        format.json {
+          render json: {
+            error: [],
+            name: @query.name,
+            url: ontology_query_path(@ontology, @query)
+          }
+        }
+      else
+        format.json { render json: { error: @query.errors.full_messages } }
       end
     end
   end
@@ -117,20 +120,23 @@ class QueriesController < ApplicationController
         out = StringIO.new
         stream = out.to_outputstream
 
-        Jena::Query::ResultSetFormatter.outputAsJSON(stream,res)
+        case @out_format
+        when "XML"
+          Jena::Query::ResultSetFormatter.outputAsXML(stream,res)
+          @query.sparql = out.string
+        when "TXT"
+          @query.sparql = Jena::Query::ResultSetFormatter.asText(res)
+        when "CSV"
+          Jena::Query::ResultSetFormatter.outputAsCSV(stream,res)
+          @query.sparql = out.string
+        else
+          Jena::Query::ResultSetFormatter.outputAsJSON(stream,res)
+          @query.sparql = JSON.parse out.string
+        end
+
         qexec.close()
         dataset.end()
 
-        @query.sparql = JSON.parse out.string
-        errors = ""
-      rescue Exception => e
-        errors = e.to_s
-      end
-    end
-
-    def validate
-      begin
-        query = Jena::Query::QueryFactory.create(@query.content)
         errors = ""
       rescue Exception => e
         errors = e.to_s

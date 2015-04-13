@@ -9,9 +9,11 @@
   .col-lg-6.col-md-6.col-sm-12.col-xs-12
     h1.section-title
       | Ontology
-      = link_to edit_ontology_path(@ontology), class: 'icon-ar icon-ar-round icon-ar-sm', style: 'margin-left:1em' do
+      = link_to ontologies_path, class: 'tt icon-ar icon-ar-round icon-ar-sm', style: 'margin-left:1em', title: 'Back to ontologies listing' do
+          i.fa.fa-list
+      = link_to edit_ontology_path(@ontology), class: 'tt icon-ar icon-ar-round icon-ar-sm', title: 'Change description' do
         i.fa.fa-pencil
-      = link_to @ontology, data: {:confirm => 'Are you sure?'}, :method => :delete, class: 'icon-ar icon-ar-round icon-ar-danger icon-ar-sm' do
+      = link_to @ontology, data: {:confirm => 'Are you sure?'}, :method => :delete, class: 'tt icon-ar icon-ar-round icon-ar-danger icon-ar-sm', title: 'Delete this ontology' do
           i.fa.fa-trash
     dl.dl-horizontal
       dt Name
@@ -22,9 +24,12 @@
       dd = @ontology.unlisted ? 'Yes' : 'No'
 
   .col-lg-6.col-md-6.col-sm-12.col-xs-12
-    h1.section-title
-      | Saved Queries
-      = link_to '#todo', class: 'icon-ar icon-ar-round icon-ar-sm', style: 'margin-left:1em' do
-          i.fa.fa-plus
-    p
-      = link_to 'Queries', ontology_queries_path(@ontology)
+    .row
+      .col-lg-12.col-md-12.col-sm-12.col-xs-12
+        h1.section-title
+          | Query
+          = link_to ontology_queries_path(@ontology), class: 'tt icon-ar icon-ar-round icon-ar-sm', style: 'margin-left:1em', title: 'List queries for this ontology' do
+              i.fa.fa-list
+    .row
+      .col-lg-12.col-md-12.col-sm-12.col-xs-12
+        == render partial: '/queries/form_run_query'
