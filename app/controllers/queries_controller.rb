@@ -31,11 +31,13 @@ class QueriesController < ApplicationController
 
     if errors.empty?
       case @out_format
-      when "4"
+      when "TXT"
         send_data @query.sparql, :filename => "result.txt"
-      when "3"
+      when "CSV"
+        send_data @query.sparql, :filename => "result.csv"
+      when "JSON"
         render :json => @query.sparql
-      when "2"
+      when "XML"
         render :xml => @query.sparql
       else
         render :run, collection: @query
@@ -119,16 +121,18 @@ class QueriesController < ApplicationController
         stream = out.to_outputstream
 
         case @out_format
-        when "2"
+        when "XML"
           Jena::Query::ResultSetFormatter.outputAsXML(stream,res)
           @query.sparql = out.string
-        when "4"
+        when "TXT"
           @query.sparql = Jena::Query::ResultSetFormatter.asText(res)
+        when "CSV"
+          Jena::Query::ResultSetFormatter.outputAsCSV(stream,res)
+          @query.sparql = out.string
         else
           Jena::Query::ResultSetFormatter.outputAsJSON(stream,res)
           @query.sparql = JSON.parse out.string
         end
-
 
         qexec.close()
         dataset.end()

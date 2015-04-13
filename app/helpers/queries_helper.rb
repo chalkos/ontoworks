@@ -24,6 +24,6 @@ module QueriesHelper
   end
 
   def default_query_output
-    "1"
+    "HTML"
   end
 end

@@ -8,7 +8,7 @@
     .form-group
       label for="output" Output type
       select.form-control style="margin-left:1em" name="query[output]"
-        = options_for_select([['HTML Table', 1], ['XML', 2], ['JSON', 3], ['Plain Text', 4]])
+        = options_for_select([['HTML Table', 'HTML'], ['XML'], ['JSON'], ['CSV'], ['Plain Text', 'TXT']])
 
 
     button.btn.btn-ar.btn-primary style="margin-left:1em" type="submit" Run Query
