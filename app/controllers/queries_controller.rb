@@ -24,16 +24,26 @@ class QueriesController < ApplicationController
     # Get a query
     @query = Query.new
     @query.content = request.post? ? params[:query][:content] : default_query_content
+    @out_format = request.post? ? params[:query][:output] : default_query_output
 
     # Method
     errors = execute
 
-    respond_to do |format|
-      if errors.empty?
-        format.html { render :run, collection: @query }
+    if errors.empty?
+      case @out_format
+      when "TXT"
+        send_data @query.sparql, :filename => "result.txt"
+      when "CSV"
+        send_data @query.sparql, :filename => "result.csv"
+      when "JSON"
+        render :json => @query.sparql
+      when "XML"
+        render :xml => @query.sparql
       else
-        format.html { redirect_to ontology_queries_run_url, notice: errors }
+        render :run, collection: @query
       end
+    else
+      redirect_to ontology_queries_run_url, notice: errors
     end
   end
 
@@ -110,11 +120,23 @@ class QueriesController < ApplicationController
         out = StringIO.new
         stream = out.to_outputstream
 
-        Jena::Query::ResultSetFormatter.outputAsJSON(stream,res)
+        case @out_format
+        when "XML"
+          Jena::Query::ResultSetFormatter.outputAsXML(stream,res)
+          @query.sparql = out.string
+        when "TXT"
+          @query.sparql = Jena::Query::ResultSetFormatter.asText(res)
+        when "CSV"
+          Jena::Query::ResultSetFormatter.outputAsCSV(stream,res)
+          @query.sparql = out.string
+        else
+          Jena::Query::ResultSetFormatter.outputAsJSON(stream,res)
+          @query.sparql = JSON.parse out.string
+        end
+
         qexec.close()
         dataset.end()
 
-        @query.sparql = JSON.parse out.string
         errors = ""
       rescue Exception => e
         errors = e.to_s
