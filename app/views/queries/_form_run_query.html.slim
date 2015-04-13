@@ -7,11 +7,9 @@
   .form-inline
     .form-group
       label for="output" Output type
-      select.form-control#output style="margin-left:1em"
-        option value="html" HTML table
-        option value="xml" XML
-        option value="json" JSON
-        option value="txt" Plain text
+      select.form-control style="margin-left:1em" name="query[output]"
+        = options_for_select([['HTML Table', 1], ['XML', 2], ['JSON', 3], ['Plain Text', 4]])
+
 
     button.btn.btn-ar.btn-primary style="margin-left:1em" type="submit" Run Query
     - if defined?(savebutton) and savebutton

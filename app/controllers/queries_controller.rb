@@ -24,16 +24,24 @@ class QueriesController < ApplicationController
     # Get a query
     @query = Query.new
     @query.content = request.post? ? params[:query][:content] : default_query_content
+    @out_format = request.post? ? params[:query][:output] : default_query_output
 
     # Method
     errors = execute
 
-    respond_to do |format|
-      if errors.empty?
-        format.html { render :run, collection: @query }
+    if errors.empty?
+      case @out_format
+      when "4"
+        send_data @query.sparql, :filename => "result.txt"
+      when "3"
+        render :json => @query.sparql
+      when "2"
+        render :xml => @query.sparql
       else
-        format.html { redirect_to ontology_queries_run_url, notice: errors }
+        render :run, collection: @query
       end
+    else
+      redirect_to ontology_queries_run_url, notice: errors
     end
   end
 
@@ -110,11 +118,21 @@ class QueriesController < ApplicationController
         out = StringIO.new
         stream = out.to_outputstream
 
-        Jena::Query::ResultSetFormatter.outputAsJSON(stream,res)
+        case @out_format
+        when "2"
+          Jena::Query::ResultSetFormatter.outputAsXML(stream,res)
+          @query.sparql = out.string
+        when "4"
+          @query.sparql = Jena::Query::ResultSetFormatter.asText(res)
+        else
+          Jena::Query::ResultSetFormatter.outputAsJSON(stream,res)
+          @query.sparql = JSON.parse out.string
+        end
+
+
         qexec.close()
         dataset.end()
 
-        @query.sparql = JSON.parse out.string
         errors = ""
       rescue Exception => e
         errors = e.to_s
