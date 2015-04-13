@@ -98,10 +98,9 @@ class OntologiesController < ApplicationController
     ## JENA START
     require 'jena_jruby'
 
-    dir = File.dirname("#{Rails.root}/db/tdb/#{@ontology.code}/ds")
-    FileUtils.mkdir_p(dir) unless File.directory?(dir)
+    FileUtils.mkdir_p(@ontology.tdb_dir) unless File.directory?(@ontology.tdb_dir)
 
-    dataset = Jena::TDB::TDBFactory.createDataset(dir)
+    dataset = Jena::TDB::TDBFactory.createDataset(@ontology.tdb_dir)
 
     dataset.begin(Jena::Query::ReadWrite::WRITE)
     model = dataset.getDefaultModel()
@@ -158,6 +157,9 @@ class OntologiesController < ApplicationController
   # DELETE /ontologies/1
   # DELETE /ontologies/1.json
   def destroy
+    require 'fileutils'
+    FileUtils.rm_r @ontology.tdb_dir
+
     @ontology.destroy
     respond_to do |format|
       format.html { redirect_to ontologies_url, notice: 'Ontology was successfully destroyed.' }
