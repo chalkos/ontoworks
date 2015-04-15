@@ -1,5 +1,6 @@
 Rails.application.routes.draw do
 
+  devise_for :users
   root 'ontologies#index'
 
   resources :ontologies, param: :code do
