@@ -104,6 +104,18 @@ html
           .container
             .row
               .col-lg-12.col-md-12.col-sm-12.col-xs-12
+                - if notice.present?
+                  .row
+                    .col-lg-12.col-md-12.col-sm-12.col-xs-12
+                      div.alert.alert-success.alert-border
+                        button.close type="button" data-dismiss="alert" aria-hidden="true" &times;
+                        = notice
+                - if alert.present?
+                  .row
+                    .col-lg-12.col-md-12.col-sm-12.col-xs-12
+                      div.alert.alert-danger.alert-border
+                        button.close type="button" data-dismiss="alert" aria-hidden="true" &times;
+                        = alert
                 = yield
         footer#footer
           p

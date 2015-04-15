@@ -3,19 +3,26 @@ source 'https://rubygems.org'
 # web server
 gem 'puma'
 
-#better logs
+# better logs
 gem "lograge"
 
 # project specific:
 gem 'jena-jruby'
 
+# authentication
+gem 'devise'
+
+# use slim views
 gem 'slim-rails'
 
+# font-awesome has a gem, so let's use it
 gem "font-awesome-rails"
 
+# extract zip contents
 gem 'rubyzip'
 
-gem 'syntax-highlighter-rails' #para os resultados da query
+# syntax highlight for some languages
+gem 'syntax-highlighter-rails'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '4.2.0'
