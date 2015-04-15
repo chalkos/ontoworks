@@ -3,6 +3,9 @@ source 'https://rubygems.org'
 # web server
 gem 'puma'
 
+#better logs
+gem "lograge"
+
 # project specific:
 gem 'jena-jruby'
 
