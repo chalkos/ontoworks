@@ -1,5 +1,6 @@
 ### project specific
 /db/tdb
+/public/assets
 
 ### rails stuff
 *.rbc
