@@ -5,6 +5,8 @@ class Ontology < ActiveRecord::Base
   has_many :queries
   belongs_to :user
 
+  validates :code, uniqueness: true
+  validates :user, presence: true
   validates :name, presence: true, length: { in: 3..255 }
   validates :file, presence: true
   validate :valid_content_type, :number_of_files

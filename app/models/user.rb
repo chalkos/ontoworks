@@ -6,4 +6,5 @@ class User < ActiveRecord::Base
          :confirmable, :lockable, :timeoutable
 
   has_many :ontologies
+  has_many :queries
 end

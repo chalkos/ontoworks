@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150416140038) do
+ActiveRecord::Schema.define(version: 20150416140554) do
 
   create_table "ontologies", force: :cascade do |t|
     t.string   "name",       limit: 255,                 null: false
@@ -35,7 +35,10 @@ ActiveRecord::Schema.define(version: 20150416140038) do
     t.datetime "created_at",                  null: false
     t.datetime "updated_at",                  null: false
     t.text     "desc"
+    t.integer  "user_id"
   end
+
+  add_index "queries", ["user_id"], name: "index_queries_on_user_id"
 
   create_table "users", force: :cascade do |t|
     t.string   "email",                  limit: 255, default: "", null: false
