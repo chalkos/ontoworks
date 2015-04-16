@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150415185723) do
+ActiveRecord::Schema.define(version: 20150416140038) do
 
   create_table "ontologies", force: :cascade do |t|
     t.string   "name",       limit: 255,                 null: false
@@ -22,9 +22,11 @@ ActiveRecord::Schema.define(version: 20150415185723) do
     t.datetime "created_at",                             null: false
     t.datetime "updated_at",                             null: false
     t.text     "desc"
+    t.integer  "user_id"
   end
 
   add_index "ontologies", ["code"], name: "index_ontologies_on_code", unique: true
+  add_index "ontologies", ["user_id"], name: "index_ontologies_on_user_id"
 
   create_table "queries", force: :cascade do |t|
     t.string   "name",        limit: 255,     null: false
