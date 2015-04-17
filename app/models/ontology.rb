@@ -6,9 +6,7 @@ class Ontology < ActiveRecord::Base
 
   validates :name, presence: true, length: { in: 3..255 }
   validates :file, presence: true
-
   validate :valid_content_type, :number_of_files
-  validate :ontology_import
 
   attr_accessor :file
 
@@ -41,10 +39,5 @@ class Ontology < ActiveRecord::Base
         errors.add(:file, "The uploaded package must contain a single file.") unless zips == 1
       end
     end
-  end
-
-  def ontology_import
-
-
   end
 end

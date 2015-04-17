@@ -1,6 +1,7 @@
 = form_for(@ontology, :html => { multipart: true, role: 'form' }) do |f|
   - if @ontology.errors.any?
-    #error_explanation
+    #error_explanation.alert.alert-danger.alert-border
+      button.close aria-hidden="true" data-dismiss="alert" type="button"  &times;
       h2 = "#{pluralize(@ontology.errors.count, "error")} prohibited this ontology from being saved:"
       ul
         - @ontology.errors.full_messages.each do |message|

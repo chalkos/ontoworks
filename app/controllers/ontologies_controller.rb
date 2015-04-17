@@ -83,25 +83,21 @@ class OntologiesController < ApplicationController
       begin
         model.read(input, nil)
       rescue Exception => e
-        input.close();
-        File.delete(@file)
-        notify_and_back("An error occurred while importing the ontology: " + e);
-        return;
+        @ontology.errors.add(:file, "An error occurred while importing the ontology: " + e.to_s)
+        FileUtils.remove_dir(@ontology.tdb_dir)
       end
-
-      #model.write(java.lang.System::out, "N-TRIPLE")
+      ## JENA END
 
       input.close()
       dataset.commit()
       dataset.end()
-      ## JENA END
 
       # remove extracted/temporary file
       File.delete(@file)
     end
 
     respond_to do |format|
-      if @ontology.save
+      if @ontology.errors.empty? && @ontology.save
         format.html { redirect_to @ontology, notice: 'Ontology was successfully created.' }
         format.json { render :show, status: :created, location: @ontology }
       else
@@ -148,14 +144,5 @@ class OntologiesController < ApplicationController
   # Never trust parameters from the scary internet, only allow the white list through.
   def ontology_params
     params.require(:ontology).permit(:name, :desc, :unlisted, :extendable, :expires, :file)
-  end
-
-  def notify_and_back(note)
-    flash.now[:notice] = note
-    #redirect_to :back
-    respond_to do |format|
-      format.html { render :new }
-      format.json { render json: @ontology.errors, status: :unprocessable_entity }
-    end
   end
 end
