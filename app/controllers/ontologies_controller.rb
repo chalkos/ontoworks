@@ -1,4 +1,6 @@
 class OntologiesController < ApplicationController
+  include OntologiesHelper
+
   before_action :set_ontology, only: [:show, :edit, :update, :destroy]
 
   # GET /ontologies
@@ -26,6 +28,9 @@ class OntologiesController < ApplicationController
 
   def create
     require 'digest/md5'
+    require 'rubygems/package'
+    require 'zlib'
+    require 'zip'
 
     @ontology = Ontology.new(ontology_params)
 
@@ -41,39 +46,20 @@ class OntologiesController < ApplicationController
       ## UNZIP START, IF NECESSARY
       case validate_file(@ontology.file)
       when :gz # if the file is in the gzip format
-        require 'rubygems/package'
-        require 'zlib'
         tar_extract = Gem::Package::TarReader.new(Zlib::GzipReader.open(@ontology.file.path))
         tar_extract.rewind # The extract has to be rewinded after every iteration
-        size = 0
         tar_extract.each do |entry|
-          if size == 0 # on the first file: extract it to the tmp folder
-            @file = File.join('tmp/extracted/', @ontology.code+entry.full_name)
-            FileUtils.mkdir_p(File.dirname(@file))
-            File.open(@file, 'w') {|file| file.write(entry.read.force_encoding('UTF-8'))}
-            size += 1
-          else # on the second file
-            File.delete(@file) # remove extracted/temporary file
-            notify_and_back("The uploaded package must contain a single file.")
-            return
-          end
+          @file = File.join('tmp/extracted/', @ontology.code+entry.full_name)
+          FileUtils.mkdir_p(File.dirname(@file))
+          File.open(@file, 'w') {|file| file.write(entry.read.force_encoding('UTF-8'))}
         end
         tar_extract.close
       when :zip # if the file is in the zip format
-        require 'zip'
-        size = 0;
         Zip::File.open(@ontology.file.path) do |zip_file|
           zip_file.each do |entry|
-            if size == 0 # on the first file: extract it to the tmp folder
-              @file = File.join('tmp/extracted/', @ontology.code+entry.name)
-              FileUtils.mkdir_p(File.dirname(@file))
-              zip_file.extract(entry, @file)
-              size += 1;
-            else #on the second file
-              File.delete(@file) # remove extracted/temporary file
-              notify_and_back("The uploaded package must contain a single file.")
-              return
-            end
+            @file = File.join('tmp/extracted/', @ontology.code+entry.name)
+            FileUtils.mkdir_p(File.dirname(@file))
+            zip_file.extract(entry, @file)
           end
         end
       else :xml # if the ontology is xml or one of its subtypes
@@ -162,19 +148,6 @@ class OntologiesController < ApplicationController
   # Never trust parameters from the scary internet, only allow the white list through.
   def ontology_params
     params.require(:ontology).permit(:name, :desc, :unlisted, :extendable, :expires, :file)
-  end
-
-  def validate_file(file)
-    type = file.content_type
-    if type == "application/gzip"
-      :gz
-    elsif type == "application/zip"
-      :zip
-    elsif type.include? "xml"
-      :xml
-    else
-      :other
-    end
   end
 
   def notify_and_back(note)
