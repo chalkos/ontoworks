@@ -6085,8 +6085,10 @@ a.feature-icon:hover {
 .header-full-title {
   float: left;
   overflow: hidden;
-  padding-left: 75px;
-  background-image: image-url('blue/logo_big.png');
+  padding: 0px;
+  height: 100px;
+  width: 255px;
+  background-image: image-url('ontoworks.png');
   background-repeat: no-repeat;
   background-position: left center;
 }
