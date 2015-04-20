@@ -1,4 +1,6 @@
 class OntologiesController < ApplicationController
+  include OntologiesHelper
+
   before_action :set_ontology, only: [:show, :edit, :update, :destroy]
 
   # GET /ontologies
@@ -26,8 +28,11 @@ class OntologiesController < ApplicationController
 
   def create
     require 'digest/md5'
+    require 'rubygems/package'
+    require 'zlib'
+    require 'zip'
 
-    @ontology = Ontology.new(ontology_params.except :file)
+    @ontology = Ontology.new(ontology_params)
 
     # ensure unique code
     inc = 0
@@ -37,99 +42,62 @@ class OntologiesController < ApplicationController
       inc += 1
     end
 
-    # validate required fields
-    if(params[:ontology]['name'] == "")
-      notify_and_back("Name can not be blank.")
-      return
-    end
-
-    @file = params[:ontology]['file']
-    if(@file.nil?)
-      notify_and_back("A file must be submitted.")
-      return
-    end
-
-    ## UNZIP START, IF NECESSARY
-
-    case validate_file(@file)
-    when :gz # if the file is in the gzip format
-      require 'rubygems/package'
-      require 'zlib'
-      tar_extract = Gem::Package::TarReader.new(Zlib::GzipReader.open(@file.path))
-      tar_extract.rewind # The extract has to be rewinded after every iteration
-      size = 0
-      tar_extract.each do |entry|
-        if size == 0 # on the first file: extract it to the tmp folder
+    if @ontology.valid?
+      ## UNZIP START, IF NECESSARY
+      case validate_file(@ontology.file)
+      when :gz # if the file is in the gzip format
+        tar_extract = Gem::Package::TarReader.new(Zlib::GzipReader.open(@ontology.file.path))
+        tar_extract.rewind # The extract has to be rewinded after every iteration
+        tar_extract.each do |entry|
           @file = File.join('tmp/extracted/', @ontology.code+entry.full_name)
           FileUtils.mkdir_p(File.dirname(@file))
           File.open(@file, 'w') {|file| file.write(entry.read.force_encoding('UTF-8'))}
-          size += 1
-        else # on the second file
-          File.delete(@file) # remove extracted/temporary file
-          notify_and_back("The uploaded package must contain a single file.")
-          return
         end
-      end
-      tar_extract.close
-    when :zip # if the file is in the zip format
-      require 'zip'
-      size = 0;
-      Zip::File.open(@file.path) do |zip_file|
-        zip_file.each do |entry|
-          if size == 0 # on the first file: extract it to the tmp folder
+        tar_extract.close
+      when :zip # if the file is in the zip format
+        Zip::File.open(@ontology.file.path) do |zip_file|
+          zip_file.each do |entry|
             @file = File.join('tmp/extracted/', @ontology.code+entry.name)
             FileUtils.mkdir_p(File.dirname(@file))
             zip_file.extract(entry, @file)
-            size += 1;
-          else #on the second file
-            File.delete(@file) # remove extracted/temporary file
-            notify_and_back("The uploaded package must contain a single file.")
-            return
           end
         end
+      else :xml # if the ontology is xml or one of its subtypes
+        @file = @ontology.file.path
       end
-    when :xml # if the ontology is xml or one of its subtypes
-      @file = params[:ontology]['file'].path
-    else
-      notify_and_back("Invalid file type. Valid formats are xml, zip and tar.gz.")
-      return
-    end
 
-    ## JENA START
-    require 'jena_jruby'
+      ## JENA START
+      require 'jena_jruby'
 
-    FileUtils.mkdir_p(@ontology.tdb_dir) unless File.directory?(@ontology.tdb_dir)
+      FileUtils.mkdir_p(@ontology.tdb_dir) unless File.directory?(@ontology.tdb_dir)
 
-    dataset = Jena::TDB::TDBFactory.createDataset(@ontology.tdb_dir)
+      dataset = Jena::TDB::TDBFactory.createDataset(@ontology.tdb_dir)
 
-    dataset.begin(Jena::Query::ReadWrite::WRITE)
-    model = dataset.getDefaultModel()
+      dataset.begin(Jena::Query::ReadWrite::WRITE)
+      model = dataset.getDefaultModel()
 
-    #open the ontology
-    input = Jena::Util::FileManager.get().open(@file)
+      #open the ontology
+      input = Jena::Util::FileManager.get().open(@file)
 
-    #read the RDF/XML file
-    begin
-      model.read(input, nil)
-    rescue Exception => e
-      input.close();
+      #read the RDF/XML file
+      begin
+        model.read(input, nil)
+      rescue Exception => e
+        @ontology.errors.add(:file, "An error occurred while importing the ontology: " + e.to_s)
+        FileUtils.remove_dir(@ontology.tdb_dir)
+      end
+      ## JENA END
+
+      input.close()
+      dataset.commit()
+      dataset.end()
+
+      # remove extracted/temporary file
       File.delete(@file)
-      notify_and_back("An error occurred while importing the ontology: " + e);
-      return;
     end
-
-    #model.write(java.lang.System::out, "N-TRIPLE")
-
-    input.close()
-    dataset.commit()
-    dataset.end()
-    ## JENA END
-
-    # remove extracted/temporary file
-    File.delete(@file)
 
     respond_to do |format|
-      if @ontology.save
+      if @ontology.errors.empty? && @ontology.save
         format.html { redirect_to @ontology, notice: 'Ontology was successfully created.' }
         format.json { render :show, status: :created, location: @ontology }
       else
@@ -176,27 +144,5 @@ class OntologiesController < ApplicationController
   # Never trust parameters from the scary internet, only allow the white list through.
   def ontology_params
     params.require(:ontology).permit(:name, :desc, :unlisted, :extendable, :expires, :file)
-  end
-
-  def validate_file(file)
-    type = file.content_type
-    if type == "application/gzip"
-      :gz
-    elsif type == "application/zip"
-      :zip
-    elsif type.include? "xml"
-      :xml
-    else
-      :other
-    end
-  end
-
-  def notify_and_back(note)
-    flash.now[:notice] = note
-    #redirect_to :back
-    respond_to do |format|
-      format.html { render :new }
-      format.json { render json: @ontology.errors, status: :unprocessable_entity }
-    end
   end
 end
