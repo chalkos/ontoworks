@@ -1,0 +1,34 @@
+header#header-full-top.hidden-xs.header-full
+  .container
+    a.active href="index.html"
+      .header-full-title
+    nav.top-nav
+      .dropdown.animated.fadeInDown.animation-delay-11
+        a.dropdown-toggle data-toggle="dropdown" href="#" 
+          i.fa.fa-user
+          | Login
+        .dropdown-menu.dropdown-menu-right.dropdown-login-box.animated.fadeInUp
+          = form_for :user, url: session_path(:user), html: { role: 'form' } do |f|
+            .form-group
+              .input-group.login-input
+                span.input-group-addon
+                  i.fa.fa-user
+                = f.email_field :email, class: 'form-control', placeholder: 'Email'
+            .form-group
+              .input-group.login-input
+                span.input-group-addon
+                  i.fa.fa-lock
+                = f.password_field :password, class: 'form-control', placeholder: 'Password'
+
+            .checkbox.pull-left
+              label
+                = f.check_box :remember_me
+                = t('helpers.label.remember_me')
+
+            button.btn.btn-ar.btn-primary.pull-right type="submit"  Login
+            .clearfix
+  /! container
+/! header-full
+
+
+
