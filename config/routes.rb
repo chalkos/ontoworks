@@ -1,11 +1,22 @@
 Rails.application.routes.draw do
 
-  devise_for :users
   root 'ontologies#index'
 
   resources :ontologies, param: :code do
     match "/queries/run" => "queries#run", :via => [:get, :post]
     resources :queries, :except => [:edit, :new, :update]
+  end
+
+  devise_for :users, skip: :registrations
+  devise_scope :user do
+    resource :registration,
+      only: [:new, :create, :edit, :update],
+      path: 'users',
+      path_names: { new: 'sign_up' },
+      controller: 'devise/registrations',
+      as: :user_registration do
+        get :cancel
+      end
   end
 
   # The priority is based upon order of creation: first created -> highest priority.
