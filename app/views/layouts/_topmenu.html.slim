@@ -36,8 +36,8 @@ header#header-full-top.hidden-xs.header-full
               =< current_user.email
         ul.top-nav-social.hidden-sm
           li
-            = link_to users_profile_path, class: 'twitter' do
-              i.fa.fa-user
+            = link_to edit_user_registration_path, class: 'twitter' do
+              i.fa.fa-gear
           li
             = link_to destroy_user_session_path, class: 'google-plus', method: :delete do
               i.fa.fa-power-off
