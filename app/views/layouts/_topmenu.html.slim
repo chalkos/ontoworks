@@ -5,9 +5,13 @@ header#header-full-top.hidden-xs.header-full
     nav.top-nav
       - if not user_signed_in?
         .dropdown
-          a.dropdown-toggle data-toggle="dropdown" href="#" 
+          = link_to new_user_registration_path, style: 'margin-right:-1em' do
             i.fa.fa-user
-            |  Login
+            | Sign up
+        .dropdown
+          a.dropdown-toggle data-toggle="dropdown" href="#"
+            i.fa.fa-sign-in
+            |  Sign in
           .dropdown-menu.dropdown-menu-right.dropdown-login-box.animated.fadeInUp
             = form_for :user, url: session_path(:user), html: { role: 'form' } do |f|
               .form-group

@@ -11,13 +11,14 @@
 // about supported directives.
 //
 //
-//= require turbolinks
 //
 //= require jquery
+//= require jquery.turbolinks
+//
 //= require jquery_ujs
 //
-//= require syntax-highlighter-rails/shCore
-//= require syntax-highlighter-rails/shBrushXml
+// require syntax-highlighter-rails/shCore
+// require syntax-highlighter-rails/shBrushXml
 //
 // APP
 //= require queries
@@ -25,12 +26,11 @@
 // OTHERS
 //= require bootstrap
 //= require buttons
-//= require circles.min
-//= require lightbox.min
 //= require slidebars
-//= require wow.min
-//= require ie/html5shiv.min
-//= require ie/respond.min
+//  require wow.min
+//
+//
+//= require turbolinks
 
 /* Smooth scrolling for anchors */
 $(document).on('click','a.smooth', function(e){
@@ -48,10 +48,7 @@ $(document).on('click','a.smooth', function(e){
     });
 }) (jQuery);
 
-// Syntax Enable
-SyntaxHighlighter.all();
-
-jQuery(document).ready(function () {
+(function($) {
     $('.nav').on('click mousedown mouseup touchstart touchmove', 'a.has_children', function () {
         if ( $(this).next('ul').hasClass('open_t') && !$(this).parents('ul').hasClass('open_t')) {
             $('.open_t').removeClass('open_t');
@@ -90,13 +87,11 @@ jQuery(document).ready(function () {
             return false;
         });
     });
-
-});
+}) (jQuery);
 
 // tooltips
 $('.tt').attr('data-toggle','tooltip').tooltip({'placement': 'top'});
 $('.tl').attr('data-toggle','tooltip').tooltip({'placement': 'left'});
 
 
-// WOW Activate
-new WOW().init();
+
