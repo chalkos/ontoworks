@@ -7,6 +7,8 @@ class OntologiesController < ApplicationController
   # GET /ontologies.json
   def index
     @ontologies = Ontology.all
+    @my_ontologies = @ontologies.where(user_id: current_user.id) if user_signed_in?
+    @public_ontologies = @ontologies.where.not(user_id: current_user.id) if user_signed_in?
   end
 
   # GET /ontologies/1
