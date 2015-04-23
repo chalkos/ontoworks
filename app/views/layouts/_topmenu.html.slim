@@ -37,7 +37,7 @@ header#header-full-top.hidden-xs.header-full
           a
             | Welcome
             strong
-              =< current_user.email
+              =< current_user.name
         ul.top-nav-social.hidden-sm
           li
             = link_to edit_user_registration_path, class: 'tb twitter', title: 'Edit profile' do

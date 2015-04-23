@@ -9,8 +9,11 @@
       = devise_error_messages!
       
       .form-group
+        = f.label :name, 'Display name'
+        = f.text_field :name, autofocus: true, class: 'form-control'
+      .form-group
         = f.label :email
-        = f.email_field :email, autofocus: true, class: 'form-control'
+        = f.email_field :email, class: 'form-control'
       .form-group
         = f.label :password
         - if @validatable

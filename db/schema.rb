@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150416140554) do
+ActiveRecord::Schema.define(version: 20150423121138) do
 
   create_table "ontologies", force: :cascade do |t|
     t.string   "name",       limit: 255,                 null: false
@@ -60,6 +60,7 @@ ActiveRecord::Schema.define(version: 20150416140554) do
     t.datetime "locked_at"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "name",                   limit: 255, default: "", null: false
   end
 
   add_index "users", ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
