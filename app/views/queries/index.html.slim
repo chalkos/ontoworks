@@ -8,7 +8,7 @@
         i.fa.fa-plus
     p.lead.lead-sm
       strong Ontology:
-      = link_to ontology_path(@ontology) do
+      =< link_to ontology_path(@ontology) do
         = @ontology.name
 
 .row#new-query-container style="display:none"
@@ -18,9 +18,9 @@
 .row
   .col-lg-12.col-md-12.col-sm-12.col-sm-12
     h1.section-title My Queries
-    == render 'list', queries: @queries, authors: false, deletable: true, contents: true
+    == render 'list', queries: @queries, options: [:delete, :content]
 
 .row
   .col-lg-12.col-md-12.col-sm-12.col-sm-12
     h1.section-title Other Queries
-    == render 'list', queries: [], authors: true, deletable: false, contents: false
+    == render 'list', queries: [], options: [:author]

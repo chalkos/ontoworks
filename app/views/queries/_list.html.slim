@@ -4,11 +4,11 @@
       tr
         th Name
         th Description
-        - if contents
+        - if options.include? :content
           th Content
-        - if authors
+        - if options.include? :author
           th Author
-        - if deletable
+        - if options.include? :delete
           th width="1px"
 
     tbody
@@ -19,11 +19,11 @@
               = query.name
           td
             = query.desc
-          - if contents
+          - if options.include? :content
             td = query.content
-          - if authors
+          - if options.include? :author
             td username
-          - if deletable
+          - if options.include? :delete
             td
               = link_to ontology_query_path(@ontology, query), data: {:confirm => 'Are you sure?'}, :method => :delete, class: 'tl icon-ar icon-ar-round icon-ar-danger icon-ar-sm', title: 'Delete this query' do
                   i.fa.fa-trash
