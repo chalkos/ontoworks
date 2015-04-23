@@ -12,7 +12,8 @@
       dt Name
       dd = @ontology.name
       dt Description
-      dd = @ontology.desc
+      dd
+        pre= @ontology.desc
       dt Unlisted
       dd = @ontology.unlisted ? 'Yes' : 'No'
       dt Download as

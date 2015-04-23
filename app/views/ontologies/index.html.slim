@@ -7,10 +7,12 @@
     -if @my_ontologies.present?
       == render 'list', ontologies: @my_ontologies
     -else
-      p You don't have any ontologies
+      p You don't have any ontologies.
 
 .row
   .col-lg-12.col-md-12.col-sm-12.col-sm-12
     h1.section-title Public ontologies
-    == render 'list', ontologies: @ontologies
-
+    -if @my_ontologies.present?
+      == render 'list', ontologies: @ontologies
+    -else
+      p There are no ontologies to display here.
