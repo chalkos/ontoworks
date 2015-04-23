@@ -1,6 +1,6 @@
 header#header-full-top.hidden-xs.header-full
   .container
-    a.active href="index.html"
+    = link_to root_path, class: 'active' do
       .header-full-title
     nav.top-nav
       - if not user_signed_in?
@@ -65,6 +65,21 @@ header#header-full-top.hidden-xs.header-full
           /    i.fa.fa-flickr
   /! container
 /! header-full
-
-
-
+nav#header.navbar.navbar-static-top.navbar-default.navbar-header-full.navbar-dark role="navigation" 
+  .container
+    /! Brand and toggle get grouped for better mobile display
+    .navbar-header
+      button.navbar-toggle data-target="#bs-example-navbar-collapse-1" data-toggle="collapse" type="button" 
+        span.sr-only Toggle navigation
+        i.fa.fa-bars
+      = link_to root_path, class: 'navbar-brand hidden-lg hidden-md hidden-sm active' do
+        | Onto
+        span Works
+    /! navbar-header
+    #bs-example-navbar-collapse-1.collapse.navbar-collapse
+      ul.nav.navbar-nav
+        = nav_link 'Home', root_path
+        = nav_link 'Ontologies', ontologies_path
+        = nav_link 'New Ontology', new_ontology_path
+    /! navbar-collapse
+  /! container
