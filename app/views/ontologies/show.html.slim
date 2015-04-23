@@ -26,9 +26,9 @@
       dd  = form_for :type, url: download_ontology_path(@ontology), html: { role: 'form' , method: 'get'} do |f|
           .form-inline
             .form-group
-            select.form-control name="type"
-              = options_for_select([['RDF/XML', 'RDF/XML-ABBREV'], ['TURTLE'], ['RDF/JSON'], ['N-TRIPLES']])
-            button.btn.btn-ar.btn-primary style="margin-left:1em" type="submit" Download
+              select.form-control name="type"
+                = options_for_select([['RDF/XML', 'RDF/XML-ABBREV'], ['TURTLE'], ['RDF/JSON'], ['N-TRIPLES']])
+              button.btn.btn-ar.btn-primary style="margin-left:1em" type="submit" Download
 
   .col-lg-6.col-md-6.col-sm-12.col-xs-12
     .row

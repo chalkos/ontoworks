@@ -141,18 +141,16 @@ class OntologiesController < ApplicationController
 
     out = write_ontology @out_format
 
+    friendly_name = @ontology.name.gsub(/[^\w\s_-]+/, '').gsub(/(^|\b\s)\s+($|\s?\b)/, '\\1\\2').gsub(/\s+/, '_')
+
     case @out_format
-    when "TURTLE"
-      send_data out, :filename => @ontology.name + ".ttl"
-    when "RDF/JSON"
-      send_data out, :filename => @ontology.name + ".json"
-    when "N-TRIPLES"
-      send_data out, :filename => @ontology.name + ".nt"
-    when "RDF/XML-ABBREV"
-      send_data out, :filename => @ontology.name + ".rdf"
-    else
-      send_data out, :filename => @ontology.name + ".rdf"
+    when "TURTLE"; ext = ".ttl"
+    when "RDF/JSON"; ext = ".json"
+    when "N-TRIPLES"; ext = ".nt"
+    when "RDF/XML-ABBREV"; ext= ".rdf"
+    else ext = ".rdf"
     end
+    send_data out, :filename => friendly_name + ext
   end
 
   private
