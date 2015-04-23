@@ -6,13 +6,6 @@ h1.section-title
 h3 = @ontology.name
 
 = form_for(@ontology, :html => { role: 'form' }) do |f|
-  - if @ontology.errors.any?
-    #error_explanation
-      h2 = "#{pluralize(@ontology.errors.count, "error")} prohibited this ontology from being saved:"
-      ul
-        - @ontology.errors.full_messages.each do |message|
-          li = message
-
   .form-group
     = f.label :desc
     = f.text_area :desc, class: 'form-control', rows: '5', placeholder: t('placeholders.ontology.desc')
