@@ -1,7 +1,7 @@
 class OntologiesController < ApplicationController
   include OntologiesHelper
 
-  before_action :set_ontology, only: [:show, :edit, :update, :destroy]
+  before_action :set_ontology, only: [:show, :edit, :update, :destroy, :download]
 
   # GET /ontologies
   # GET /ontologies.json
@@ -135,6 +135,26 @@ class OntologiesController < ApplicationController
     end
   end
 
+  # GET /ontologies/1/download
+  def download
+    @out_format = request.get? ? params[:type] : default_ontology_output
+
+    out = write_ontology @out_format
+
+    case @out_format
+    when "TURTLE"
+      send_data out, :filename => @ontology.name + ".ttl"
+    when "RDF/JSON"
+      send_data out, :filename => @ontology.name + ".json"
+    when "N-TRIPLES"
+      send_data out, :filename => @ontology.name + ".nt"
+    when "RDF/XML-ABBREV"
+      send_data out, :filename => @ontology.name + ".rdf"
+    else
+      send_data out, :filename => @ontology.name + ".rdf"
+    end
+  end
+
   private
   # Use callbacks to share common setup or constraints between actions.
   def set_ontology
@@ -144,5 +164,20 @@ class OntologiesController < ApplicationController
   # Never trust parameters from the scary internet, only allow the white list through.
   def ontology_params
     params.require(:ontology).permit(:name, :desc, :unlisted, :extendable, :expires, :file)
+  end
+
+  # Create string with content of an ontology
+  def write_ontology(out_format)
+    require 'jena_jruby'
+    dataset = Jena::TDB::TDBFactory.createDataset(@ontology.tdb_dir)
+    dataset.begin(Jena::Query::ReadWrite::READ)
+    model = dataset.getDefaultModel()
+
+    out = StringIO.new
+    stream = out.to_outputstream
+    model.write(stream, out_format)
+
+    dataset.end()
+    out.string
   end
 end
