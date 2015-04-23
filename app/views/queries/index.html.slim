@@ -18,9 +18,15 @@
 .row
   .col-lg-12.col-md-12.col-sm-12.col-sm-12
     h1.section-title My Queries
-    == render 'list', queries: @queries, options: [:delete, :content]
+    -if @my_queries.present?
+      == render 'list', queries: @my_queries, options: [:delete, :content]
+    -else
+      p You don't have any queries for this ontology.
 
 .row
   .col-lg-12.col-md-12.col-sm-12.col-sm-12
-    h1.section-title Other Queries
-    == render 'list', queries: [], options: [:author]
+    h1.section-title More Queries
+    -if @more_queries.present?
+      == render 'list', queries: @more_queries, options: [:author]
+    -else
+      p There are no queries to display here.

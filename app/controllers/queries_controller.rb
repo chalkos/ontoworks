@@ -12,6 +12,8 @@ class QueriesController < ApplicationController
   # GET /queries.json
   def index
     @queries = @ontology.queries
+    @my_queries = @queries.where(user_id: current_user.id) if user_signed_in?
+    @more_queries = @queries.where.not(user_id: current_user.id) if user_signed_in?
   end
 
   # GET /queries/1
@@ -53,6 +55,7 @@ class QueriesController < ApplicationController
     @query = Query.new(query_params)
     @query.ontology = @ontology
     @query.user_id = current_user.id if user_signed_in?
+    @query.desc = '(no description)' if @query.desc.blank?
 
     respond_to do |format|
       if @query.save

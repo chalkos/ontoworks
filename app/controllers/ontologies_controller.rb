@@ -36,6 +36,7 @@ class OntologiesController < ApplicationController
 
     @ontology = Ontology.new(ontology_params)
     @ontology.user_id = current_user.id if user_signed_in?
+    @ontology.desc = '(no description)' if @ontology.desc.blank?
 
     # ensure unique code
     inc = 0

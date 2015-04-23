@@ -14,7 +14,8 @@
         = link_to ontology_path(@ontology) do
           = @ontology.name
       dt Description
-      dd = @query.desc
+      dd
+        pre = @query.desc
       dt Content
       dd
         pre = @query.content
