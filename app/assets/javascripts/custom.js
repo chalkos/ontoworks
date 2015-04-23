@@ -12,9 +12,23 @@
     $(document).ready(function() {
         $.slidebars();
 
+        var setTooltip = function(type, elem){
+            if($(elem).hasClass( "tt-inline" )){
+                $(elem).tooltip({
+                    placement: type,
+                    template: '<div class="tooltip" role="tooltip"><div class="tooltip-arrow"></div><div class="tooltip-inner tooltip-inline"></div></div>'
+                });
+            }else{
+                $(elem).tooltip({placement: type});
+            }
+        };
+
         // tooltips
-        $('.tt').attr('data-toggle','tooltip').tooltip({'placement': 'top'});
-        $('.tl').attr('data-toggle','tooltip').tooltip({'placement': 'left'});
+        $('.tt').attr('data-toggle','tooltip').each(function(i,e){setTooltip('top', e)});
+        $('.tl').attr('data-toggle','tooltip').each(function(i,e){setTooltip('left', e)});
+        $('.tr').attr('data-toggle','tooltip').each(function(i,e){setTooltip('right', e)});
+        $('.tb').attr('data-toggle','tooltip').each(function(i,e){setTooltip('bottom', e)});
+
 
         $('.nav').on('click mousedown mouseup touchstart touchmove', 'a.has_children', function () {
             if ( $(this).next('ul').hasClass('open_t') && !$(this).parents('ul').hasClass('open_t')) {

@@ -40,10 +40,10 @@ header#header-full-top.hidden-xs.header-full
               =< current_user.email
         ul.top-nav-social.hidden-sm
           li
-            = link_to edit_user_registration_path, class: 'twitter' do
+            = link_to edit_user_registration_path, class: 'tb twitter', title: 'Edit profile' do
               i.fa.fa-gear
           li
-            = link_to destroy_user_session_path, class: 'google-plus', method: :delete do
+            = link_to destroy_user_session_path, class: 'tb tt-inline google-plus', title: 'Sign out', method: :delete do
               i.fa.fa-power-off
           /li
           /  a.facebook href="#" 
