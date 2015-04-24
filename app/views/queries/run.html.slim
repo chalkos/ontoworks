@@ -12,7 +12,7 @@
       = link_to ontology_path(@ontology) do
         = @ontology.name
   .col-md-9
-    = render 'form_run_query', savebutton: true
+    = render 'form_run_query', options: [:save]
   .col-md-3
     br/
     section
@@ -26,7 +26,6 @@
               a#s_classes Classes
             li
               a#s_properties Properties
-
 
 .row style="margin-top:1em"
   .col-lg-12.col-md-12.col-sm-12.col-xs-12#query_save_area
