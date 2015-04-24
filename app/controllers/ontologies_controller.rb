@@ -1,6 +1,8 @@
 class OntologiesController < ApplicationController
   include OntologiesHelper
 
+  # raise an exception if authorize has not yet been called
+  after_action :verify_authorized
   before_action :set_ontology, only: [:show, :edit, :update, :destroy, :download]
 
   # GET /ontologies
@@ -9,6 +11,7 @@ class OntologiesController < ApplicationController
     @ontologies = Ontology.all
     @my_ontologies = @ontologies.where(user_id: current_user.id) if user_signed_in?
     @public_ontologies = @ontologies.where.not(user_id: current_user.id) if user_signed_in?
+    authorize @ontologies
   end
 
   # GET /ontologies/1
@@ -19,6 +22,7 @@ class OntologiesController < ApplicationController
   # GET /ontologies/new
   def new
     @ontology = Ontology.new
+    authorize @ontology
   end
 
   # GET /ontologies/1/edit

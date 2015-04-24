@@ -1,0 +1,11 @@
+# localization information used by pundit policies
+
+en:
+  pundit:
+    default: 'You cannot perform this action.'
+    ontology_policy:
+      new?: 'You cannot create ontologies.'
+      create?: 'You cannot create ontologies.'
+      edit?: 'You cannot edit this ontology.'
+      update?: 'You cannot edit this ontology.'
+      destroy?: 'You cannot destroy this ontology.'

@@ -12,6 +12,9 @@ gem 'jena-jruby'
 # authentication
 gem 'devise'
 
+# authorization
+gem 'pundit'
+
 # use slim views
 gem 'slim-rails'
 
