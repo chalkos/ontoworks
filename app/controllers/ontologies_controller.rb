@@ -137,20 +137,26 @@ class OntologiesController < ApplicationController
 
   # GET /ontologies/1/download
   def download
-    @out_format = request.get? ? params[:type] : default_ontology_output
+    if(params.has_key?(:type))
+      @type = params[:type]
+    else @type = "RDF/XML-ABBREV"
+    end
 
-    out = write_ontology @out_format
-
-    friendly_name = @ontology.name.gsub(/[^\w\s_-]+/, '').gsub(/(^|\b\s)\s+($|\s?\b)/, '\\1\\2').gsub(/\s+/, '_')
-
-    case @out_format
+    case @type
     when "TURTLE"; ext = ".ttl"
     when "RDF/JSON"; ext = ".json"
     when "N-TRIPLES"; ext = ".nt"
     when "RDF/XML-ABBREV"; ext= ".rdf"
-    else ext = ".rdf"
+    else
+      ext = ".rdf"
+      @type = "RDF/XML-ABBREV"
     end
-    send_data out, :filename => friendly_name + ext
+    friendly_name = @ontology.name.gsub(/[^\w\s_-]+/, '').gsub(/(^|\b\s)\s+($|\s?\b)/, '\\1\\2').gsub(/\s+/, '_') + ext
+
+    name = write_ontology @type
+    file = File.open(name, "r")
+    send_data file.read, :filename => friendly_name, :type =>"text/plain"
+    FileUtils.rm(name)
   end
 
   private
@@ -171,11 +177,16 @@ class OntologiesController < ApplicationController
     dataset.begin(Jena::Query::ReadWrite::READ)
     model = dataset.getDefaultModel()
 
-    out = StringIO.new
-    stream = out.to_outputstream
-    model.write(stream, out_format)
+    #create filename with timestamp to minimise same filename problems
+    tmpName = @ontology.name + "_" + Time.now.utc.iso8601
+    tmpName = tmpName.gsub(/[^\w\s_-]+/, '').gsub(/(^|\b\s)\s+($|\s?\b)/, '\\1\\2').gsub(/\s+/, '_')
+    tmpName = "tmp/" + tmpName
 
+    bw = java.io.BufferedWriter.new(java.io.FileWriter.new(tmpName))
+    model.write(bw, out_format)
+
+    bw.close
     dataset.end()
-    out.string
+    tmpName
   end
 end

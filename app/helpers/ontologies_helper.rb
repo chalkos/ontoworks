@@ -11,8 +11,4 @@ module OntologiesHelper
       :other
     end
   end
-
-  def default_ontology_output
-    "RDF/XML-ABBREV"
-  end
 end

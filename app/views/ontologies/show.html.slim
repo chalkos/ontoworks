@@ -10,11 +10,11 @@
     h1.section-title
       | Ontology
       = link_to ontologies_path, class: 'tt icon-ar icon-ar-round icon-ar-sm', style: 'margin-left:1em', title: 'Back to ontologies listing' do
-          i.fa.fa-list
+        i.fa.fa-list
       = link_to edit_ontology_path(@ontology), class: 'tt icon-ar icon-ar-round icon-ar-sm', title: 'Change description' do
-          i.fa.fa-pencil
+        i.fa.fa-pencil
       = link_to @ontology, data: {:confirm => 'Are you sure?'}, :method => :delete, class: 'tt icon-ar icon-ar-round icon-ar-danger icon-ar-sm', title: 'Delete this ontology' do
-          i.fa.fa-trash
+        i.fa.fa-trash
     dl.dl-horizontal
       dt Name
       dd = @ontology.name
@@ -24,11 +24,11 @@
       dd = @ontology.unlisted ? 'Yes' : 'No'
       dt Download as
       dd  = form_for :type, url: download_ontology_path(@ontology), html: { role: 'form' , method: 'get'} do |f|
-          .form-inline
-            .form-group
-              select.form-control name="type"
-                = options_for_select([['RDF/XML', 'RDF/XML-ABBREV'], ['TURTLE'], ['RDF/JSON'], ['N-TRIPLES']])
-              button.btn.btn-ar.btn-primary style="margin-left:1em" type="submit" Download
+        .form-inline
+          .form-group
+            select.form-control name="type"
+              = options_for_select([['RDF/XML', 'RDF/XML-ABBREV'], ['TURTLE'], ['RDF/JSON'], ['N-TRIPLES']])
+            button.btn.btn-ar.btn-primary style="margin-left:1em" type="submit" Download
 
   .col-lg-6.col-md-6.col-sm-12.col-xs-12
     .row
