@@ -137,10 +137,7 @@ class OntologiesController < ApplicationController
 
   # GET /ontologies/1/download
   def download
-    if(params.has_key?(:type))
-      @type = params[:type]
-    else @type = "RDF/XML-ABBREV"
-    end
+    @type = params[:type]
 
     case @type
     when "TURTLE"; ext = ".ttl"
