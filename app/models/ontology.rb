@@ -1,14 +1,15 @@
 class Ontology < ActiveRecord::Base
   include OntologiesHelper
 
-  validates_uniqueness_of :code
   has_many :queries
   belongs_to :user
 
+
+  validates :public, :public_readonly, :shared, :shared_readonly, inclusion: [true, false]
+  validates_presence_of :user
+  validates_presence_of :file, on: :create
   validates :code, uniqueness: true
-  validates :user, presence: true
   validates :name, presence: true, length: { in: 3..255 }
-  validates :file, presence: true
   validate :valid_content_type, :number_of_files
 
   attr_accessor :file

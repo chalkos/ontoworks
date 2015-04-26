@@ -8,7 +8,7 @@ class OntologiesController < ApplicationController
   # GET /ontologies
   # GET /ontologies.json
   def index
-    @ontologies = Ontology.all
+    @ontologies = Ontology.eager_load(:user).all
     @my_ontologies = @ontologies.where(user_id: current_user.id) if user_signed_in?
     @public_ontologies = @ontologies.where.not(user_id: current_user.id) if user_signed_in?
     authorize @ontologies
@@ -41,6 +41,8 @@ class OntologiesController < ApplicationController
     @ontology = Ontology.new(ontology_params)
     @ontology.user_id = current_user.id if user_signed_in?
     @ontology.desc = '(no description)' if @ontology.desc.blank?
+    @ontology.shared = false
+    @ontology.shared_readonly = true
 
     # ensure unique code
     inc = 0
@@ -120,7 +122,7 @@ class OntologiesController < ApplicationController
   # PATCH/PUT /ontologies/1.json
   def update
     respond_to do |format|
-      if @ontology.update(ontology_params.slice(:desc))
+      if @ontology.update(ontology_params.slice(:desc, :public, :public_readonly, :shared, :shared_readonly))
         format.html { redirect_to @ontology, notice: 'Ontology was successfully updated.' }
         format.json { render :show, status: :ok, location: @ontology }
       else
@@ -167,12 +169,29 @@ class OntologiesController < ApplicationController
   private
   # Use callbacks to share common setup or constraints between actions.
   def set_ontology
-    @ontology = Ontology.where(code: params[:code]).first
+    @ontology = Ontology.eager_load(:user).where(code: params[:code]).first
   end
 
   # Never trust parameters from the scary internet, only allow the white list through.
   def ontology_params
-    params.require(:ontology).permit(:name, :desc, :unlisted, :extendable, :expires, :file)
+    p = params.require(:ontology).permit(:name, :desc, :public_field, :shared_field, :file)
+
+    ['public', 'shared'].each do |fieldname|
+      case p["#{fieldname}_field"]
+      when 'private'
+        p[fieldname] = false
+        p["#{fieldname}_readonly"] = true
+      when 'readonly'
+        p[fieldname] = true
+        p["#{fieldname}_readonly"] = true
+      when 'readwrite'
+        p[fieldname] = true
+        p["#{fieldname}_readonly"] = false
+      end
+      p.delete "#{fieldname}_field"
+    end
+
+    p
   end
 
   # Create string with content of an ontology

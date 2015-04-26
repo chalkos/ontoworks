@@ -150,6 +150,7 @@ class QueriesController < ApplicationController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_query
+      # possível optimização usando eager_load em vez de joins e incluir também os autores das queries
       @query = Query.joins(:ontology).where(ontologies: {code: params[:ontology_code]}, queries: {id: params[:id]}).first!
     end
 
