@@ -11,4 +11,9 @@ module OntologiesHelper
       :other
     end
   end
+
+  def user_owns_ontology(ontology)
+    return ontology.user_id == current_user.id if user_signed_in?
+    false
+  end
 end

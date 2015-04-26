@@ -9,4 +9,25 @@ h3 = @ontology.name
   .form-group
     = f.label :desc
     = f.text_area :desc, class: 'form-control', rows: '5', placeholder: t('placeholders.ontology.desc')
+
+  .form-group
+    label for="ontology[public_field]" Allow anyone to query this ontology
+    select.form-control name="ontology[public_field]"
+      option value='private' selected=("selected" if not @ontology.public?)
+        | No
+      option value='readonly' selected=("selected" if @ontology.public? && @ontology.public_readonly?)
+        | Yes, but deny queries that change the ontology
+      option value='readwrite' selected=("selected" if @ontology.public? && !@ontology.public_readonly?)
+        | Yes, and allow all queries
+
+  .form-group
+    label for="ontology[shared_field]" Allow use of shared link for this ontology
+    select.form-control name="ontology[shared_field]"
+      option value='private' selected=("selected" if not @ontology.shared?)
+        | No
+      option value='readonly' selected=("selected" if @ontology.shared? && @ontology.shared_readonly?)
+        | Yes, but deny queries that change the ontology
+      option value='readwrite' selected=("selected" if @ontology.shared? && !@ontology.shared_readonly?)
+        | Yes, and allow all queries
+
   button.btn.btn-ar.btn-primary type="submit" =t 'helpers.submit.ontology.create'
