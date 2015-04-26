@@ -5,6 +5,10 @@ Rails.application.routes.draw do
   resources :ontologies, param: :code do
     match "/queries/run" => "queries#run", :via => [:get, :post]
     resources :queries, :except => [:edit, :new, :update]
+    # we don't use match here because we want to force :code instead of :ontology_code
+    member do
+      get 'download'
+    end
   end
 
   # The priority is based upon order of creation: first created -> highest priority.

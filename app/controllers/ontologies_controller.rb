@@ -1,7 +1,7 @@
 class OntologiesController < ApplicationController
   include OntologiesHelper
 
-  before_action :set_ontology, only: [:show, :edit, :update, :destroy]
+  before_action :set_ontology, only: [:show, :edit, :update, :destroy, :download]
 
   # GET /ontologies
   # GET /ontologies.json
@@ -135,6 +135,27 @@ class OntologiesController < ApplicationController
     end
   end
 
+  # GET /ontologies/1/download
+  def download
+    @type = params[:type]
+
+    case @type
+    when "TURTLE"; ext = ".ttl"
+    when "RDF/JSON"; ext = ".json"
+    when "N-TRIPLES"; ext = ".nt"
+    when "RDF/XML-ABBREV"; ext= ".rdf"
+    else
+      ext = ".rdf"
+      @type = "RDF/XML-ABBREV"
+    end
+    friendly_name = @ontology.name.gsub(/[^\w\s_-]+/, '').gsub(/(^|\b\s)\s+($|\s?\b)/, '\\1\\2').gsub(/\s+/, '_') + ext
+
+    name = write_ontology @type
+    file = File.open(name, "r")
+    send_data file.read, :filename => friendly_name, :type =>"text/plain"
+    FileUtils.rm(name)
+  end
+
   private
   # Use callbacks to share common setup or constraints between actions.
   def set_ontology
@@ -144,5 +165,25 @@ class OntologiesController < ApplicationController
   # Never trust parameters from the scary internet, only allow the white list through.
   def ontology_params
     params.require(:ontology).permit(:name, :desc, :unlisted, :extendable, :expires, :file)
+  end
+
+  # Create string with content of an ontology
+  def write_ontology(out_format)
+    require 'jena_jruby'
+    dataset = Jena::TDB::TDBFactory.createDataset(@ontology.tdb_dir)
+    dataset.begin(Jena::Query::ReadWrite::READ)
+    model = dataset.getDefaultModel()
+
+    #create filename with timestamp to minimise same filename problems
+    tmpName = @ontology.name + "_" + Time.now.utc.iso8601
+    tmpName = tmpName.gsub(/[^\w\s_-]+/, '').gsub(/(^|\b\s)\s+($|\s?\b)/, '\\1\\2').gsub(/\s+/, '_')
+    tmpName = "tmp/" + tmpName
+
+    bw = java.io.BufferedWriter.new(java.io.FileWriter.new(tmpName))
+    model.write(bw, out_format)
+
+    bw.close
+    dataset.end()
+    tmpName
   end
 end

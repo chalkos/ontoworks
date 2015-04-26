@@ -2,6 +2,9 @@
 /db/tdb
 /public/assets
 
+# backup files
+*~
+
 ### rails stuff
 *.rbc
 capybara-*.html
