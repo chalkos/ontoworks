@@ -20,7 +20,11 @@ module QueriesHelper
   end
 
   def default_query_content
-    "select distinct ?Concept where {\n  [] a ?Concept\n} LIMIT 100"
+    "SELECT DISTINCT ?class WHERE {\n [] a ?class\n} ORDER BY ?class"
+  end
+
+  def properties_query_content
+    "SELECT DISTINCT ?property WHERE {\n [] ?property []\n} ORDER BY ?property"
   end
 
   def default_query_output
