@@ -16,6 +16,10 @@
  *
  *= require style/style-blue.css
  *
- *= require syntax-highlighter-rails/shCore
- *= require syntax-highlighter-rails/shThemeDefault
+ * require syntax-highlighter-rails/shCore
+ * require syntax-highlighter-rails/shThemeDefault
  */
+
+.tooltip-inline {
+  white-space: nowrap;
+}

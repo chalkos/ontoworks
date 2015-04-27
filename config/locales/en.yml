@@ -37,6 +37,9 @@ en:
     submit:
       ontology:
         create: "Submit ontology"
+    label:
+      user:
+        remember_me: "Remember me"
   placeholders:
     ontology:
       desc: 'A description for this ontology'

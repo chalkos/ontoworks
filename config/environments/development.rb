@@ -39,8 +39,16 @@ Rails.application.configure do
   # Raises error for missing translations
   # config.action_view.raise_on_missing_translations = true
 
+  # Better logs
   config.logger = Logger.new(STDOUT)
   config.assets.logger = false
   config.lograge.enabled = true
   config.lograge.formatter = Lograge::Formatters::KeyValue.new
+
+  # Send emails. Uses http://mailcatcher.me/
+  config.action_mailer.default_url_options = { host: 'localhost', port: 3000 }
+  config.action_mailer.smtp_settings = {port: 1025}
+  config.action_mailer.perform_deliveries = true
+  config.action_mailer.delivery_method = :smtp
+  config.action_mailer.raise_delivery_errors = false
 end

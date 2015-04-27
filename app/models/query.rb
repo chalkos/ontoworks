@@ -1,8 +1,11 @@
 class Query < ActiveRecord::Base
   belongs_to :ontology
+  belongs_to :user
 
   validates :name   , presence: true, length: { in: 3..255 }
   validates :content, presence: true, length: { in: 1..1048576 }
+  validates :user   , presence: true
+
   validate :content_is_a_valid_sparql_query
 
   attr_accessor :sparql

@@ -11,6 +11,18 @@ Rails.application.routes.draw do
     end
   end
 
+  devise_for :users, skip: :registrations
+  devise_scope :user do
+    resource :registration,
+      only: [:new, :create, :edit, :update],
+      path: 'users',
+      path_names: { new: 'sign_up' },
+      controller: 'registrations',
+      as: :user_registration do
+        get :cancel
+      end
+  end
+
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 

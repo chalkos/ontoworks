@@ -52,6 +52,7 @@ class QueriesController < ApplicationController
   def create
     @query = Query.new(query_params)
     @query.ontology = @ontology
+    @query.user_id = current_user.id if user_signed_in?
 
     respond_to do |format|
       if @query.save

@@ -1,0 +1,70 @@
+header#header-full-top.hidden-xs.header-full
+  .container
+    a.active href="index.html"
+      .header-full-title
+    nav.top-nav
+      - if not user_signed_in?
+        .dropdown
+          = link_to new_user_registration_path, style: 'margin-right:-1em' do
+            i.fa.fa-user
+            | Sign up
+        .dropdown
+          a.dropdown-toggle data-toggle="dropdown" href="#"
+            i.fa.fa-sign-in
+            |  Sign in
+          .dropdown-menu.dropdown-menu-right.dropdown-login-box.animated.fadeInUp
+            = form_for :user, url: session_path(:user), html: { role: 'form' } do |f|
+              .form-group
+                .input-group.login-input
+                  span.input-group-addon
+                    i.fa.fa-user
+                  = f.email_field :email, class: 'form-control', placeholder: 'Email'
+              .form-group
+                .input-group.login-input
+                  span.input-group-addon
+                    i.fa.fa-lock
+                  = f.password_field :password, class: 'form-control', placeholder: 'Password'
+
+              .checkbox.pull-left
+                label
+                  = f.check_box :remember_me
+                  = t('helpers.label.remember_me')
+
+              button.btn.btn-ar.btn-primary.pull-right type="submit"  Login
+              .clearfix
+      - else
+        .dropdown
+          a
+            | Welcome
+            strong
+              =< current_user.name
+        ul.top-nav-social.hidden-sm
+          li
+            = link_to edit_user_registration_path, class: 'tb twitter', title: 'Edit profile' do
+              i.fa.fa-gear
+          li
+            = link_to destroy_user_session_path, class: 'tb tt-inline google-plus', title: 'Sign out', method: :delete do
+              i.fa.fa-power-off
+          /li
+          /  a.facebook href="#" 
+          /    i.fa.fa-facebook
+          /li
+          /  a.google-plus href="#" 
+          /    i.fa.fa-google-plus
+          /li
+          /  a.instagram href="#" 
+          /    i.fa.fa-instagram
+          /li
+          /  a.vine href="#" 
+          /    i.fa.fa-vine
+          /li
+          /  a.linkedin href="#" 
+          /    i.fa.fa-linkedin
+          /li
+          /  a.flickr href="#" 
+          /    i.fa.fa-flickr
+  /! container
+/! header-full
+
+
+
