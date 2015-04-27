@@ -19,7 +19,22 @@
       strong Ontology:
       = link_to ontology_path(@ontology) do
         = @ontology.name
+  .col-md-9
     = render 'form_run_query', savebutton: true
+  .col-md-3
+    br/
+    section
+      .panel.panel-primary
+        .panel-heading
+          i.fa.fa-cogs
+          | Additional Queries
+        .panel-body
+          ul.list-unstyled
+            li
+              = link_to "Concepts", ontology_queries_run_path(@ontology, :query => {:content => default_query_content}), method: :post
+            li
+              = link_to "Properties", ontology_queries_run_path(@ontology, :query => {:content => properties_query_content}), method: :post
+
 
 .row style="margin-top:1em"
   .col-lg-12.col-md-12.col-sm-12.col-xs-12#query_save_area
@@ -36,7 +51,7 @@
 .row
   .col-lg-12.col-md-12.col-sm-12.col-xs-12
     h1.section-title
-      | Query results 
+      | Query results
       small = @query.sparql['results']['bindings'].count.to_s + " matches"
 
     .table-responsive
