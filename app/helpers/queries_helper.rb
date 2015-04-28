@@ -26,4 +26,9 @@ module QueriesHelper
   def default_query_output
     "HTML"
   end
+
+  def default_query_timeout
+   30000
+  end
+
 end

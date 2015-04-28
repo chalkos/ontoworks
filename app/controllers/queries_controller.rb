@@ -25,9 +25,16 @@ class QueriesController < ApplicationController
     @query = Query.new
     @query.content = request.post? ? params[:query][:content] : default_query_content
     @out_format = request.post? ? params[:query][:output] : default_query_output
+    time = request.post? ? params[:query][:timeout].to_i : default_query_timeout
+
+    @timeout = time.between?(1, 3600) ? time * 1000 : default_query_timeout
 
     # Method
     errors = execute
+
+    if errors.empty? and !@query.sparql
+      errors = "Query timed out - " + time.to_s + " second(s)"
+    end
 
     if errors.empty?
       case @out_format
@@ -101,7 +108,7 @@ class QueriesController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def query_params
-      params.require(:query).permit(:name, :desc, :content)
+      params.require(:query).permit(:name, :desc, :content, :timeout)
     end
 
     # Auxiliar Method
@@ -114,6 +121,7 @@ class QueriesController < ApplicationController
       begin
         query = Jena::Query::QueryFactory.create(@query.content)
         qexec = Jena::Query::QueryExecutionFactory.create(@query.content, dataset)
+        qexec.setTimeout(@timeout)
         res = qexec.execSelect()
 
         # StringIO - org.jruby.util.IOOutputStream
