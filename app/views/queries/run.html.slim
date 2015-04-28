@@ -31,7 +31,7 @@
         .panel-body
           ul.list-unstyled
             li
-              = link_to "Concepts", ontology_queries_run_path(@ontology, :query => {:content => default_query_content}), method: :post
+              = link_to "Classes", ontology_queries_run_path(@ontology, :query => {:content => default_query_content}), method: :post
             li
               = link_to "Properties", ontology_queries_run_path(@ontology, :query => {:content => properties_query_content}), method: :post
 
