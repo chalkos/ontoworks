@@ -9,6 +9,10 @@ class OntologyPolicy < ApplicationPolicy
     true
   end
 
+  def show?
+    @record.public? or user_is_owner?
+  end
+
   def create?
     authenticated_user?
   end
