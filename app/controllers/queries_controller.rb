@@ -50,7 +50,9 @@ class QueriesController < ApplicationController
         render :run, collection: @query
       end
     else
-      redirect_to ontology_queries_run_url, notice: errors
+      flash.now[:notice] = errors
+      render :run, collection: @query
+      #redirect_to ontology_queries_run_url, notice: errors,  collection: @query
     end
   end
 

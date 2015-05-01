@@ -28,7 +28,7 @@ module QueriesHelper
   end
 
   def default_query_timeout
-   30000
+    30000
   end
 
 end
