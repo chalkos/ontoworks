@@ -24,10 +24,4 @@ class OntologyPolicy < ApplicationPolicy
   def destroy?
     user_is_owner?
   end
-
-  private
-  def user_is_owner?
-    return @record.user_id == @user.id if authenticated_user?
-    false
-  end
 end

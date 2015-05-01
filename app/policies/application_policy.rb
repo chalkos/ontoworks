@@ -55,4 +55,9 @@ class ApplicationPolicy
   def authenticated_user?
     not @user.nil?
   end
+
+  def user_is_owner?
+    return @record.user_id == @user.id if authenticated_user?
+    false
+  end
 end
