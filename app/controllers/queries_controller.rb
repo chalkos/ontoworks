@@ -26,7 +26,6 @@ class QueriesController < ApplicationController
     @query.content = request.post? ? params[:query][:content] : default_query_content
     @out_format = request.post? ? params[:query][:output] : default_query_output
     time = request.post? ? params[:query][:timeout].to_i : default_query_timeout
-
     @timeout = time.between?(1, 3600) ? time * 1000 : default_query_timeout
 
     # Method
@@ -52,7 +51,6 @@ class QueriesController < ApplicationController
     else
       flash.now[:notice] = errors
       render :run, collection: @query
-      #redirect_to ontology_queries_run_url, notice: errors,  collection: @query
     end
   end
 

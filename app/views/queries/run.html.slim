@@ -31,6 +31,7 @@
       h1.section-title
         | Query results
         small = @query.sparql['results']['bindings'].count.to_s + " matches"
+
       .table-responsive
         table.table#query-results
           thead
