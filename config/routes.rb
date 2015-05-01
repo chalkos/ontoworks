@@ -3,7 +3,8 @@ Rails.application.routes.draw do
   root 'ontologies#index'
 
   resources :ontologies, param: :code do
-    match "/queries/run" => "queries#run", :via => [:get, :post]
+    match "/queries/run" => "queries#run", :via => [:post]
+    match "/queries/run" => "queries#navigate", :via => [:get]
     resources :queries, :except => [:edit, :new, :update]
     # we don't use match here because we want to force :code instead of :ontology_code
     member do

@@ -19,6 +19,42 @@ class QueriesController < ApplicationController
   def show
   end
 
+  def navigate
+
+    if params['uri'].nil?
+      run
+    else
+      uri = params[:uri]
+
+      dataset = Jena::TDB::TDBFactory.createDataset(@ontology.tdb_dir)
+      dataset.begin(Jena::Query::ReadWrite::READ)
+
+      begin
+        n_read,res = exec_query(dataset,query_subject)
+        if(n_read == 0)
+          n_read,res = exec_query(dataset,query_predicate)
+          if(n_read == 0)
+            n_read,res = exec_query(dataset,query_object)
+          end
+        end
+
+        out = StringIO.new
+        stream = out.to_outputstream
+
+        Jena::Query::ResultSetFormatter.outputAsJSON(stream,res)
+        sparql = JSON.parse out.string
+
+      rescue Exception => e
+        error = e.to_s
+      end
+      dataset.end
+
+      respond_to do |format|
+        format.html { render :text => "#{sparql}" }
+      end
+    end
+  end
+
   # POST /run
   def run
     # Get a query
@@ -111,9 +147,11 @@ class QueriesController < ApplicationController
       dataset.begin(Jena::Query::ReadWrite::READ)
 
       begin
-        query = Jena::Query::QueryFactory.create(@query.content)
-        qexec = Jena::Query::QueryExecutionFactory.create(@query.content, dataset)
-        res = qexec.execSelect()
+        n_read,res,q_exec = exec_query(dataset,@query.content)
+
+        # q_fact = Jena::Query::QueryFactory.create(@query.content)
+        # q_exec = Jena::Query::QueryExecutionFactory.create(q_fact, dataset)
+        # res = q_exec.execSelect()
 
         # StringIO - org.jruby.util.IOOutputStream
         out = StringIO.new
@@ -133,12 +171,22 @@ class QueriesController < ApplicationController
           @query.sparql = JSON.parse out.string
         end
 
-        qexec.close()
+        #q_exec.close()
         dataset.end()
 
         errors = ""
       rescue Exception => e
         errors = e.to_s
       end
+    end
+
+    def exec_query(dataset,query)
+      q_fact = Jena::Query::QueryFactory.create(query)
+      q_exec = Jena::Query::QueryExecutionFactory.create(q_fact, dataset)
+      res = q_exec.execSelect()
+
+      read = Jena::Query::ResultSetFormatter.consume(res)
+
+      return read,res,q_exec
     end
 end
