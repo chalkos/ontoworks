@@ -66,7 +66,11 @@
               - @query.sparql['head']['vars'].each do |col|
                 td
                   = format_cell(row[col])
-                  =  link_to result_cell(row[col]), ontology_queries_run_path(@ontology, :uri => result_cell(row[col])), method: :get
+                  - if row[col]['type'] == 'uri'
+                    =  link_to result_cell(row[col]), ontology_queries_run_path(@ontology, :uri => result_cell(row[col])), method: :get
+                  - else
+                    b
+                      = result_cell(row[col])
 
 
 /link_to "Profile", profile_path(@profile.id, param1: 'value1', param2: 'value2'), method: :post

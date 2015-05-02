@@ -20,37 +20,41 @@ class QueriesController < ApplicationController
   end
 
   def navigate
-
     if params['uri'].nil?
       run
     else
       uri = params[:uri]
+      @query = Query.new
 
       dataset = Jena::TDB::TDBFactory.createDataset(@ontology.tdb_dir)
       dataset.begin(Jena::Query::ReadWrite::READ)
 
       begin
-        n_read,res = exec_query(dataset,query_subject)
-        if(n_read == 0)
-          n_read,res = exec_query(dataset,query_predicate)
-          if(n_read == 0)
-            n_read,res = exec_query(dataset,query_object)
+        res,qexec = exec_query(dataset,query_subject(uri))
+        @query.content = query_subject(uri)
+        if(res.size == 0)
+          res,qexec = exec_query(dataset,query_predicate(uri))
+          @query.content = query_predicate(uri)
+          if(res.size == 0)
+            res,qexec = exec_query(dataset,query_object(uri))
+            @query.content = query_object(uri)
           end
         end
 
         out = StringIO.new
-        stream = out.to_outputstream
+        Jena::Query::ResultSetFormatter.outputAsJSON(out.to_outputstream,res)
+        @query.sparql = JSON.parse out.string
 
-        Jena::Query::ResultSetFormatter.outputAsJSON(stream,res)
-        sparql = JSON.parse out.string
-
+        errors = ""
       rescue Exception => e
-        error = e.to_s
+        errors = e.to_s
       end
-      dataset.end
+
+      qexec.close()
+      dataset.end()
 
       respond_to do |format|
-        format.html { render :text => "#{sparql}" }
+        format.html { render :run, collection: @query }
       end
     end
   end
@@ -147,11 +151,11 @@ class QueriesController < ApplicationController
       dataset.begin(Jena::Query::ReadWrite::READ)
 
       begin
-        n_read,res,q_exec = exec_query(dataset,@query.content)
+        res,qexec = exec_query(dataset,@query.content)
 
-        # q_fact = Jena::Query::QueryFactory.create(@query.content)
-        # q_exec = Jena::Query::QueryExecutionFactory.create(q_fact, dataset)
-        # res = q_exec.execSelect()
+        # query = Jena::Query::QueryFactory.create(@query.content)
+        # qexec = Jena::Query::QueryExecutionFactory.create(query, dataset)
+        # res = qexec.execSelect()
 
         # StringIO - org.jruby.util.IOOutputStream
         out = StringIO.new
@@ -171,7 +175,7 @@ class QueriesController < ApplicationController
           @query.sparql = JSON.parse out.string
         end
 
-        #q_exec.close()
+        qexec.close()
         dataset.end()
 
         errors = ""
@@ -181,12 +185,10 @@ class QueriesController < ApplicationController
     end
 
     def exec_query(dataset,query)
-      q_fact = Jena::Query::QueryFactory.create(query)
-      q_exec = Jena::Query::QueryExecutionFactory.create(q_fact, dataset)
-      res = q_exec.execSelect()
+      query = Jena::Query::QueryFactory.create(query)
+      qexec = Jena::Query::QueryExecutionFactory.create(query, dataset)
+      res = Jena::Query::ResultSetFactory.makeRewindable(qexec.execSelect())
 
-      read = Jena::Query::ResultSetFormatter.consume(res)
-
-      return read,res,q_exec
+      return res,qexec
     end
 end
