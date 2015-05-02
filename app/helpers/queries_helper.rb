@@ -39,15 +39,15 @@ module QueriesHelper
     30000
   end
 
-  def query_subject
-    "SELECT DISTINCT * WHERE {\n<#{uri}> ?b ?c\n}"
+  def query_subject(uri)
+    "SELECT * WHERE {\n<#{uri}> ?predicate ?object\n}"
   end
 
-  def query_predicate
-    "SELECT DISTINCT * WHERE {\n?a <#{uri}> ?c\n}"
+  def query_predicate(uri)
+    "SELECT * WHERE {\n?subject <#{uri}> ?object\n}"
   end
 
-  def query_object
-    "SELECT DISTINCT * WHERE {\n?a ?b <#{uri}>\n}"
+  def query_object(uri)
+    "SELECT * WHERE {\n?subject ?predicate <#{uri}>\n}"
   end
 end
