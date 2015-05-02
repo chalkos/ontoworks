@@ -1,8 +1,8 @@
-= form_for :query, url: ontology_queries_run_path(@ontology), html: { role: 'form' } do |f|
+= form_for :query, url: ontology_queries_run_path(@ontology), html: { id: 'submit_query', role: 'form' } do |f|
 
   .form-group
     = f.label :content, 'Run a query on this ontology'
-    = f.text_area :content, class: 'form-control monospace', spellcheck: false, rows: '5', value: (@query.nil? ? default_query_content : @query.content)
+    = f.text_area :content, id: 'q_content', class: 'form-control monospace', spellcheck: false, rows: '5', value: (@query.nil? ? default_query_content : @query.content)
 
   .form-inline
     .form-group

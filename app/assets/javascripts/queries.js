@@ -89,4 +89,14 @@ $(document).ready(function(){
     }
     return false;
   });
+
+  $("#s_classes").click(function(){
+    $("#q_content").val("SELECT DISTINCT ?class WHERE {\n [] a ?class\n} ORDER BY ?class");
+    $("#submit_query").submit();
+  });
+
+  $("#s_properties").click(function(){
+    $("#q_content").val("SELECT DISTINCT ?property WHERE {\n [] ?property []\n} ORDER BY ?property");
+    $("#submit_query").submit();
+  });
 });

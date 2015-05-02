@@ -31,9 +31,9 @@
         .panel-body
           ul.list-unstyled
             li
-              = link_to "Classes", ontology_queries_run_path(@ontology, :query => {:content => default_query_content}), method: :post
+              a#s_classes Classes
             li
-              = link_to "Properties", ontology_queries_run_path(@ontology, :query => {:content => properties_query_content}), method: :post
+              a#s_properties Properties
 
 
 .row style="margin-top:1em"
@@ -71,6 +71,3 @@
                   - else
                     b
                       = result_cell(row[col])
-
-
-/link_to "Profile", profile_path(@profile.id, param1: 'value1', param2: 'value2'), method: :post
