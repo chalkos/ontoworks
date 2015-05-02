@@ -189,8 +189,8 @@ class QueriesController < ApplicationController
     end
 
     def exec_query(dataset,query,timeout)
-      query = Jena::Query::QueryFactory.create(query)
-      qexec = Jena::Query::QueryExecutionFactory.create(query, dataset)
+      qfact = Jena::Query::QueryFactory.create(query)
+      qexec = Jena::Query::QueryExecutionFactory.create(qfact, dataset)
       qexec.setTimeout(timeout)
       res = Jena::Query::ResultSetFactory.makeRewindable(qexec.execSelect())
 
