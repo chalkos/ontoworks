@@ -166,6 +166,21 @@ class OntologiesController < ApplicationController
     FileUtils.rm(name)
   end
 
+  # GET /share/7ntqd9m8hxnq9degy7qzdxnxuyhz98edn7zqxq
+  def share
+    authorize Ontology
+
+    @ontology = Ontology.where(share_code: params['share_code']).first
+
+    unless @ontology.shared?
+      @ontology.errors.add(:share_code, "not shared")
+    end
+
+    # associate user and ontology
+
+    redirect_to ontologies_url, notice: 'not yet implemented.'
+  end
+
   private
   # Use callbacks to share common setup or constraints between actions.
   def set_ontology

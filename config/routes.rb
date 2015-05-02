@@ -2,6 +2,7 @@ Rails.application.routes.draw do
 
   root 'ontologies#index'
 
+  get 'share/:share_code', to: 'ontologies#share'
   resources :ontologies, param: :code do
     match "/queries/run" => "queries#run", :via => [:get, :post]
     resources :queries, :except => [:edit, :new, :update]
