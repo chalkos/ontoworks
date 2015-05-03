@@ -45,16 +45,20 @@ class QueriesController < ApplicationController
         Jena::Query::ResultSetFormatter.outputAsJSON(out.to_outputstream,res)
         @query.sparql = JSON.parse out.string
 
+        qexec.close()
         errors = ""
       rescue Exception => e
         errors = e.to_s
       end
 
-      qexec.close()
       dataset.end()
 
-      respond_to do |format|
-        format.html { render :run, collection: @query }
+      if errors.empty?
+        respond_to do |format|
+          format.html { render :run, collection: @query }
+        end
+      else
+        redirect_to ontology_queries_run_url, notice: errors
       end
     end
   end
