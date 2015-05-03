@@ -9,7 +9,6 @@ class Query < ActiveRecord::Base
   validate :content_is_a_valid_sparql_query
 
   attr_accessor :sparql
-  attr_accessor :timeout
 
   def content_is_a_valid_sparql_query
     if content.present?
