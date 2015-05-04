@@ -3,7 +3,7 @@ class OntologiesController < ApplicationController
 
   # raise an exception if authorize has not yet been called
   after_action :verify_authorized
-  before_action :set_ontology, only: [:show, :edit, :update, :destroy, :download]
+  before_action :set_ontology, only: [:show, :edit, :update, :destroy, :download, :change_code]
 
   # GET /ontologies
   # GET /ontologies.json
@@ -17,6 +17,7 @@ class OntologiesController < ApplicationController
   # GET /ontologies/1
   # GET /ontologies/1.json
   def show
+    authorize @ontology
   end
 
   # GET /ontologies/new
@@ -44,13 +45,9 @@ class OntologiesController < ApplicationController
     @ontology.shared = false
     @ontology.shared_readonly = true
 
-    # ensure unique code
-    inc = 0
-    loop do
-      @ontology.code = Digest::MD5.hexdigest (@ontology.hash+inc).to_s
-      break if Ontology.where(:code => @ontology.code).empty?
-      inc += 1
-    end
+    authorize @ontology
+
+    generate_code! @ontology
 
     if @ontology.valid?
       ## UNZIP START, IF NECESSARY
@@ -166,6 +163,22 @@ class OntologiesController < ApplicationController
     FileUtils.rm(name)
   end
 
+  # GET /ontologies/1/change_code
+  def change_code
+    authorize @ontology
+    generate_code! @ontology
+
+    respond_to do |format|
+      if @ontology.save
+        format.html { redirect_to @ontology, notice: 'Ontology code was successfully changed.' }
+        format.json { render :show, status: :ok, location: @ontology }
+      else
+        format.html { render :show }
+        format.json { render json: @ontology.errors, status: :unprocessable_entity }
+      end
+    end
+  end
+
   private
   # Use callbacks to share common setup or constraints between actions.
   def set_ontology
@@ -212,5 +225,16 @@ class OntologiesController < ApplicationController
     bw.close
     dataset.end()
     tmpName
+  end
+
+  def generate_code!(ontology)
+    # ensure unique code
+    inc = 0
+    loop do
+      ontology.code = Digest::MD5.hexdigest (ontology.hash+inc).to_s
+      puts "\n##### generated code: #{ontology.code}\n"
+      break if Ontology.where(:code => ontology.code).empty?
+      inc += 1
+    end
   end
 end

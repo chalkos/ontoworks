@@ -9,8 +9,12 @@ class OntologyPolicy < ApplicationPolicy
     true
   end
 
+  def change_code?
+    user_is_owner?
+  end
+
   def show?
-    @record.public? or user_is_owner?
+    @record.public? or @record.shared? or user_is_owner?
   end
 
   def create?
