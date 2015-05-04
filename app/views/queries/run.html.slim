@@ -11,7 +11,22 @@
       strong Ontology:
       = link_to ontology_path(@ontology) do
         = @ontology.name
+  .col-md-9
     = render 'form_run_query', savebutton: true
+  .col-md-3
+    br/
+    section
+      .panel.panel-primary
+        .panel-heading
+          i.fa.fa-cogs
+          | Additional Queries
+        .panel-body
+          ul.list-unstyled
+            li
+              a#s_classes Classes
+            li
+              a#s_properties Properties
+
 
 .row style="margin-top:1em"
   .col-lg-12.col-md-12.col-sm-12.col-xs-12#query_save_area
@@ -25,7 +40,7 @@
       button.btn.btn-ar.btn-info#query_save type="button" Save Query
       button.btn.btn-ar.btn-default#query_stop_save style="margin-left:1em" type="button" Cancel
 
--if @query.sparql
+- if @query.sparql
   .row
     .col-lg-12.col-md-12.col-sm-12.col-xs-12
       h1.section-title
@@ -42,4 +57,10 @@
             - @query.sparql['results']['bindings'].each do |row|
               tr
                 - @query.sparql['head']['vars'].each do |col|
-                  td = format_result_cell row[col]
+                  td
+                    = format_cell(row[col])
+                    - if row[col]['type'] == 'uri'
+                      =  link_to result_cell(row[col]), ontology_queries_run_path(@ontology, :uri => result_cell(row[col])), method: :get
+                    - else
+                      b
+                        = result_cell(row[col])

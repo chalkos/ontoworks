@@ -19,6 +19,50 @@ class QueriesController < ApplicationController
   def show
   end
 
+  def navigate
+    if params['uri'].nil?
+      run
+    else
+      uri = params[:uri]
+      @query = Query.new
+
+      dataset = Jena::TDB::TDBFactory.createDataset(@ontology.tdb_dir)
+      dataset.begin(Jena::Query::ReadWrite::READ)
+
+      begin
+        res,qexec = exec_query(dataset,query_subject(uri),default_query_timeout)
+        @query.content = query_subject(uri)
+        if(res.size == 0)
+          res,qexec = exec_query(dataset,query_predicate(uri),default_query_timeout)
+          @query.content = query_predicate(uri)
+          if(res.size == 0)
+            res,qexec = exec_query(dataset,query_object(uri),default_query_timeout)
+            @query.content = query_object(uri)
+          end
+        end
+
+        out = StringIO.new
+        Jena::Query::ResultSetFormatter.outputAsJSON(out.to_outputstream,res)
+        @query.sparql = JSON.parse out.string
+
+        qexec.close()
+        errors = ""
+      rescue Exception => e
+        errors = e.to_s
+      end
+
+      dataset.end()
+
+      if errors.empty?
+        respond_to do |format|
+          format.html { render :run, collection: @query }
+        end
+      else
+        redirect_to ontology_queries_run_url, notice: errors
+      end
+    end
+  end
+
   # POST /run
   def run
     # Get a query
@@ -119,10 +163,7 @@ class QueriesController < ApplicationController
       dataset.begin(Jena::Query::ReadWrite::READ)
 
       begin
-        query = Jena::Query::QueryFactory.create(@query.content)
-        qexec = Jena::Query::QueryExecutionFactory.create(@query.content, dataset)
-        qexec.setTimeout(@timeout)
-        res = qexec.execSelect()
+        res,qexec = exec_query(dataset,@query.content,@timeout)
 
         # StringIO - org.jruby.util.IOOutputStream
         out = StringIO.new
@@ -149,5 +190,14 @@ class QueriesController < ApplicationController
       rescue Exception => e
         errors = e.to_s
       end
+    end
+
+    def exec_query(dataset,query,timeout)
+      qfact = Jena::Query::QueryFactory.create(query)
+      qexec = Jena::Query::QueryExecutionFactory.create(qfact, dataset)
+      qexec.setTimeout(timeout)
+      res = Jena::Query::ResultSetFactory.makeRewindable(qexec.execSelect())
+
+      return res,qexec
     end
 end

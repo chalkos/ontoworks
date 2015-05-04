@@ -1,12 +1,12 @@
 module QueriesHelper
-  def format_result_cell(cell)
+  def format_cell(cell)
     # value - the lexical value of the object
     # (required, full URIs should be used, not qnames)
-    text = cell['value'].to_s || '_error_'
+    # text = cell['value'].to_s || '_error_'
 
     # type - one of 'uri', 'literal' or 'bnode'
     # (required and must be lowercase)
-    text.prepend "[#{cell['type']}] " if cell['type']
+    text = "[#{cell['type']}] " if cell['type']
 
     # lang - the language of a literal value
     # (optional but if supplied it must not be empty)
@@ -19,8 +19,16 @@ module QueriesHelper
     text
   end
 
+  def result_cell(cell)
+    text = cell['value'].to_s || '_error_'
+  end
+
   def default_query_content
-    "select distinct ?Concept where {\n  [] a ?Concept\n} LIMIT 100"
+    "SELECT DISTINCT ?class WHERE {\n [] a ?class\n} ORDER BY ?class"
+  end
+
+  def properties_query_content
+    "SELECT DISTINCT ?property WHERE {\n [] ?property []\n} ORDER BY ?property"
   end
 
   def default_query_output
@@ -31,4 +39,15 @@ module QueriesHelper
     30000
   end
 
+  def query_subject(uri)
+    "SELECT * WHERE {\n<#{uri}> ?predicate ?object\n}"
+  end
+
+  def query_predicate(uri)
+    "SELECT * WHERE {\n?subject <#{uri}> ?object\n}"
+  end
+
+  def query_object(uri)
+    "SELECT * WHERE {\n?subject ?predicate <#{uri}>\n}"
+  end
 end
