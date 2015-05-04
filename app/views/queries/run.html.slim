@@ -40,26 +40,27 @@
       button.btn.btn-ar.btn-info#query_save type="button" Save Query
       button.btn.btn-ar.btn-default#query_stop_save style="margin-left:1em" type="button" Cancel
 
-.row
-  .col-lg-12.col-md-12.col-sm-12.col-xs-12
-    h1.section-title
-      | Query results
-      small = @query.sparql['results']['bindings'].count.to_s + " matches"
+- if @query.sparql
+  .row
+    .col-lg-12.col-md-12.col-sm-12.col-xs-12
+      h1.section-title
+        | Query results
+        small = @query.sparql['results']['bindings'].count.to_s + " matches"
 
-    .table-responsive
-      table.table#query-results
-        thead
-          tr
-            - @query.sparql['head']['vars'].each do |col|
-              th = col
-        tbody
-          - @query.sparql['results']['bindings'].each do |row|
+      .table-responsive
+        table.table#query-results
+          thead
             tr
               - @query.sparql['head']['vars'].each do |col|
-                td
-                  = format_cell(row[col])
-                  - if row[col]['type'] == 'uri'
-                    =  link_to result_cell(row[col]), ontology_queries_run_path(@ontology, :uri => result_cell(row[col])), method: :get
-                  - else
-                    b
-                      = result_cell(row[col])
+                th = col
+          tbody
+            - @query.sparql['results']['bindings'].each do |row|
+              tr
+                - @query.sparql['head']['vars'].each do |col|
+                  td
+                    = format_cell(row[col])
+                    - if row[col]['type'] == 'uri'
+                      =  link_to result_cell(row[col]), ontology_queries_run_path(@ontology, :uri => result_cell(row[col])), method: :get
+                    - else
+                      b
+                        = result_cell(row[col])
