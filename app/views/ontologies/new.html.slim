@@ -13,13 +13,10 @@
       .form-group
         = f.label :desc
         = f.text_area :desc, class: 'form-control', rows: '5', placeholder: t('placeholders.ontology.desc')
-      .form-group
-        label for="ontology[public_field]" Allow anyone to query this ontology
-        select.form-control name="ontology[public_field]"
-          = options_for_select({\
-            'No' => 'private',\
-            'Yes, but deny queries that change the ontology' => 'readonly',\
-            'Yes, and allow all queries' => 'readwrite'})
+      .checkbox
+        label
+          = f.check_box :public
+          = t('forms.ontology.public')
       .form-group
         label for="ontology_file" Ontology file
         input type="file" name="ontology[file]" id="ontology_file"

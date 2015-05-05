@@ -29,19 +29,13 @@
         dt Publicly available
         dd
           - if @ontology.public?
-            - if @ontology.public_readonly?
-              | Yes, denying queries that change the ontology.
-            - else
-              | Yes, allowing queries that change the ontology.
+            | Yes.
           - else
             | No.
         dt Shared using link
         dd
           - if @ontology.shared?
-            - if @ontology.shared_readonly?
-              | Yes, denying queries that change the ontology.
-            - else
-              | Yes, allowing queries that change the ontology.
+            | Yes.
           - else
             | No.
         - if @ontology.shared?

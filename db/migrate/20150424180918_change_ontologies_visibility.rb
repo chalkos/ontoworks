@@ -5,9 +5,6 @@ class ChangeOntologiesVisibility < ActiveRecord::Migration
     remove_column :ontologies, :expires
 
     add_column :ontologies, :public, :boolean, default: false
-    add_column :ontologies, :public_readonly, :boolean, default: true
-
     add_column :ontologies, :shared, :boolean, default: false
-    add_column :ontologies, :shared_readonly, :boolean, default: true
   end
 end

@@ -28,6 +28,7 @@ class OntologiesController < ApplicationController
 
   # GET /ontologies/1/edit
   def edit
+    authorize @ontology
   end
 
   # POST /ontologies
@@ -41,9 +42,6 @@ class OntologiesController < ApplicationController
 
     @ontology = Ontology.new(ontology_params)
     @ontology.user_id = current_user.id if user_signed_in?
-    @ontology.desc = '(no description)' if @ontology.desc.blank?
-    @ontology.shared = false
-    @ontology.shared_readonly = true
 
     authorize @ontology
 
@@ -118,8 +116,9 @@ class OntologiesController < ApplicationController
   # PATCH/PUT /ontologies/1
   # PATCH/PUT /ontologies/1.json
   def update
+    authorize @ontology
     respond_to do |format|
-      if @ontology.update(ontology_params.slice(:desc, :public, :public_readonly, :shared, :shared_readonly))
+      if @ontology.update(ontology_params.slice(:desc, :public, :shared))
         format.html { redirect_to @ontology, notice: 'Ontology was successfully updated.' }
         format.json { render :show, status: :ok, location: @ontology }
       else
@@ -144,8 +143,9 @@ class OntologiesController < ApplicationController
 
   # GET /ontologies/1/download
   def download
-    @type = params[:type]
+    authorize @ontology
 
+    @type = params[:type]
     case @type
     when "TURTLE"; ext = ".ttl"
     when "RDF/JSON"; ext = ".json"
@@ -167,6 +167,7 @@ class OntologiesController < ApplicationController
   def change_code
     authorize @ontology
     generate_code! @ontology
+    # also change the TDB directory
 
     respond_to do |format|
       if @ontology.save
@@ -187,24 +188,7 @@ class OntologiesController < ApplicationController
 
   # Never trust parameters from the scary internet, only allow the white list through.
   def ontology_params
-    p = params.require(:ontology).permit(:name, :desc, :public_field, :shared_field, :file)
-
-    ['public', 'shared'].each do |fieldname|
-      case p["#{fieldname}_field"]
-      when 'private'
-        p[fieldname] = false
-        p["#{fieldname}_readonly"] = true
-      when 'readonly'
-        p[fieldname] = true
-        p["#{fieldname}_readonly"] = true
-      when 'readwrite'
-        p[fieldname] = true
-        p["#{fieldname}_readonly"] = false
-      end
-      p.delete "#{fieldname}_field"
-    end
-
-    p
+    params.require(:ontology).permit(:name, :desc, :public, :shared, :file)
   end
 
   # Create string with content of an ontology
@@ -232,7 +216,6 @@ class OntologiesController < ApplicationController
     inc = 0
     loop do
       ontology.code = Digest::MD5.hexdigest (ontology.hash+inc).to_s
-      puts "\n##### generated code: #{ontology.code}\n"
       break if Ontology.where(:code => ontology.code).empty?
       inc += 1
     end
