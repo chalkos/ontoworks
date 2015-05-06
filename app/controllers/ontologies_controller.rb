@@ -168,8 +168,11 @@ class OntologiesController < ApplicationController
   # GET /ontologies/1/change_code
   def change_code
     authorize_present @ontology
+    old_location = @ontology.tdb_dir
     generate_code! @ontology
-    # also change the TDB directory
+
+    require 'fileutils'
+    FileUtils.mv(old_location, @ontology.tdb_dir)
 
     respond_to do |format|
       if @ontology.save
