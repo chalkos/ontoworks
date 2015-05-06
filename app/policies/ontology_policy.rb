@@ -17,6 +17,10 @@ class OntologyPolicy < ApplicationPolicy
     @record.public? or @record.shared? or user_is_owner?
   end
 
+  def download?
+    show?
+  end
+
   def create?
     authenticated_user?
   end
