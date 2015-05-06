@@ -3,6 +3,7 @@ class QueriesController < ApplicationController
 
   before_action :set_query, only: [:show, :destroy]
   before_action :get_ontology
+  after_action :verify_authorized
 
   # GET /queries
   # GET /queries.json
@@ -10,11 +11,13 @@ class QueriesController < ApplicationController
     @queries = @ontology.queries
     @my_queries = @queries.where(user_id: current_user.id) if user_signed_in?
     @more_queries = @queries.where.not(user_id: current_user.id) if user_signed_in?
+    authorize @queries
   end
 
   # GET /queries/1
   # GET /queries/1.json
   def show
+    authorize_present @query
   end
 
   def navigate
@@ -70,6 +73,8 @@ class QueriesController < ApplicationController
     time = request.post? ? params[:query][:timeout].to_i : default_query_timeout
     @timeout = time.between?(1, 3600) ? time * 1000 : default_query_timeout
 
+    authorize @query
+
     # Method
     errors = execute
 
@@ -104,6 +109,8 @@ class QueriesController < ApplicationController
     @query.user_id = current_user.id if user_signed_in?
     @query.desc = '(no description)' if @query.desc.blank?
 
+    authorize @query
+
     respond_to do |format|
       if @query.save
         format.json {
@@ -136,6 +143,8 @@ class QueriesController < ApplicationController
   # DELETE /queries/1
   # DELETE /queries/1.json
   def destroy
+    authorize_present @query
+
     @query.destroy
     respond_to do |format|
       format.html { redirect_to ontology_queries_url, notice: 'Query was successfully destroyed.' }
