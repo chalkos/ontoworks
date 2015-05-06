@@ -10,7 +10,8 @@ class QueryPolicy < ApplicationPolicy
 
   # those who can see the ontology can see it's queries
   def index?
-    Pundit.policy!(@user, @record.ontology).show?
+    # this should not be used, use "authorize @ontology, :show?" in the controller instead
+    false
   end
 
   def show?
@@ -22,7 +23,7 @@ class QueryPolicy < ApplicationPolicy
   end
 
   def create?
-    index? and authenticated_user?
+    authenticated_user?
   end
 
   # only the query owner or the ontology owner can delete a query

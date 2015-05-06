@@ -11,13 +11,14 @@ class QueriesController < ApplicationController
     @queries = @ontology.queries
     @my_queries = @queries.where(user_id: current_user.id) if user_signed_in?
     @more_queries = @queries.where.not(user_id: current_user.id) if user_signed_in?
-    authorize @queries
+
+    authorize @ontology, :show?
   end
 
   # GET /queries/1
   # GET /queries/1.json
   def show
-    authorize_present @query
+    authorize @ontology, :show?
   end
 
   def navigate
@@ -73,7 +74,7 @@ class QueriesController < ApplicationController
     time = request.post? ? params[:query][:timeout].to_i : default_query_timeout
     @timeout = time.between?(1, 3600) ? time * 1000 : default_query_timeout
 
-    authorize @query
+    authorize @ontology, :show?
 
     # Method
     errors = execute
@@ -105,10 +106,12 @@ class QueriesController < ApplicationController
   # POST /queries.json
   def create
     @query = Query.new(query_params)
-    @query.ontology = @ontology
-    @query.user_id = current_user.id if user_signed_in?
 
+    authorize @ontology, :show?
     authorize @query
+
+    @query.ontology = @ontology
+    @query.user_id = current_user.id
 
     respond_to do |format|
       if @query.save
@@ -125,23 +128,10 @@ class QueriesController < ApplicationController
     end
   end
 
-  # PATCH/PUT /queries/1
-  # PATCH/PUT /queries/1.json
-  # def update
-  #   respond_to do |format|
-  #     if @query.update(query_params)
-  #       format.html { redirect_to ontology_query_path(@ontology, @query), notice: 'Query was successfully updated.' }
-  #       format.json { render :show, status: :ok, location: @query }
-  #     else
-  #       format.html { render :edit }
-  #       format.json { render json: @query.errors, status: :unprocessable_entity }
-  #     end
-  #   end
-  # end
-
   # DELETE /queries/1
   # DELETE /queries/1.json
   def destroy
+    authorize @ontology, :show?
     authorize_present @query
 
     @query.destroy
