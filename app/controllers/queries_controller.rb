@@ -4,10 +4,6 @@ class QueriesController < ApplicationController
   before_action :set_query, only: [:show, :destroy]
   before_action :get_ontology
 
-  def get_ontology
-    @ontology = Ontology.where(code: params[:ontology_code]).first
-  end
-
   # GET /queries
   # GET /queries.json
   def index
@@ -157,6 +153,11 @@ class QueriesController < ApplicationController
     # Never trust parameters from the scary internet, only allow the white list through.
     def query_params
       params.require(:query).permit(:name, :desc, :content)
+    end
+
+    # Get ontology from the URL
+    def get_ontology
+      @ontology = Ontology.where(code: params[:ontology_code]).first
     end
 
     # Auxiliar Method
