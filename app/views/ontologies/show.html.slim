@@ -40,10 +40,11 @@
             | No.
         - if @ontology.shared?
           dt Share link
-          dd ~~link placeholder~~
+          dd
+            pre= ontology_url(@ontology)
         dt Access link
         dd
-          = link_to 'Generate new ontology link', change_code_ontology_path(@ontology), data: {:confirm => 'Are you sure?'}
+          = link_to 'Generate new ontology link', change_code_ontology_path(@ontology), data: {:confirm => 'Are you sure?'}, class: 'em-danger-inverse'
 
   .col-lg-6.col-md-6.col-sm-12.col-xs-12
     .row
