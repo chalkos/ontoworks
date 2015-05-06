@@ -17,7 +17,7 @@ class OntologiesController < ApplicationController
   # GET /ontologies/1
   # GET /ontologies/1.json
   def show
-    authorize @ontology
+    authorize_present @ontology
   end
 
   # GET /ontologies/new
@@ -28,12 +28,11 @@ class OntologiesController < ApplicationController
 
   # GET /ontologies/1/edit
   def edit
-    authorize @ontology
+    authorize_present @ontology
   end
 
   # POST /ontologies
   # POST /ontologies.json
-
   def create
     require 'digest/md5'
     require 'rubygems/package'
@@ -116,7 +115,8 @@ class OntologiesController < ApplicationController
   # PATCH/PUT /ontologies/1
   # PATCH/PUT /ontologies/1.json
   def update
-    authorize @ontology
+    authorize_present @ontology
+
     respond_to do |format|
       if @ontology.update(ontology_params.slice(:desc, :public, :shared))
         format.html { redirect_to @ontology, notice: 'Ontology was successfully updated.' }
@@ -131,6 +131,8 @@ class OntologiesController < ApplicationController
   # DELETE /ontologies/1
   # DELETE /ontologies/1.json
   def destroy
+    authorize_present @ontology
+
     require 'fileutils'
     FileUtils.rm_r @ontology.tdb_dir
 
@@ -143,7 +145,7 @@ class OntologiesController < ApplicationController
 
   # GET /ontologies/1/download
   def download
-    authorize @ontology
+    authorize_present @ontology
 
     @type = params[:type]
     case @type
@@ -165,7 +167,7 @@ class OntologiesController < ApplicationController
 
   # GET /ontologies/1/change_code
   def change_code
-    authorize @ontology
+    authorize_present @ontology
     generate_code! @ontology
     # also change the TDB directory
 

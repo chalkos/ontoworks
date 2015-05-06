@@ -9,6 +9,17 @@ class ApplicationController < ActionController::Base
   rescue_from Pundit::NotAuthorizedError, with: :user_not_authorized
 
   private
+  def raise_404
+    raise ActionController::RoutingError.new('Not Found')
+  end
+
+  def authorize_present(resource)
+    if resource.present?
+      authorize resource
+    else
+      raise_404
+    end
+  end
 
   def user_not_authorized(exception)
     policy_name = exception.policy.class.to_s.underscore
