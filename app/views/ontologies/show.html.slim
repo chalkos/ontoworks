@@ -44,7 +44,10 @@
             pre= ontology_url(@ontology)
         dt Access link
         dd
-          = link_to 'Generate new ontology link', change_code_ontology_path(@ontology), data: {:confirm => 'Are you sure?'}, class: 'em-danger-inverse'
+          = link_to change_code_ontology_path(@ontology), data: {:confirm => 'Are you sure that you want to change the link for this ontology?'} do
+            button.btn.btn-ar.btn-warning type="button"
+              i.fa.fa-exclamation-triangle
+              | Generate new ontology link
 
   .col-lg-6.col-md-6.col-sm-12.col-xs-12
     .row
