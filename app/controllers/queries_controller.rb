@@ -107,7 +107,6 @@ class QueriesController < ApplicationController
     @query = Query.new(query_params)
     @query.ontology = @ontology
     @query.user_id = current_user.id if user_signed_in?
-    @query.desc = '(no description)' if @query.desc.blank?
 
     authorize @query
 
