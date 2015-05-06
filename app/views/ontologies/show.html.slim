@@ -4,7 +4,7 @@
       | Ontology
       = link_to ontologies_path, class: 'tt icon-ar icon-ar-round icon-ar-sm', style: 'margin-left:1em', title: 'Back to ontologies listing' do
         i.fa.fa-list
-      = link_to edit_ontology_path(@ontology), class: 'tt icon-ar icon-ar-round icon-ar-sm', title: 'Change description' do
+      = link_to edit_ontology_path(@ontology), class: 'tt icon-ar icon-ar-round icon-ar-sm', title: 'Change ontology options' do
         i.fa.fa-pencil
       = link_to @ontology, data: {:confirm => 'Are you sure?'}, :method => :delete, class: 'tt icon-ar icon-ar-round icon-ar-danger icon-ar-sm', title: 'Delete this ontology' do
         i.fa.fa-trash

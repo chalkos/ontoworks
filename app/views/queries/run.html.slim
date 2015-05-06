@@ -12,7 +12,10 @@
       = link_to ontology_path(@ontology) do
         = @ontology.name
   .col-md-9
-    = render 'form_run_query', options: [:save]
+    - if user_signed_in?
+      = render 'form_run_query', options: [:save]
+    - else
+      = render 'form_run_query'
   .col-md-3
     br/
     section
