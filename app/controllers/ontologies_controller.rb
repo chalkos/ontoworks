@@ -8,10 +8,9 @@ class OntologiesController < ApplicationController
   # GET /ontologies
   # GET /ontologies.json
   def index
-    @ontologies = Ontology.eager_load(:user).all
-    @my_ontologies = @ontologies.where(user_id: current_user.id) if user_signed_in?
-    @public_ontologies = @ontologies.where.not(user_id: current_user.id) if user_signed_in?
-    authorize @ontologies
+    @my_ontologies = Ontology.where(user_id: current_user.id) if user_signed_in?
+    @public_ontologies = Ontology.eager_load(:user).where(public: true)
+    authorize Ontology
   end
 
   # GET /ontologies/1

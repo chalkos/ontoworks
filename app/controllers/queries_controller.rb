@@ -10,7 +10,12 @@ class QueriesController < ApplicationController
   def index
     @queries = @ontology.queries
     @my_queries = @queries.where(user_id: current_user.id) if user_signed_in?
-    @more_queries = @queries.where.not(user_id: current_user.id) if user_signed_in?
+
+    if user_signed_in?
+      @more_queries = @queries.where.not(user_id: current_user.id)
+    else
+      @more_queries = @queries
+    end
 
     authorize @ontology, :show?
   end
