@@ -7,4 +7,13 @@ module ApplicationViewHelper
       link_to link_text, link_path
     end
   end
+
+  # obtains the error messages for any used model
+  def error_messages
+    [@ontology, @user, @query]
+      .keep_if( &:present? )
+      .map(&:errors)
+      .map(&:full_messages)
+      .flatten
+  end
 end

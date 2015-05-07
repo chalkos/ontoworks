@@ -17,44 +17,15 @@ html
     #sb-site
       .boxed
         = render 'layouts/topmenu'
-        nav#header.navbar.navbar-static-top.navbar-default.navbar-header-full.navbar-dark role="navigation" 
-          .container
-            /! Brand and toggle get grouped for better mobile display
-            .navbar-header
-              button.navbar-toggle data-target="#bs-example-navbar-collapse-1" data-toggle="collapse" type="button" 
-                span.sr-only Toggle navigation
-                i.fa.fa-bars
-              a.navbar-brand.hidden-lg.hidden-md.hidden-sm.active href="index.html" 
-                | Onto
-                span Works
-            /! navbar-header
-            #bs-example-navbar-collapse-1.collapse.navbar-collapse
-              ul.nav.navbar-nav
-                = nav_link 'Home', root_path
-                = nav_link 'Ontologies', ontologies_path
-                = nav_link 'New Ontology', new_ontology_path
-            /! navbar-collapse
-          /! container
         section.margin-bottom.margin-top
           .container
             .row
               .col-lg-12.col-md-12.col-sm-12.col-xs-12
-                - if notice.present?
-                  .row
-                    .col-lg-12.col-md-12.col-sm-12.col-xs-12
-                      div.alert.alert-success.alert-border
-                        button.close type="button" data-dismiss="alert" aria-hidden="true" &times;
-                        = notice
-                - if alert.present?
-                  .row
-                    .col-lg-12.col-md-12.col-sm-12.col-xs-12
-                      div.alert.alert-danger.alert-border
-                        button.close type="button" data-dismiss="alert" aria-hidden="true" &times;
-                        = alert
+                = render 'layouts/notice'
                 = yield
         footer#footer
           p
-            | &copy; 2014
+            | &copy; 2015
             a href="#"  OntoWorks
             |  All rights reserved.
       /! boxed

@@ -9,6 +9,7 @@ Rails.application.routes.draw do
     # we don't use match here because we want to force :code instead of :ontology_code
     member do
       get 'download'
+      get 'change_code'
     end
   end
 

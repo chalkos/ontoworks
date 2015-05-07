@@ -1,3 +1,4 @@
+- options = [] if options.nil?
 table.table
   thead
     tr
@@ -12,4 +13,4 @@ table.table
           = link_to ontology do
             = ontology.name
         td
-          = truncate ontology.desc, length: 50
+          = truncate ontology.desc, length: 60

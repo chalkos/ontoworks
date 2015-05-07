@@ -3,20 +3,27 @@ class QueriesController < ApplicationController
 
   before_action :set_query, only: [:show, :destroy]
   before_action :get_ontology
-
-  def get_ontology
-    @ontology = Ontology.where(code: params[:ontology_code]).first
-  end
+  after_action :verify_authorized
 
   # GET /queries
   # GET /queries.json
   def index
     @queries = @ontology.queries
+    @my_queries = @queries.where(user_id: current_user.id) if user_signed_in?
+
+    if user_signed_in?
+      @more_queries = @queries.where.not(user_id: current_user.id)
+    else
+      @more_queries = @queries
+    end
+
+    authorize @ontology, :show?
   end
 
   # GET /queries/1
   # GET /queries/1.json
   def show
+    authorize @ontology, :show?
   end
 
   def navigate
@@ -72,6 +79,8 @@ class QueriesController < ApplicationController
     time = request.post? ? params[:query][:timeout].to_i : default_query_timeout
     @timeout = time.between?(1, 3600) ? time * 1000 : default_query_timeout
 
+    authorize @ontology, :show?
+
     # Method
     errors = execute
 
@@ -102,8 +111,12 @@ class QueriesController < ApplicationController
   # POST /queries.json
   def create
     @query = Query.new(query_params)
+
+    authorize @ontology, :show?
+    authorize @query
+
     @query.ontology = @ontology
-    @query.user_id = current_user.id if user_signed_in?
+    @query.user_id = current_user.id
 
     respond_to do |format|
       if @query.save
@@ -120,23 +133,12 @@ class QueriesController < ApplicationController
     end
   end
 
-  # PATCH/PUT /queries/1
-  # PATCH/PUT /queries/1.json
-  # def update
-  #   respond_to do |format|
-  #     if @query.update(query_params)
-  #       format.html { redirect_to ontology_query_path(@ontology, @query), notice: 'Query was successfully updated.' }
-  #       format.json { render :show, status: :ok, location: @query }
-  #     else
-  #       format.html { render :edit }
-  #       format.json { render json: @query.errors, status: :unprocessable_entity }
-  #     end
-  #   end
-  # end
-
   # DELETE /queries/1
   # DELETE /queries/1.json
   def destroy
+    authorize @ontology, :show?
+    authorize_present @query
+
     @query.destroy
     respond_to do |format|
       format.html { redirect_to ontology_queries_url, notice: 'Query was successfully destroyed.' }
@@ -147,12 +149,18 @@ class QueriesController < ApplicationController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_query
+      # possível optimização usando eager_load em vez de joins e incluir também os autores das queries
       @query = Query.joins(:ontology).where(ontologies: {code: params[:ontology_code]}, queries: {id: params[:id]}).first!
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def query_params
       params.require(:query).permit(:name, :desc, :content)
+    end
+
+    # Get ontology from the URL
+    def get_ontology
+      @ontology = Ontology.where(code: params[:ontology_code]).first
     end
 
     # Auxiliar Method

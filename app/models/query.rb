@@ -8,8 +8,11 @@ class Query < ActiveRecord::Base
 
   validate :content_is_a_valid_sparql_query
 
+  before_validation :set_default_description_if_blank, on: :create
+
   attr_accessor :sparql
 
+  private
   def content_is_a_valid_sparql_query
     if content.present?
       begin
@@ -18,5 +21,10 @@ class Query < ActiveRecord::Base
         errors.add(:content, e.to_s)
       end
     end
+  end
+
+  def set_default_description_if_blank
+    self.desc = '(no description)' if self.desc.blank?
+    return true
   end
 end

@@ -1,15 +1,18 @@
 class Ontology < ActiveRecord::Base
   include OntologiesHelper
 
-  validates_uniqueness_of :code
   has_many :queries
   belongs_to :user
 
+  validates :public, :shared, inclusion: [true, false]
+  validates_presence_of :user
+  validates_presence_of :file, on: :create
   validates :code, uniqueness: true
-  validates :user, presence: true
   validates :name, presence: true, length: { in: 3..255 }
-  validates :file, presence: true
   validate :valid_content_type, :number_of_files
+
+  before_validation :set_default_description_if_blank, on: [:create, :update]
+  before_validation :set_shared_to_false, on: :create
 
   attr_accessor :file
 
@@ -22,7 +25,7 @@ class Ontology < ActiveRecord::Base
   end
 
   def valid_content_type
-    unless file.blank?
+    if file.present?
       allowed = ["application/gzip","application/zip","text/xml","application/rdf+xml","application/octet-stream","application/x-gzip"]
 
       errors.add(:file,"Invalid file type. Valid formats are xml, zip and tar.gz") unless allowed.include? file.content_type
@@ -42,5 +45,15 @@ class Ontology < ActiveRecord::Base
         errors.add(:file, "The uploaded package must contain a single file.") unless zips == 1
       end
     end
+  end
+
+  def set_shared_to_false
+    self.shared = false
+    return true
+  end
+
+  def set_default_description_if_blank
+    self.desc = '(no description)' if self.desc.blank?
+    return true
   end
 end

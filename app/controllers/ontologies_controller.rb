@@ -1,31 +1,37 @@
 class OntologiesController < ApplicationController
   include OntologiesHelper
 
-  before_action :set_ontology, only: [:show, :edit, :update, :destroy, :download]
+  # raise an exception if authorize has not yet been called
+  after_action :verify_authorized
+  before_action :set_ontology, only: [:show, :edit, :update, :destroy, :download, :change_code]
 
   # GET /ontologies
   # GET /ontologies.json
   def index
-    @ontologies = Ontology.all
+    @my_ontologies = Ontology.where(user_id: current_user.id) if user_signed_in?
+    @public_ontologies = Ontology.eager_load(:user).where(public: true)
+    authorize Ontology
   end
 
   # GET /ontologies/1
   # GET /ontologies/1.json
   def show
+    authorize_present @ontology
   end
 
   # GET /ontologies/new
   def new
     @ontology = Ontology.new
+    authorize @ontology
   end
 
   # GET /ontologies/1/edit
   def edit
+    authorize_present @ontology
   end
 
   # POST /ontologies
   # POST /ontologies.json
-
   def create
     require 'digest/md5'
     require 'rubygems/package'
@@ -35,13 +41,9 @@ class OntologiesController < ApplicationController
     @ontology = Ontology.new(ontology_params)
     @ontology.user_id = current_user.id if user_signed_in?
 
-    # ensure unique code
-    inc = 0
-    loop do
-      @ontology.code = Digest::MD5.hexdigest (@ontology.hash+inc).to_s
-      break if Ontology.where(:code => @ontology.code).empty?
-      inc += 1
-    end
+    authorize @ontology
+
+    generate_code! @ontology
 
     if @ontology.valid?
       ## UNZIP START, IF NECESSARY
@@ -112,8 +114,10 @@ class OntologiesController < ApplicationController
   # PATCH/PUT /ontologies/1
   # PATCH/PUT /ontologies/1.json
   def update
+    authorize_present @ontology
+
     respond_to do |format|
-      if @ontology.update(ontology_params.slice(:desc))
+      if @ontology.update(ontology_params.slice(:desc, :public, :shared))
         format.html { redirect_to @ontology, notice: 'Ontology was successfully updated.' }
         format.json { render :show, status: :ok, location: @ontology }
       else
@@ -126,6 +130,8 @@ class OntologiesController < ApplicationController
   # DELETE /ontologies/1
   # DELETE /ontologies/1.json
   def destroy
+    authorize_present @ontology
+
     require 'fileutils'
     FileUtils.rm_r @ontology.tdb_dir
 
@@ -138,8 +144,9 @@ class OntologiesController < ApplicationController
 
   # GET /ontologies/1/download
   def download
-    @type = params[:type]
+    authorize_present @ontology
 
+    @type = params[:type]
     case @type
     when "TURTLE"; ext = ".ttl"
     when "RDF/JSON"; ext = ".json"
@@ -157,15 +164,35 @@ class OntologiesController < ApplicationController
     FileUtils.rm(name)
   end
 
+  # GET /ontologies/1/change_code
+  def change_code
+    authorize_present @ontology
+    old_location = @ontology.tdb_dir
+    generate_code! @ontology
+
+    require 'fileutils'
+    FileUtils.mv(old_location, @ontology.tdb_dir)
+
+    respond_to do |format|
+      if @ontology.save
+        format.html { redirect_to @ontology, notice: 'Ontology code was successfully changed.' }
+        format.json { render :show, status: :ok, location: @ontology }
+      else
+        format.html { render :show }
+        format.json { render json: @ontology.errors, status: :unprocessable_entity }
+      end
+    end
+  end
+
   private
   # Use callbacks to share common setup or constraints between actions.
   def set_ontology
-    @ontology = Ontology.where(code: params[:code]).first
+    @ontology = Ontology.eager_load(:user).where(code: params[:code]).first
   end
 
   # Never trust parameters from the scary internet, only allow the white list through.
   def ontology_params
-    params.require(:ontology).permit(:name, :desc, :unlisted, :extendable, :expires, :file)
+    params.require(:ontology).permit(:name, :desc, :public, :shared, :file)
   end
 
   # Create string with content of an ontology
@@ -186,5 +213,15 @@ class OntologiesController < ApplicationController
     bw.close
     dataset.end()
     tmpName
+  end
+
+  def generate_code!(ontology)
+    # ensure unique code
+    inc = 0
+    loop do
+      ontology.code = Digest::MD5.hexdigest (ontology.hash+inc).to_s
+      break if Ontology.where(:code => ontology.code).empty?
+      inc += 1
+    end
   end
 end
