@@ -60,9 +60,10 @@
               tr
                 - @query.sparql['head']['vars'].each do |col|
                   td
-                    = format_cell(row[col])
-                    - if row[col]['type'] == 'uri'
-                      =  link_to result_cell(row[col]), ontology_queries_run_path(@ontology, :uri => result_cell(row[col])), method: :get
-                    - else
-                      b
-                        = result_cell(row[col])
+                    - unless row[col].nil?
+                      = format_cell(row[col])
+                      - if row[col]['type'] == 'uri'
+                        =  link_to result_cell(row[col]), ontology_queries_run_path(@ontology, :uri => result_cell(row[col])), method: :get
+                      - else
+                        b
+                          = result_cell(row[col])
