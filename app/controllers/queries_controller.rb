@@ -27,6 +27,8 @@ class QueriesController < ApplicationController
   end
 
   def navigate
+    authorize @ontology, :show?
+
     if params['uri'].nil?
       run
     else
