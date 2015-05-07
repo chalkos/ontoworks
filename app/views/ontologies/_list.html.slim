@@ -4,6 +4,8 @@ table.table
     tr
       th Name
       th Description
+      - if options.include? :author
+        th Author
       th
 
   tbody
@@ -14,3 +16,5 @@ table.table
             = ontology.name
         td
           = truncate ontology.desc, length: 60
+        - if options.include? :author
+          td = ontology.user.name

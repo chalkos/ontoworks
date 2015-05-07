@@ -23,7 +23,7 @@
           - if options.include? :content
             td = query.content
           - if options.include? :author
-            td username
+            td = query.user.name
           - if options.include? :delete
             td
               = link_to ontology_query_path(@ontology, query), data: {:confirm => 'Are you sure?'}, :method => :delete, class: 'tl icon-ar icon-ar-round icon-ar-danger icon-ar-sm', title: 'Delete this query' do
