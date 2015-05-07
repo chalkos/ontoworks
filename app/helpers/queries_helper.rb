@@ -14,7 +14,7 @@ module QueriesHelper
 
     # datatype - the datatype URI of the
     # literal value (optional)
-    text << "^^#{cell['datatype']}" if cell['datatype']
+    text << "^^#{cell['datatype']} " if cell['datatype']
 
     text
   end
@@ -39,15 +39,7 @@ module QueriesHelper
     30000
   end
 
-  def query_subject(uri)
-    "SELECT * WHERE {\n<#{uri}> ?predicate ?object\n}"
-  end
-
-  def query_predicate(uri)
-    "SELECT * WHERE {\n?subject <#{uri}> ?object\n}"
-  end
-
-  def query_object(uri)
-    "SELECT * WHERE {\n?subject ?predicate <#{uri}>\n}"
+  def query_navigate(uri)
+    "SELECT * WHERE {\n  {?subject ?predicate <#{uri}>} UNION\n  {?subject <#{uri}> ?object} UNION\n  {<#{uri}> ?predicate ?object}\n}"
   end
 end

@@ -39,16 +39,8 @@ class QueriesController < ApplicationController
       dataset.begin(Jena::Query::ReadWrite::READ)
 
       begin
-        res,qexec = exec_query(dataset,query_subject(uri),default_query_timeout)
-        @query.content = query_subject(uri)
-        if(res.size == 0)
-          res,qexec = exec_query(dataset,query_predicate(uri),default_query_timeout)
-          @query.content = query_predicate(uri)
-          if(res.size == 0)
-            res,qexec = exec_query(dataset,query_object(uri),default_query_timeout)
-            @query.content = query_object(uri)
-          end
-        end
+        res,qexec = exec_query(dataset,query_navigate(uri),default_query_timeout)
+        @query.content = query_navigate(uri)
 
         out = StringIO.new
         Jena::Query::ResultSetFormatter.outputAsJSON(out.to_outputstream,res)
@@ -62,12 +54,13 @@ class QueriesController < ApplicationController
 
       dataset.end()
 
-      if errors.empty?
-        respond_to do |format|
+      respond_to do |format|
+        if errors.empty?
+          format.html { render :run, collection: @query }
+        else
+          @query.errors.add(:content, errors)
           format.html { render :run, collection: @query }
         end
-      else
-        redirect_to ontology_queries_run_url, notice: errors
       end
     end
   end
@@ -104,7 +97,7 @@ class QueriesController < ApplicationController
         render :run, collection: @query
       end
     else
-      flash.now[:notice] = errors
+      @query.errors.add(:content, errors)
       render :run, collection: @query
     end
   end
