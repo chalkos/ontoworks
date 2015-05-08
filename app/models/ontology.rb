@@ -56,4 +56,20 @@ class Ontology < ActiveRecord::Base
     self.desc = '(no description)' if self.desc.blank?
     return true
   end
+
+  def add_default_queries! query_model
+    queries = [
+      query_model.new(
+        name: "Classes",
+        content: "SELECT DISTINCT ?class WHERE {\n [] a ?class\n} ORDER BY ?class",
+        desc: "Lists all classes for this ontology."
+      ),
+    ]
+
+    queries.each do |q|
+      q.ontology_id = self.id
+      q.user_id = self.user_id
+      q.save!
+    end
+  end
 end
