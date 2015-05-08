@@ -132,10 +132,13 @@ class OntologiesController < ApplicationController
   def destroy
     authorize_present @ontology
 
-    require 'fileutils'
-    FileUtils.rm_r @ontology.tdb_dir
-
+    Query.delete_all(ontology_id: @ontology.id)
+    dir = @ontology.tdb_dir
     @ontology.destroy
+
+    require 'fileutils'
+    FileUtils.rm_r dir
+
     respond_to do |format|
       format.html { redirect_to ontologies_url, notice: 'Ontology was successfully destroyed.' }
       format.json { head :no_content }
