@@ -64,6 +64,11 @@ class Ontology < ActiveRecord::Base
         content: "SELECT DISTINCT ?class WHERE {\n [] a ?class\n} ORDER BY ?class",
         desc: "Lists all classes for this ontology."
       ),
+      query_model.new(
+        name: "Properties",
+        content: "SELECT DISTINCT ?property WHERE {\n [] ?property []\n} ORDER BY ?property",
+        desc: "Lists all properties for this ontology."
+      ),
     ]
 
     queries.each do |q|
