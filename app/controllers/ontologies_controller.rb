@@ -17,6 +17,7 @@ class OntologiesController < ApplicationController
   # GET /ontologies/1.json
   def show
     authorize_present @ontology
+    @logs = Log.where(ontology: @ontology.id)
   end
 
   # GET /ontologies/new
@@ -132,13 +133,10 @@ class OntologiesController < ApplicationController
   def destroy
     authorize_present @ontology
 
-    Query.delete_all(ontology_id: @ontology.id)
-    dir = @ontology.tdb_dir
-    @ontology.destroy
-
     require 'fileutils'
-    FileUtils.rm_r dir
+    FileUtils.rm_r @ontology.tdb_dir
 
+    @ontology.destroy
     respond_to do |format|
       format.html { redirect_to ontologies_url, notice: 'Ontology was successfully destroyed.' }
       format.json { head :no_content }
