@@ -115,7 +115,7 @@ class QueriesController < ApplicationController
 
     respond_to do |format|
       if @query.save
-        log = Log.new(ontology_id: @ontology.id, user_id: current_user.id, query_id: @query.id)
+        log = Log.new(ontology_id: @ontology.id, user_id: current_user.id, query_name: @query.name)
         log.savequery!
         log.save
         format.json {
@@ -136,6 +136,10 @@ class QueriesController < ApplicationController
   def destroy
     authorize @ontology, :show?
     authorize_present @query
+
+    log = Log.new(ontology_id: @ontology.id, user_id: current_user.id, query_name: @query.name)
+    log.deletequery!
+    log.save
 
     @query.destroy
     respond_to do |format|
