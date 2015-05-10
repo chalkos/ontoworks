@@ -1,0 +1,14 @@
+- options = [] if options.nil?
+table.table
+  thead
+    tr
+      th Date
+      th Action
+
+  tbody
+    - @logs.each do |log|
+      tr
+        td
+          = log.created_at
+        td
+          = log.to_s
