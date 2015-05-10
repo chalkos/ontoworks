@@ -115,6 +115,9 @@ class QueriesController < ApplicationController
 
     respond_to do |format|
       if @query.save
+        log = Log.new(ontology_id: @ontology.id, user_id: current_user.id, query_id: @query.id)
+        log.savequery!
+        log.save
         format.json {
           render json: {
             error: [],

@@ -11,19 +11,21 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150508155809) do
+ActiveRecord::Schema.define(version: 20150510173155) do
 
   create_table "logs", force: :cascade do |t|
     t.integer  "ontology_id"
-    t.integer  "type"
+    t.integer  "msg_type"
     t.string   "from_code",   limit: 255
     t.string   "to_code",     limit: 255
     t.integer  "user_id"
+    t.integer  "query_id"
     t.datetime "created_at",              null: false
     t.datetime "updated_at",              null: false
   end
 
   add_index "logs", ["ontology_id"], name: "index_logs_on_ontology_id"
+  add_index "logs", ["query_id"], name: "index_logs_on_query_id"
   add_index "logs", ["user_id"], name: "index_logs_on_user_id"
 
   create_table "ontologies", force: :cascade do |t|

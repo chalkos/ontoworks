@@ -103,6 +103,11 @@ class OntologiesController < ApplicationController
     respond_to do |format|
       if @ontology.errors.empty? && @ontology.save
         @ontology.add_default_queries! Query
+
+        log = Log.new(ontology_id: @ontology.id)
+        log.ontologycreate!
+        log.save
+
         format.html { redirect_to @ontology, notice: 'Ontology was successfully created.' }
         format.json { render :show, status: :created, location: @ontology }
       else
@@ -167,10 +172,16 @@ class OntologiesController < ApplicationController
 
   # GET /ontologies/1/change_code
   def change_code
+    log = Log.new(ontology_id: @ontology.id)
+    log.codechange!
+    log.from_code = @ontology.code
+
     authorize_present @ontology
     old_location = @ontology.tdb_dir
     generate_code! @ontology
 
+    log.to_code = @ontology.code
+    log.save
     require 'fileutils'
     FileUtils.mv(old_location, @ontology.tdb_dir)
 
