@@ -17,7 +17,7 @@ class OntologiesController < ApplicationController
   # GET /ontologies/1.json
   def show
     authorize_present @ontology
-    @logs = Log.where(ontology: @ontology.id)
+    @logs = Log.where(ontology: @ontology.id).order(created_at: :desc).first(10)
   end
 
   # GET /ontologies/new
