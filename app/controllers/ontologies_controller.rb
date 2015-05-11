@@ -155,8 +155,12 @@ class OntologiesController < ApplicationController
   def destroy
     authorize_present @ontology
 
+    Query.delete_all(ontology_id: @ontology.id)
+    dir = @ontology.tdb_dir
+    @ontology.destroy
+
     require 'fileutils'
-    FileUtils.rm_r @ontology.tdb_dir
+    FileUtils.rm_r dir
 
     @ontology.destroy
     respond_to do |format|
