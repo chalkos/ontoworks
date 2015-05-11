@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150510182410) do
+ActiveRecord::Schema.define(version: 20150511182709) do
 
   create_table "logs", force: :cascade do |t|
     t.integer  "ontology_id"
@@ -22,6 +22,7 @@ ActiveRecord::Schema.define(version: 20150510182410) do
     t.datetime "created_at",              null: false
     t.datetime "updated_at",              null: false
     t.string   "query_name",  limit: 255
+    t.boolean  "helper"
   end
 
   add_index "logs", ["ontology_id"], name: "index_logs_on_ontology_id"

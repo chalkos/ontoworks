@@ -121,9 +121,26 @@ class OntologiesController < ApplicationController
   # PATCH/PUT /ontologies/1.json
   def update
     authorize_present @ontology
+    desc = @ontology.desc
+    pub = @ontology.public
+    sha = @ontology.shared
 
     respond_to do |format|
       if @ontology.update(ontology_params.slice(:desc, :public, :shared))
+        #Log changes
+        if(desc != @ontology.desc)
+          log = Log.new(ontology_id: @ontology.id)
+          log.updatedesc!; log.save
+        end
+        if(pub != @ontology.public)
+          log = Log.new(ontology_id: @ontology.id, helper: @ontology.public)
+          log.updatepublic!; log.save
+        end
+        if(sha != @ontology.shared)
+          log = Log.new(ontology_id: @ontology.id,helper: @ontology.shared)
+          log.updateshared!; log.save
+        end
+        #respond
         format.html { redirect_to @ontology, notice: 'Ontology was successfully updated.' }
         format.json { render :show, status: :ok, location: @ontology }
       else

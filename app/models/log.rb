@@ -1,5 +1,5 @@
 class Log < ActiveRecord::Base
-  enum msg_type: [:ontologycreate, :savequery, :deletequery, :codechange]
+  enum msg_type: [:ontologycreate, :savequery, :deletequery, :codechange, :updatedesc, :updatepublic, :updateshared]
   belongs_to :ontology
   belongs_to :user
 
@@ -15,6 +15,14 @@ def to_s
     "Query '" + self.query_name + "' was deleted by user '" + user.name + "'"
   when "codechange"
     "Code changed from " + self.from_code + " to " + self.to_code
+  when "updatedesc"
+    ont = Ontology.find(self.ontology_id)
+    user = User.find(ont.user_id)
+    "Owner '" + user.name + "' updated this ontology's description"
+  when "updatepublic"
+    self.helper ? "Ontology was changed to public" : "Ontology was changed to private"
+  when "updateshared"
+    self.helper ? "Ontology was changed to shared" : "Ontology was changed to not shared"
   end
 end
 
