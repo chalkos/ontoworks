@@ -12,7 +12,7 @@ Vagrant.configure(2) do |config|
 
   # Every Vagrant development environment requires a box. You can search for
   # boxes at https://atlas.hashicorp.com/search.
-  config.vm.box = "https://github.com/holms/vagrant-centos7-box/releases/download/7.1.1503.001/CentOS-7.1.1503-x86_64-netboot.box"
+  config.vm.box = "chef/centos-7.0"
 
   # Disable automatic box update checking. If you disable this, then
   # boxes will only be checked for updates when the user runs
@@ -65,4 +65,12 @@ Vagrant.configure(2) do |config|
   #   sudo apt-get update
   #   sudo apt-get install -y apache2
   # SHELL
+  config.librarian_chef.enabled = true
+  config.librarian_chef.cheffile_dir = "chef"
+
+  config.vm.provision "chef_solo" do |chef|
+    chef.cookbooks_path = ["chef/cookbooks", "chef/site_cookbooks"]
+    chef.roles_path = "chef/roles"
+    chef.add_role("web_server")
+  end
 end

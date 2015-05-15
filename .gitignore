@@ -1,3 +1,8 @@
+### deployment stuff
+.vagrant/
+chef/cookbooks
+chef/tmp
+
 ### project specific
 /db/tdb
 /public/assets
