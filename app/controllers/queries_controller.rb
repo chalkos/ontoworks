@@ -195,6 +195,7 @@ class QueriesController < ApplicationController
 
         errors = ""
       rescue Exception => e
+        puts e
         errors = e.to_s
       ensure
         qexec.close() if qexec
@@ -204,16 +205,35 @@ class QueriesController < ApplicationController
     end
 
     def exec_query(dataset,query,timeout)
-      aux = query.dup
-      aux.gsub! /PREFIX\s+[^:]+:\s+<.[^>]+>/, ''
-      aux.gsub! /BASE\s+<.[^>]+>/, ''
-      aux.strip!
+      query_aux = query.dup
+      query_aux.gsub! /PREFIX\s+[^:]+:\s+<.[^>]+>/i, ''
+      query_aux.gsub! /BASE\s+<.[^>]+>/i, ''
+      query_aux.strip!
+      splitted = query_aux.split
+      type = splitted[0].upcase
 
+      case type
+      when "SELECT", "ASK", "CONSTRUCT", "DESCRIBE"
+        return simple_query(dataset, query, timeout, type)
+      # when "INSERT"
+      # when "DELETE"
+      end
+    end
+
+    def simple_query(dataset, query, timeout, type)
       qfact = Jena::Query::QueryFactory.create(query)
       qexec = Jena::Query::QueryExecutionFactory.create(qfact, dataset)
       qexec.setTimeout(timeout)
-      res = qexec.execSelect()
-
+      case type
+      when "SELECT"
+        res = qexec.execSelect()
+        puts @query.sparql.to_s
+      when "ASK"
+        res = qexec.execAsk()
+      when "DESCRIBE"
+        res = qexec.execDescribe()
+      else puts "NAAAAHHHH"
+      end
       return res,qexec
     end
 end
