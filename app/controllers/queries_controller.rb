@@ -204,6 +204,11 @@ class QueriesController < ApplicationController
     end
 
     def exec_query(dataset,query,timeout)
+      aux = query.dup
+      aux.gsub! /PREFIX\s+[^:]+:\s+<.[^>]+>/, ''
+      aux.gsub! /BASE\s+<.[^>]+>/, ''
+      aux.strip!
+
       qfact = Jena::Query::QueryFactory.create(query)
       qexec = Jena::Query::QueryExecutionFactory.create(qfact, dataset)
       qexec.setTimeout(timeout)
