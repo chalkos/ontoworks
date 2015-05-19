@@ -37,7 +37,7 @@ RUN /bin/bash -l -c "bundle install"
 
 # production configuration
 ENV RAILS_ENV=production
-ENTRYPOINT "/home/ontoworks/dockerEntrypoint.sh"
+ENTRYPOINT ["/home/ontoworks/webserver/docker-entrypoint.sh"]
 
 
 # NOTES
