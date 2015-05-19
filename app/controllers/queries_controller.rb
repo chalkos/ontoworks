@@ -98,6 +98,7 @@ class QueriesController < ApplicationController
       end
     else
       @query.errors.add(:content, errors)
+      puts @query.sparql
       render :run, collection: @query
     end
   end
@@ -179,18 +180,24 @@ class QueriesController < ApplicationController
         out = StringIO.new
         stream = out.to_outputstream
 
-        case @out_format
-        when "XML"
-          Jena::Query::ResultSetFormatter.outputAsXML(stream,res)
-          @query.sparql = out.string
-        when "TXT"
-          @query.sparql = Jena::Query::ResultSetFormatter.asText(res)
-        when "CSV"
-          Jena::Query::ResultSetFormatter.outputAsCSV(stream,res)
+        if(@type == "CONSTRUCT") #construct only makes sense as RDF/XML and res is a Model
+          @out_format = "XML";
+          res.write(stream, "RDF/XML-ABBREV")
           @query.sparql = out.string
         else
-          Jena::Query::ResultSetFormatter.outputAsJSON(stream,res)
-          @query.sparql = JSON.parse out.string
+          case @out_format
+          when "XML"
+            Jena::Query::ResultSetFormatter.outputAsXML(stream,res)
+            @query.sparql = out.string
+          when "TXT"
+            @query.sparql = Jena::Query::ResultSetFormatter.asText(res)
+          when "CSV"
+            Jena::Query::ResultSetFormatter.outputAsCSV(stream,res)
+            @query.sparql = out.string
+          else
+            Jena::Query::ResultSetFormatter.outputAsJSON(stream,res)
+            @query.sparql = JSON.parse out.string
+          end
         end
 
         errors = ""
@@ -210,29 +217,37 @@ class QueriesController < ApplicationController
       query_aux.gsub! /BASE\s+<.[^>]+>/i, ''
       query_aux.strip!
       splitted = query_aux.split
-      type = splitted[0].upcase
+      @type = splitted[0].upcase
 
-      case type
+      case @type
       when "SELECT", "ASK", "CONSTRUCT", "DESCRIBE"
-        return simple_query(dataset, query, timeout, type)
+        return simple_query(dataset, query, timeout)
       # when "INSERT"
       # when "DELETE"
       end
     end
 
-    def simple_query(dataset, query, timeout, type)
+    def simple_query(dataset, query, timeout)
       qfact = Jena::Query::QueryFactory.create(query)
       qexec = Jena::Query::QueryExecutionFactory.create(qfact, dataset)
       qexec.setTimeout(timeout)
-      case type
+      case @type
       when "SELECT"
         res = qexec.execSelect()
-        puts @query.sparql.to_s
       when "ASK"
-        res = qexec.execAsk()
+        ask = qexec.execAsk() #ask is a boolean, so we need to create a ResultSet to show the results
+        string = '{"head":{"vars":["Response"]},"results":{"bindings":[{"Response":{"type":"typed-literal","value":"' + ask.to_s + '"}}]}}'
+        bytes = string.to_java_bytes
+        inputstream = java.io.ByteArrayInputStream.new(bytes)
+        res = Jena::Query::ResultSetFactory.fromJSON(inputstream)
       when "DESCRIBE"
-        res = qexec.execDescribe()
-      else puts "NAAAAHHHH"
+        desc = qexec.execDescribe()
+        qexec.close()
+        # desc is a model so we select everything in it, using a select query, and get a ResultSet
+        qexec = Jena::Query::QueryExecutionFactory.create("Select * where {?s ?p ?o} ORDER BY ?s", desc)
+        res = qexec.execSelect()
+      when "CONSTRUCT"
+        res = qexec.execConstruct()
       end
       return res,qexec
     end
