@@ -34,12 +34,10 @@ RUN /bin/bash -l -c "gem install bundler -v 1.7.3"
 # webserver configuration
 WORKDIR /home/ontoworks/webserver
 RUN /bin/bash -l -c "bundle install"
-VOLUME /home/ontoworks/webserver
 
 # production configuration
 ENV RAILS_ENV=production
-
-
+ENTRYPOINT "/home/ontoworks/dockerEntrypoint.sh"
 
 
 # NOTES
