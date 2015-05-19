@@ -7,10 +7,11 @@ RUN useradd -ms /bin/bash ontoworks
 # copy rails files
 ADD . /home/ontoworks/webserver/
 
-# install dependencies
+# install dependencies, the last line are RVM depencencies
 RUN yum makecache && yum install -y \
   curl \
   java-1.7.0-openjdk \
+  postgresql-jdbc \
   tar \
   patch libyaml-devel glibc-headers autoconf gcc-c++ glibc-devel patch readline-devel zlib-devel libffi-devel openssl-devel make bzip2 automake libtool bison sqlite-devel
 
@@ -37,6 +38,8 @@ RUN /bin/bash -l -c "bundle install"
 
 # production configuration
 ENV RAILS_ENV=production
+
+# docker configuration
 ENTRYPOINT ["/home/ontoworks/webserver/docker-entrypoint.sh"]
 
 
