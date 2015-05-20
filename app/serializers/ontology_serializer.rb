@@ -1,6 +1,5 @@
 class OntologySerializer < ActiveModel::Serializer
-  attributes :code, :name, :desc, :created_at, :updated_at
-  attributes :user, :url
+  attributes :code, :name, :desc, :created_at, :updated_at, :user
 
   def user
     object.user.name
