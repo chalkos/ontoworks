@@ -21,6 +21,7 @@ class QueriesController < ApplicationController
 
     respond_to do |format|
       format.html
+      format.xml
       format.json  { render json: @queries }
     end
   end
@@ -32,6 +33,7 @@ class QueriesController < ApplicationController
 
     respond_to do |format|
       format.html
+      format.xml
       format.json  { render json: @query }
     end
   end
