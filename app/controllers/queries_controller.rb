@@ -5,6 +5,8 @@ class QueriesController < ApplicationController
   before_action :get_ontology
   after_action :verify_authorized
 
+  protect_from_forgery except: :run
+
   # GET /queries
   # GET /queries.json
   def index
@@ -110,7 +112,12 @@ class QueriesController < ApplicationController
       end
     else
       @query.errors.add(:content, errors)
-      render :run, collection: @query
+      case @out_format
+      when "JSON"
+        render :json => { :errors => @query.errors.full_messages }
+      else
+        render :run, collection: @query
+      end
     end
   end
 
