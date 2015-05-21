@@ -1,20 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ontologies>
   <% @public_ontologies.each do |p| %>
-    <ontology>
-      <code><%= p.code %>"</code>
-      <name><%= p.name %></name>
-      <description><%= p.desc %></description>
-      <created_at><%= p.created_at %></created_at>
-      <user><%= p.user.name %></user>
-      <queries>
-        <% p.queries.each do |q| %>
-          <query>
-            <id><%= q.id %></id>
-            <url><%= ontology_query_url(p,q) %></url>
-          </query>
-        <% end -%>
-      </queries>
-    </ontology>
+    <%= render 'info', ontology: p %>
   <% end %>
 </ontologies>
