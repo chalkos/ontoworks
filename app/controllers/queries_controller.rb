@@ -18,12 +18,24 @@ class QueriesController < ApplicationController
     end
 
     authorize @ontology, :show?
+
+    respond_to do |format|
+      format.html
+      format.xml
+      format.json  { render json: @queries }
+    end
   end
 
   # GET /queries/1
   # GET /queries/1.json
   def show
     authorize @ontology, :show?
+
+    respond_to do |format|
+      format.html
+      format.xml
+      format.json  { render json: @query }
+    end
   end
 
   def navigate

@@ -1,0 +1,15 @@
+<ontology>
+  <code><%= ontology.code %>"</code>
+  <name><%= ontology.name %></name>
+  <description><%= ontology.desc %></description>
+  <created_at><%= ontology.created_at %></created_at>
+  <user><%= ontology.user.name %></user>
+  <queries>
+    <% ontology.queries.each do |q| %>
+      <query>
+        <id><%= q.id %></id>
+        <url><%= ontology_query_url(ontology,q) %></url>
+      </query>
+    <% end -%>
+  </queries>
+</ontology>

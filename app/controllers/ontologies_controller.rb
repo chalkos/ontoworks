@@ -11,12 +11,24 @@ class OntologiesController < ApplicationController
     @my_ontologies = Ontology.where(user_id: current_user.id) if user_signed_in?
     @public_ontologies = Ontology.eager_load(:user).where(public: true)
     authorize Ontology
+
+    respond_to do |format|
+      format.html
+      format.json  { render json: @public_ontologies }
+      format.xml
+    end
   end
 
   # GET /ontologies/1
   # GET /ontologies/1.json
   def show
     authorize_present @ontology
+
+    respond_to do |format|
+      format.html
+      format.json  { render json: @ontology }
+      format.xml
+    end
   end
 
   # GET /ontologies/new
