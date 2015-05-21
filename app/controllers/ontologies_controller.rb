@@ -33,7 +33,7 @@ class OntologiesController < ApplicationController
     respond_to do |format|
       format.html
       format.json  { render json: @ontology }
-      format.xml {render :xml => @ontology.to_xml}
+      format.xml
     end
   end
 
