@@ -42,4 +42,8 @@ module QueriesHelper
   def query_navigate(uri)
     "SELECT * WHERE {\n  {?subject ?predicate <#{uri}>} UNION\n  {?subject <#{uri}> ?object} UNION\n  {<#{uri}> ?predicate ?object}\n}"
   end
+
+  def without_csrf
+    return ["application/json","text/xml"]
+  end
 end

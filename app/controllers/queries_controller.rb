@@ -5,7 +5,8 @@ class QueriesController < ApplicationController
   before_action :get_ontology
   after_action :verify_authorized
 
-  protect_from_forgery except: :run
+  #protect_from_forgery except: :run
+  protect_from_forgery with: :null_session, :if => Proc.new { |c|  without_csrf.include? c.request.format }
 
   # GET /queries
   # GET /queries.json
