@@ -73,7 +73,7 @@ GEM
       activesupport (>= 3.0.0, < 5)
       multi_json (~> 1.2)
     jdbc-sqlite3 (3.8.7)
-    jena-jruby (0.7.1-java)
+    jena-jruby (0.6.0-java)
       builder
       haml
     jquery-rails (4.0.3)
