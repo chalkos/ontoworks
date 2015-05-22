@@ -180,23 +180,25 @@ class QueriesController < ApplicationController
         out = StringIO.new
         stream = out.to_outputstream
 
-        if(@type == "CONSTRUCT") #construct only makes sense as RDF/XML and res is a Model
-          @out_format = "XML";
-          res.write(stream, "RDF/XML-ABBREV")
-          @query.sparql = out.string
-        else
-          case @out_format
-          when "XML"
-            Jena::Query::ResultSetFormatter.outputAsXML(stream,res)
-            @query.sparql = out.string
-          when "TXT"
-            @query.sparql = Jena::Query::ResultSetFormatter.asText(res)
-          when "CSV"
-            Jena::Query::ResultSetFormatter.outputAsCSV(stream,res)
+        if res != :updated
+          if @type == "CONSTRUCT" #construct only makes sense as RDF/XML and res is a Model
+            @out_format = "XML";
+            res.write(stream, "RDF/XML-ABBREV")
             @query.sparql = out.string
           else
-            Jena::Query::ResultSetFormatter.outputAsJSON(stream,res)
-            @query.sparql = JSON.parse out.string
+            case @out_format
+            when "XML"
+              Jena::Query::ResultSetFormatter.outputAsXML(stream,res)
+              @query.sparql = out.string
+            when "TXT"
+              @query.sparql = Jena::Query::ResultSetFormatter.asText(res)
+            when "CSV"
+              Jena::Query::ResultSetFormatter.outputAsCSV(stream,res)
+              @query.sparql = out.string
+            else
+              Jena::Query::ResultSetFormatter.outputAsJSON(stream,res)
+              @query.sparql = JSON.parse out.string
+            end
           end
         end
 
@@ -222,9 +224,15 @@ class QueriesController < ApplicationController
       case @type
       when "SELECT", "ASK", "CONSTRUCT", "DESCRIBE"
         return simple_query(dataset, query, timeout)
-      # when "INSERT"
-      # when "DELETE"
+      else
+        update_query(dataset, query)
+        return :updated
       end
+    end
+
+    def update_query(dataset, query)
+      graphStore = GraphStoreFactory.create(dataset)
+      UpdateAction.parseExecute((query, graphStore)
     end
 
     def simple_query(dataset, query, timeout)
@@ -247,7 +255,7 @@ class QueriesController < ApplicationController
         qexec = Jena::Query::QueryExecutionFactory.create("Select * where {?s ?p ?o} ORDER BY ?s", desc)
         res = qexec.execSelect()
       when "CONSTRUCT"
-        res = qexec.execConstruct()
+        res= qexec.execConstruct()
       end
       return res,qexec
     end
