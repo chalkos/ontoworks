@@ -79,14 +79,11 @@ class QueriesController < ApplicationController
     # Method
     errors = execute
 
-    #puts @query.sparql
-
     if errors.empty? and !@query.sparql
-      errors = "Query timed out - " + time.to_s + " second(s)"
+      errors = "Query timed out - " + (@timeout * 0.001).to_i.to_s + " second(s)"
     end
 
     if errors.empty?
-      puts "Estou a fazer o resultado, espera um bocadinho -> " + Time.now.getutc.to_s
       case @out_format
       when "TXT"
         send_data @query.sparql, :filename => "result.txt"
@@ -169,7 +166,6 @@ class QueriesController < ApplicationController
       dataset.begin(Jena::Query::ReadWrite::READ)
 
       begin
-        puts "Timeout: " + @timeout.to_s
         res,qexec = exec_query(dataset,@query.content,@timeout)
 
         # StringIO - org.jruby.util.IOOutputStream
@@ -192,15 +188,11 @@ class QueriesController < ApplicationController
 
         errors = ""
       rescue Exception => e
-        puts "Entrei no Exception"
         errors = e.to_s
       end
-        puts "exec.closed? " + qexec.isClosed().to_s
-        qexec.close()
-        dataset.end()
-        puts "exec.closed? " + qexec.isClosed().to_s
-
-        errors
+      qexec.close()
+      dataset.end()
+      errors
     end
 
     def exec_query(dataset,query,timeout)
