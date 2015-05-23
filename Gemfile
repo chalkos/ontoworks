@@ -7,7 +7,7 @@ gem 'puma'
 gem "lograge"
 
 # project specific:
-gem 'jena-jruby'
+gem 'jena-jruby', git: 'https://github.com/chalkos/jena-jruby.git'
 
 # authentication
 gem 'devise'
