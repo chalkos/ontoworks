@@ -28,7 +28,7 @@ class ApplicationController < ActionController::Base
       flash[:alert] = t "#{policy_name}.#{exception.query}", scope: "pundit", default: :default
       redirect_to(request.referrer || root_path)
     else
-      render :status => :unauthorized, :text => "Forbidden Request"
+      render :status => :forbidden, :text => "Forbidden Request"
     end
   end
 end
