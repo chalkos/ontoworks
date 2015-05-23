@@ -189,10 +189,11 @@ class QueriesController < ApplicationController
         errors = ""
       rescue Exception => e
         errors = e.to_s
+      ensure
+        qexec.close()
+        dataset.end()
+        errors
       end
-      qexec.close()
-      dataset.end()
-      errors
     end
 
     def exec_query(dataset,query,timeout)
