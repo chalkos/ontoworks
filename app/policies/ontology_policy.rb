@@ -29,10 +29,6 @@ class OntologyPolicy < ApplicationPolicy
     user_is_owner?
   end
 
-  def update_query?
-    user_is_owner?
-  end
-
   def destroy?
     user_is_owner?
   end
