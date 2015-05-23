@@ -222,7 +222,7 @@ class OntologiesController < ApplicationController
     # ensure unique code
     inc = 0
     loop do
-      ontology.code = Digest::MD5.hexdigest (ontology.hash+inc).to_s
+      ontology.code = Digest::MD5.hexdigest "#{ontology.hash}#{inc}#{Time.now.to_f}"
       break if Ontology.where(:code => ontology.code).empty?
       inc += 1
     end
