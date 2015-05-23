@@ -1,3 +1,12 @@
+GIT
+  remote: https://github.com/chalkos/jena-jruby.git
+  revision: 7ab0f6b9b1adb0d6697264d068d99e4b1703fa31
+  tag: v0.7.0.fixtimeout
+  specs:
+    jena-jruby (0.7.0.fixtimeout-java)
+      builder
+      haml
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -73,9 +82,6 @@ GEM
       activesupport (>= 3.0.0, < 5)
       multi_json (~> 1.2)
     jdbc-sqlite3 (3.8.7)
-    jena-jruby (0.6.0-java)
-      builder
-      haml
     jquery-rails (4.0.3)
       rails-dom-testing (~> 1.0)
       railties (>= 4.2.0)
@@ -200,7 +206,7 @@ DEPENDENCIES
   devise
   font-awesome-rails
   jbuilder (~> 2.0)
-  jena-jruby
+  jena-jruby!
   jquery-rails
   jquery-turbolinks
   lograge
