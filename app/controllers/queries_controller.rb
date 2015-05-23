@@ -80,7 +80,7 @@ class QueriesController < ApplicationController
     errors = execute
 
     if errors.empty? and !@query.sparql
-      errors = "Query timed out - " + time.to_s + " second(s)"
+      errors = "Query timed out - " + (@timeout * 0.001).to_i.to_s + " second(s)"
     end
 
     if errors.empty?
@@ -186,20 +186,20 @@ class QueriesController < ApplicationController
           @query.sparql = JSON.parse out.string
         end
 
-        qexec.close()
-        dataset.end()
-
         errors = ""
       rescue Exception => e
         errors = e.to_s
+      ensure
+        qexec.close()
+        dataset.end()
+        errors
       end
     end
 
     def exec_query(dataset,query,timeout)
-      qfact = Jena::Query::QueryFactory.create(query)
-      qexec = Jena::Query::QueryExecutionFactory.create(qfact, dataset)
+      qexec = Jena::Query::QueryExecutionFactory.create(query, dataset)
       qexec.setTimeout(timeout)
-      res = Jena::Query::ResultSetFactory.makeRewindable(qexec.execSelect())
+      res = qexec.execSelect()
 
       return res,qexec
     end
