@@ -82,6 +82,9 @@ GEM
       activesupport (>= 3.0.0, < 5)
       multi_json (~> 1.2)
     jdbc-sqlite3 (3.8.7)
+    jena-jruby (0.7.1-java)
+      builder
+      haml
     jquery-rails (4.0.3)
       rails-dom-testing (~> 1.0)
       railties (>= 4.2.0)
