@@ -1,8 +1,9 @@
 GIT
   remote: https://github.com/chalkos/jena-jruby.git
-  revision: 9a1ca8793a6ef26b46586e5a33b3dc07ed3418f7
+  revision: 7ab0f6b9b1adb0d6697264d068d99e4b1703fa31
+  tag: v0.7.0.fixtimeout
   specs:
-    jena-jruby (0.7.0-java)
+    jena-jruby (0.7.0.fixtimeout-java)
       builder
       haml
 
