@@ -36,6 +36,7 @@ class QueriesController < ApplicationController
       @query = Query.new
 
       dataset = Jena::TDB::TDBFactory.createDataset(@ontology.tdb_dir)
+      dataset.begin(Jena::Query::ReadWrite::READ)
 
       begin
         res,qexec = exec_query(dataset,query_navigate(uri),default_query_timeout)
@@ -198,7 +199,6 @@ class QueriesController < ApplicationController
             @query.sparql = JSON.parse out.string
           end
         end
-
         errors = ""
       rescue Exception => e
         errors = e.to_s
