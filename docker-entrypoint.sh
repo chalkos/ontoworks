@@ -13,11 +13,18 @@
 #                    (should only be used with docker)
 # reset_logs - clear logs
 # logs [environment=production] - show scrolling log (uses tail -f)
+# debug - idle indefinitely and allow access to container with docker exec
 
 
 if [ "$1" = 'start' ]; then
   source .env
   ./railsStart $2 $3 $4
+
+elif [ "$1" = 'debug' ]; then
+  echo "Idling indefinitely. Use CTRL+C to stop."
+  echo "To debug use: docker exec -i -t genericsparqlendpoint_owwebserver_1 /bin/bash -l"
+  while true; do sleep 100; done
+  exit
 
 elif [ "$1" = 'update_development' ]; then
   source .env

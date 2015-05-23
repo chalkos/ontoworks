@@ -4,7 +4,7 @@ owdb:
     - "5432"
 owwebserver:
   build: .
-  command: "start"
+  command: "debug"
   volumes:
     - .:/home/ontoworks/webserver
   ports:
