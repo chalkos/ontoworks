@@ -5,58 +5,71 @@
 
 # Builtin commands:
 # start [max [heap [min]]] - start rails server
-# update_development - bundle install && rake db:migrate
-# update_production - try to update everything to last version keeping current content intact
-# reset_development - clean and prepare development environment
-#                     (although docker container runs only in production)
-# reset_production - clean and prepare a production environment
-#                    (should only be used with docker)
-# reset_logs - clear logs
-# logs [environment=production] - show scrolling log (uses tail -f)
+# update - try to update everything to last version keeping current content intact
+# reset - clean and prepare a production environment (should only be used with docker)
+# reset_log - clear logs
+# log [environment=production] - show scrolling log (uses tail -f)
 # debug - idle indefinitely and allow access to container with docker exec
 
+#####################
+# main functions
 
-if [ "$1" = 'start' ]; then
-  source .env
-  ./railsStart $2 $3 $4
+function start {
+  get_env
+  ./railsStart $1 $2 $3
+}
 
-elif [ "$1" = 'debug' ]; then
+function debug {
   echo "Idling indefinitely. Use CTRL+C to stop."
   echo "To debug use: docker exec -i -t genericsparqlendpoint_owwebserver_1 /bin/bash -l"
   while true; do sleep 100; done
   exit
+}
 
-elif [ "$1" = 'update_development' ]; then
-  source .env
-  bundle install
-  rake db:migrate
-
-elif [ "$1" = 'update_production' ]; then
-  source .env
-  bundle install
+function update {
+  get_env
+  bundle_install
   rake db:migrate assets:precompile
+}
 
-elif [ "$1" = 'reset_development' ]; then
-  rake db:drop db:create db:migrate db:seed assets:clobber
+function reset {
+  set_env
+  get_env
+  rake db:drop db:create db:migrate assets:clean assets:precompile
   rm -rf db/tdb/*
+}
 
-elif [ "$1" = 'reset_production' ]; then
+function reset_log {
+  > log/production.log
+}
+
+function log {
+  tail -20f log/production.log
+}
+
+#####################
+# auxiliary functions
+
+function set_env {
   echo "export SECRET_KEY_BASE=$(rake secret)" > .env
   echo "export CLASSPATH=/usr/share/java/postgresql-jdbc.jar" >> .env
+}
+
+function get_env {
   source .env
-  rake db:drop db:create db:migrate assets:precompile
-  rm -rf db/tdb/*
+}
 
-elif [ "$1" = 'reset_logs' ]; then
-  > log/development.log
-  > log/production.log
+function bundle_install {
+  bundle install
+}
 
-elif [ "$1" = 'logs' ]; then
-  if [ -z "$2" ]; then
-    tail -20f log/production.log
-  else
-    tail -20f log/$2.log
-  fi
-else
-  exec "$@"
-fi
+#####################
+# main script
+
+funcs=":start: :debug: :update: :reset: :reset_log: :log:"
+case "$funcs" in
+  *":$1:"*) $1 $2 $3 $4
+  ;;
+  *) exec "$@"
+  ;;
+esac

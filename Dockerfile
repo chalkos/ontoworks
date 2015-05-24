@@ -14,6 +14,8 @@ RUN yum makecache && yum install -y \
   java-1.7.0-openjdk \
   postgresql-jdbc \
   tar \
+  unzip \
+  zip \
   patch libyaml-devel glibc-headers autoconf gcc-c++ glibc-devel patch readline-devel zlib-devel libffi-devel openssl-devel make bzip2 automake libtool bison sqlite-devel
 
 # switch to user
