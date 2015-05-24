@@ -98,7 +98,6 @@ class QueriesController < ApplicationController
       end
     else
       @query.errors.add(:content, errors)
-      puts @query.sparql
       render :run, collection: @query
     end
   end
