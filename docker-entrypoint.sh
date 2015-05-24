@@ -15,6 +15,11 @@
 # main functions
 
 function start {
+  try_permissions
+  if [ ! -f .env ]; then
+    echo "Setting up ..."
+    reset
+  fi
   get_env
   ./railsStart $1 $2 $3
 }
@@ -35,7 +40,7 @@ function update {
 function reset {
   set_env
   get_env
-  rake db:drop db:create db:migrate assets:clean assets:precompile
+  rake db:drop db:create db:migrate assets:precompile assets:clean
   rm -rf db/tdb/*
 }
 
@@ -49,6 +54,16 @@ function log {
 
 #####################
 # auxiliary functions
+
+function try_permissions {
+  echo "export ONTOWORKSTMP=check" > .ontoworks_tmp
+  source .ontoworks_tmp
+  rm .ontoworks_tmp
+  if [ ! "$ONTOWORKSTMP" = "check" ]; then
+    echo "Can't write to rails directory. Entering debug mode ..."
+    debug
+  fi
+}
 
 function set_env {
   echo "export SECRET_KEY_BASE=$(rake secret)" > .env

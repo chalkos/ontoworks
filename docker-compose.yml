@@ -4,7 +4,7 @@ db:
     - "5432"
 web:
   build: .
-  command: "debug"
+  command: "start"
   volumes:
     - .:/home/ontoworks/webserver
   ports:
