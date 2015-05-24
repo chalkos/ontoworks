@@ -9,16 +9,16 @@ def to_s
     "Ontology  was created"
   when "savequery"
     user = User.find(self.user_id)
-    "Query '" + self.query_name + "' was saved by user '" + user.name + "'"
+    "Query <b>" + self.query_name + "</b> was saved by user <b>" + user.name + "</b>"
   when "deletequery"
     user = User.find(self.user_id)
-    "Query '" + self.query_name + "' was deleted by user '" + user.name + "'"
+    "Query <b>" + self.query_name + "</b> was deleted by user <b>" + user.name + "</b>"
   when "codechange"
     "Code changed from " + self.from_code + " to " + self.to_code
   when "updatedesc"
     ont = Ontology.find(self.ontology_id)
     user = User.find(ont.user_id)
-    "Owner '" + user.name + "' updated this ontology's description"
+    "Owner <b>" + user.name + "</b> updated this ontology's description"
   when "updatepublic"
     self.helper ? "Ontology was changed to public" : "Ontology was changed to private"
   when "updateshared"

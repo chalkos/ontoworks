@@ -211,8 +211,9 @@ class QueriesController < ApplicationController
 
     def exec_query(dataset,query,timeout)
       qfact = Jena::Query::QueryFactory.create(query)
--     qexec = Jena::Query::QueryExecutionFactory.create(qfact, dataset)
+      qexec = Jena::Query::QueryExecutionFactory.create(qfact, dataset)
       qexec.setTimeout(timeout)
+
       case qfact.getQueryType()
       when Jena::Query::Query::QueryTypeSelect
         res = qexec.execSelect()

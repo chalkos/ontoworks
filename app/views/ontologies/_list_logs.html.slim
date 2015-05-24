@@ -8,7 +8,7 @@ table.table
   tbody
     - @logs.each do |log|
       tr
-        td
+        td style="max-width: 90px;"
           = log.created_at
         td
-          = log.to_s
+          == log.to_s
