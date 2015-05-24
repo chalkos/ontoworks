@@ -11,4 +11,9 @@ class ErrorsControllerTest < ActionController::TestCase
     assert_response :success
   end
 
+  test "should get unprocessable_entity" do
+    get :unprocessable_entity
+    assert_response :success
+  end
+
 end
