@@ -1,5 +1,9 @@
 Rails.application.routes.draw do
 
+  get "/404" => "errors#not_found"
+  get "/422" => "errors#unprocessable_entity"
+  get "/500" => "errors#internal_server_error"
+
   root 'ontologies#index'
 
   resources :ontologies, param: :code do

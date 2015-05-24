@@ -1,0 +1,16 @@
+= render 'errors/headers'
+
+body style="overflow: visible;"
+  .paper-back
+    .absolute-center
+      .text-center
+        .title-logo.animated.fadeInDown.animation-delay-5
+          br/
+        .transparent-div.animated.fadeInUp.animation-delay-8
+          h1 Error 422
+          h2 Unprocessable Entity
+          p
+            | The change you wanted was rejected.
+            br/
+            | Maybe you tried to change something you didn't have access to.
+          = link_to "Go Home", root_path, class: "btn btn-ar btn-primary btn-lg"
