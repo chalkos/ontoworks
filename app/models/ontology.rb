@@ -56,4 +56,30 @@ class Ontology < ActiveRecord::Base
     self.desc = '(no description)' if self.desc.blank?
     return true
   end
+
+  def add_default_queries! query_model
+    queries = [
+      query_model.new(
+        name: "Classes",
+        content: "SELECT DISTINCT ?class WHERE {\n [] a ?class\n} ORDER BY ?class",
+        desc: "Lists all classes for this ontology."
+      ),
+      query_model.new(
+        name: "Properties",
+        content: "SELECT DISTINCT ?property WHERE {\n [] ?property []\n} ORDER BY ?property",
+        desc: "Lists all properties for this ontology."
+      ),
+      query_model.new(
+        name: "Top Concepts",
+        content: "PREFIX skos: <http://www.w3.org/2004/02/skos/core#>\n\nSELECT DISTINCT ?topConcept ?prefLabel WHERE {\n ?base skos:hasTopConcept ?topConcept.\n ?topConcept skos:prefLabel ?prefLabel.\n FILTER(lang(?prefLabel) = \"en\")\n} ORDER BY ?prefLabel",
+        desc: "Lists SKOS top concepts for this ontology."
+      ),
+    ]
+
+    queries.each do |q|
+      q.ontology_id = self.id
+      q.user_id = self.user_id
+      q.save!
+    end
+  end
 end

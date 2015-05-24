@@ -101,6 +101,7 @@ class OntologiesController < ApplicationController
 
     respond_to do |format|
       if @ontology.errors.empty? && @ontology.save
+        @ontology.add_default_queries! Query
         format.html { redirect_to @ontology, notice: 'Ontology was successfully created.' }
         format.json { render :show, status: :created, location: @ontology }
       else
@@ -109,7 +110,6 @@ class OntologiesController < ApplicationController
       end
     end
   end
-
 
   # PATCH/PUT /ontologies/1
   # PATCH/PUT /ontologies/1.json
