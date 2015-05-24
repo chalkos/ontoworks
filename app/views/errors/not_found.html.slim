@@ -1,0 +1,13 @@
+= render 'errors/headers'
+
+body style="overflow: visible;"
+  .paper-back
+    .absolute-center
+      .text-center
+        .title-logo.animated.fadeInDown.animation-delay-5
+          br/
+        .transparent-div.animated.fadeInUp.animation-delay-8
+          h1 Error 404
+          h2 Page Not Found
+          p We have not found what you are looking for.
+          = link_to "Go Home", root_path, class: "btn btn-ar btn-primary btn-lg"

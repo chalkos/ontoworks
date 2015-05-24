@@ -1,0 +1,16 @@
+= render 'errors/headers'
+
+body style="overflow: visible;"
+  .paper-back
+    .absolute-center
+      .text-center
+        .title-logo.animated.fadeInDown.animation-delay-5
+          br/
+        .transparent-div.animated.fadeInUp.animation-delay-8
+          h1 Error 500
+          h2 Internal Server Error
+          p
+            | Something has gone wrong we are trying to fix it.
+            br/
+            | Meanwhile you can go back to the homepage.
+          = link_to "Go Home", root_path, class: "btn btn-ar btn-primary btn-lg"
