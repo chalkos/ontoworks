@@ -3,7 +3,7 @@ class OntologiesController < ApplicationController
 
   # raise an exception if authorize has not yet been called
   after_action :verify_authorized
-  before_action :set_ontology, only: [:show, :edit, :update, :destroy, :download, :change_code]
+  before_action :set_ontology, only: [:show, :edit, :update, :destroy, :download, :change_code, :logs]
 
   # GET /ontologies
   # GET /ontologies.json
@@ -17,7 +17,11 @@ class OntologiesController < ApplicationController
   # GET /ontologies/1.json
   def show
     authorize_present @ontology
-    @logs = Log.where(ontology: @ontology.id).order(created_at: :desc).first(10)
+    if user_owns_ontology(@ontology)
+      @logs = Log.where(ontology: @ontology.id).order(created_at: :desc).first(10)
+    else
+      @logs = Log.where(ontology: @ontology.id, msg_type: visitor_types).order(created_at: :desc).first(10)
+    end
   end
 
   # GET /ontologies/new
@@ -169,6 +173,15 @@ class OntologiesController < ApplicationController
     end
   end
 
+  def logs
+    authorize_present @ontology
+    if user_owns_ontology(@ontology)
+      @logs = Log.where(ontology: @ontology.id).order(created_at: :desc)
+    else
+      @logs = Log.where(ontology: @ontology.id, msg_type: visitor_types).order(created_at: :desc)
+    end
+  end
+
   # GET /ontologies/1/download
   def download
     authorize_present @ontology
@@ -246,6 +259,10 @@ class OntologiesController < ApplicationController
     bw.close
     dataset.end()
     tmpName
+  end
+
+  def visitor_types
+    return[Log.msg_types[:ontologycreate], Log.msg_types[:savequery], Log.msg_types[:deletequery], Log.msg_types[:updatedesc]]
   end
 
   def generate_code!(ontology)

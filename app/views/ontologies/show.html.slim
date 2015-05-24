@@ -65,3 +65,7 @@
         | Logs
       dl.dl-horizontal
       == render partial: 'list_logs'
+      = link_to logs_ontology_path(@ontology) do
+        button.btn.btn-ar.btn-info type="button" style="float: right;"
+          i.fa.fa-list
+          | Show All

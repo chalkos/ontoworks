@@ -1,0 +1,7 @@
+h1.section-title
+  | Logs
+  span style="font-size:18px; margin-left:2px"
+    = link_to ontology_path(@ontology) do
+      = @ontology.name
+  dl.dl-horizontal
+== render partial: 'list_logs'
