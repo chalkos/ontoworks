@@ -10,6 +10,7 @@ ADD . /home/ontoworks/webserver/
 # install dependencies, the last line are RVM depencencies
 RUN yum makecache && yum install -y \
   curl \
+  git \
   java-1.7.0-openjdk \
   postgresql-jdbc \
   tar \
