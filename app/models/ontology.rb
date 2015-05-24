@@ -71,8 +71,8 @@ class Ontology < ActiveRecord::Base
       ),
       query_model.new(
         name: "Top Concepts",
-        content: "PREFIX skos: <http://www.w3.org/2004/02/skos/core#>\n\nSELECT DISTINCT ?topConcept ?prefLabel WHERE {\n ?base skos:hasTopConcept ?topConcept.\n ?topConcept skos:prefLabel ?prefLabel.\n FILTER(lang(?prefLabel) = \"en\")\n}",
-        desc: "Lists top concepts for this ontology."
+        content: "PREFIX skos: <http://www.w3.org/2004/02/skos/core#>\n\nSELECT DISTINCT ?topConcept ?prefLabel WHERE {\n ?base skos:hasTopConcept ?topConcept.\n ?topConcept skos:prefLabel ?prefLabel.\n FILTER(lang(?prefLabel) = \"en\")\n} ORDER BY ?prefLabel",
+        desc: "Lists SKOS top concepts for this ontology."
       ),
     ]
 

@@ -99,4 +99,9 @@ $(document).ready(function(){
     $("#query_content").val("SELECT DISTINCT ?property WHERE {\n [] ?property []\n} ORDER BY ?property");
     $("#submit_query").submit();
   });
+
+  $("#s_topconcepts").click(function(){
+    $("#query_content").val("PREFIX skos: <http://www.w3.org/2004/02/skos/core#>\n\nSELECT DISTINCT ?topConcept ?prefLabel WHERE {\n ?base skos:hasTopConcept ?topConcept.\n ?topConcept skos:prefLabel ?prefLabel.\n FILTER(lang(?prefLabel) = \"en\")\n} ORDER BY ?prefLabel");
+    $("#submit_query").submit();
+  });
 });
