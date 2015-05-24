@@ -25,4 +25,4 @@ production:
   pool: 20
   username: postgres
   password:
-  host: owdb
+  host: db

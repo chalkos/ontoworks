@@ -1,8 +1,8 @@
-owdb:
+db:
   image: postgres
   ports:
     - "5432"
-owwebserver:
+web:
   build: .
   command: "debug"
   volumes:
@@ -10,4 +10,4 @@ owwebserver:
   ports:
     - "3000:3000"
   links:
-    - owdb
+    - db
