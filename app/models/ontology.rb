@@ -4,7 +4,7 @@ class Ontology < ActiveRecord::Base
   has_many :queries
   belongs_to :user
 
-  validates :public, :shared, inclusion: [true, false]
+  validates :public, :shared, inclusion: [true, 1, '1', 't', 'T', 'true', 'TRUE', 'on', 'ON', false, 0, '0', 'f', 'F', 'false', 'FALSE', 'off', 'OFF']
   validates_presence_of :user
   validates_presence_of :file, on: :create
   validates :code, uniqueness: true
