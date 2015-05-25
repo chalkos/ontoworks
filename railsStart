@@ -20,6 +20,6 @@ else
   min="$3"
 fi
 
-echo "Running: jruby -J-Xmn${heap}m -J-Xms${min}m -J-Xmx${max}m -S bundle exec puma"
+echo "Running: bundle exec jruby -J-Xmn${heap}m -J-Xms${min}m -J-Xmx${max}m -S puma"
 
-jruby -J-Xmn${heap}m -J-Xms${min}m -J-Xmx${max}m -S bundle exec puma
+bundle exec jruby -J-Xmn${heap}m -J-Xms${min}m -J-Xmx${max}m -S puma
