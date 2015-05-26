@@ -190,14 +190,15 @@ class QueriesController < ApplicationController
       rescue Exception => e
         errors = e.to_s
       ensure
-        qexec.close()
+        qexec.close() if qexec
         dataset.end()
         errors
       end
     end
 
     def exec_query(dataset,query,timeout)
-      qexec = Jena::Query::QueryExecutionFactory.create(query, dataset)
+      qfact = Jena::Query::QueryFactory.create(query)
+      qexec = Jena::Query::QueryExecutionFactory.create(qfact, dataset)
       qexec.setTimeout(timeout)
       res = qexec.execSelect()
 

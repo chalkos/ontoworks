@@ -31,6 +31,7 @@ gem 'syntax-highlighter-rails'
 gem 'rails', '4.2.0'
 # Use jdbcsqlite3 as the database for Active Record
 gem 'activerecord-jdbcsqlite3-adapter'
+#gem 'jruby-pg'
 # Use SCSS for stylesheets
 gem 'sass-rails', '~> 5.0'
 # Use Uglifier as compressor for JavaScript assets
