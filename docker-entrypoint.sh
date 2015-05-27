@@ -26,7 +26,7 @@ function start {
 
 function debug {
   echo "Idling indefinitely. Use CTRL+C to stop."
-  echo "To debug use: docker exec -i -t genericsparqlendpoint_owwebserver_1 /bin/bash -l"
+  echo "To debug use: docker exec -i -t genericsparqlendpoint_web_1 /bin/bash -l"
   while true; do sleep 100; done
   exit
 }
