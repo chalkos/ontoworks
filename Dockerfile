@@ -19,6 +19,7 @@ RUN yum makecache && yum install -y \
   git \
   java-1.7.0-openjdk \
   postgresql-jdbc \
+  sendmail \
   tar \
   unzip \
   zip \
