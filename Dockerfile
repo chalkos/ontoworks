@@ -1,8 +1,15 @@
 FROM centos:latest
 MAINTAINER Bruno Ferreira "docker@chalkos.net"
 
+# Before building, this needs to be changed to whatever UID and GID
+# the host is using for this file
+# to get the UID use: ls -n Dockerfile | cut -d' ' -f3
+# to get the GID use: ls -n Dockerfile | cut -d' ' -f4
+ENV owUID=1000
+ENV owGID=100
+
 # create user
-RUN useradd -ms /bin/bash ontoworks
+RUN useradd -u$owUID -g$owGID -ms /bin/bash ontoworks
 
 # copy rails files
 ADD . /home/ontoworks/webserver/
