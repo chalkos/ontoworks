@@ -5,11 +5,10 @@ MAINTAINER Bruno Ferreira "docker@chalkos.net"
 # the host is using for this file
 # to get the UID use: ls -n Dockerfile | cut -d' ' -f3
 # to get the GID use: ls -n Dockerfile | cut -d' ' -f4
-ENV owUID=1000
-ENV owGID=100
+ENV owUID=1000 owGID=100
 
-# create user
-RUN useradd -u$owUID -g$owGID -ms /bin/bash ontoworks
+# create group and user
+RUN groupadd -fg$owGID ontoworks && useradd -u$owUID -g$owGID -ms /bin/bash ontoworks
 
 # copy rails files
 ADD . /home/ontoworks/webserver/
