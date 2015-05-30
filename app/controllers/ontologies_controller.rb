@@ -20,7 +20,7 @@ class OntologiesController < ApplicationController
     if user_owns_ontology(@ontology)
       @logs = Log.where(ontology: @ontology.id).order(created_at: :desc).first(10)
     else
-      @logs = Log.where(ontology: @ontology.id, msg_type: visitor_types).order(created_at: :desc).first(10)
+      @logs = Log.where(ontology: @ontology.id, msg_type: Log.visitor_types).order(created_at: :desc).first(10)
     end
   end
 
@@ -259,10 +259,6 @@ class OntologiesController < ApplicationController
     bw.close
     dataset.end()
     tmpName
-  end
-
-  def visitor_types
-    return[Log.msg_types[:ontologycreate], Log.msg_types[:savequery], Log.msg_types[:deletequery], Log.msg_types[:updatedesc]]
   end
 
   def generate_code!(ontology)
