@@ -178,7 +178,7 @@ class OntologiesController < ApplicationController
     if user_owns_ontology(@ontology)
       @logs = Log.where(ontology: @ontology.id).order(created_at: :desc)
     else
-      @logs = Log.where(ontology: @ontology.id, msg_type: visitor_types).order(created_at: :desc)
+      @logs = Log.where(ontology: @ontology.id, msg_type: Log.visitor_types).order(created_at: :desc)
     end
   end
 

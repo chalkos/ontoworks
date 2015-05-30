@@ -63,9 +63,6 @@
     .col-lg-12.col-md-12.col-sm-12.col-xs-12
       h1.section-title
         | Logs
-      dl.dl-horizontal
-      == render partial: 'list_logs'
-      = link_to logs_ontology_path(@ontology) do
-        button.btn.btn-ar.btn-info type="button" style="float: right;"
+        = link_to logs_ontology_path, class: 'tt icon-ar icon-ar-round icon-ar-sm', style: 'margin-left:1em', title: 'Show All' do
           i.fa.fa-list
-          | Show All
+      == render partial: 'list_logs'
