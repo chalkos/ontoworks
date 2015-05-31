@@ -1,0 +1,17 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  ontology_id: 
+  msg_type: 1
+  from_code: MyString
+  to_code: MyString
+  user_id: 
+  query_id: 
+
+two:
+  ontology_id: 
+  msg_type: 1
+  from_code: MyString
+  to_code: MyString
+  user_id: 
+  query_id: 

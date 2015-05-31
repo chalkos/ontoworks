@@ -32,4 +32,8 @@ class OntologyPolicy < ApplicationPolicy
   def destroy?
     user_is_owner?
   end
+
+  def logs?
+    show?
+  end
 end

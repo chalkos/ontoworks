@@ -115,6 +115,9 @@ class QueriesController < ApplicationController
 
     respond_to do |format|
       if @query.save
+        log = Log.new(ontology_id: @ontology.id, user_id: current_user.id, query_name: @query.name)
+        log.savequery!
+        log.save
         format.json {
           render json: {
             error: [],
@@ -133,6 +136,10 @@ class QueriesController < ApplicationController
   def destroy
     authorize @ontology, :show?
     authorize_present @query
+
+    log = Log.new(ontology_id: @ontology.id, user_id: current_user.id, query_name: @query.name)
+    log.deletequery!
+    log.save
 
     @query.destroy
     respond_to do |format|
@@ -172,20 +179,25 @@ class QueriesController < ApplicationController
         out = StringIO.new
         stream = out.to_outputstream
 
-        case @out_format
-        when "XML"
-          Jena::Query::ResultSetFormatter.outputAsXML(stream,res)
-          @query.sparql = out.string
-        when "TXT"
-          @query.sparql = Jena::Query::ResultSetFormatter.asText(res)
-        when "CSV"
-          Jena::Query::ResultSetFormatter.outputAsCSV(stream,res)
+        if qexec.getQuery().getQueryType() ==  Jena::Query::Query::QueryTypeConstruct #construct only makes sense as RDF/XML and res is a Model
+          @out_format = "XML";
+          res.write(stream, "RDF/XML-ABBREV")
           @query.sparql = out.string
         else
-          Jena::Query::ResultSetFormatter.outputAsJSON(stream,res)
-          @query.sparql = JSON.parse out.string
+          case @out_format
+          when "XML"
+            Jena::Query::ResultSetFormatter.outputAsXML(stream,res)
+            @query.sparql = out.string
+          when "TXT"
+            @query.sparql = Jena::Query::ResultSetFormatter.asText(res)
+          when "CSV"
+            Jena::Query::ResultSetFormatter.outputAsCSV(stream,res)
+            @query.sparql = out.string
+          else
+            Jena::Query::ResultSetFormatter.outputAsJSON(stream,res)
+            @query.sparql = JSON.parse out.string
+          end
         end
-
         errors = ""
       rescue Exception => e
         errors = e.to_s
@@ -200,8 +212,25 @@ class QueriesController < ApplicationController
       qfact = Jena::Query::QueryFactory.create(query)
       qexec = Jena::Query::QueryExecutionFactory.create(qfact, dataset)
       qexec.setTimeout(timeout)
-      res = qexec.execSelect()
 
+      case qfact.getQueryType()
+      when Jena::Query::Query::QueryTypeSelect
+        res = qexec.execSelect()
+      when Jena::Query::Query::QueryTypeAsk
+        ask = qexec.execAsk() #ask is a boolean, so we need to create a ResultSet to show the results
+        string = '{"head":{"vars":["Response"]},"results":{"bindings":[{"Response":{"type":"typed-literal","value":"' + ask.to_s + '"}}]}}'
+        bytes = string.to_java_bytes
+        inputstream = java.io.ByteArrayInputStream.new(bytes)
+        res = Jena::Query::ResultSetFactory.fromJSON(inputstream)
+      when Jena::Query::Query::QueryTypeDescribe
+        desc = qexec.execDescribe()
+        qexec.close()
+        # desc is a model so we select everything in it, using a select query, and get a ResultSet
+        qexec = Jena::Query::QueryExecutionFactory.create("Select * where {?s ?p ?o} ORDER BY ?s", desc)
+        res = qexec.execSelect()
+      when Jena::Query::Query::QueryTypeConstruct
+        res= qexec.execConstruct()
+      end
       return res,qexec
     end
 end

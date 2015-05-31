@@ -1,0 +1,11 @@
+.row
+  .col-lg-12.col-md-12.col-sm-12.col-xs-12
+    h1.section-title
+     | Logs
+     = link_to ontology_path(@ontology), class: 'tt icon-ar icon-ar-round icon-ar-sm', style: 'margin-left:1em', title: 'Back to ontology' do
+        i.fa.fa-arrow-left
+    p.lead.lead-sm
+      strong Ontology:
+      =< link_to ontology_path(@ontology) do
+        = @ontology.name
+    == render partial: 'list_logs'

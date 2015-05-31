@@ -14,6 +14,7 @@ Rails.application.routes.draw do
     member do
       get 'download'
       get 'change_code'
+      get 'logs'
     end
   end
 

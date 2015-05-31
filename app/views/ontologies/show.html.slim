@@ -59,3 +59,10 @@
     .row
       .col-lg-12.col-md-12.col-sm-12.col-xs-12
         == render partial: '/queries/form_run_query'
+  .row
+    .col-lg-12.col-md-12.col-sm-12.col-xs-12
+      h1.section-title
+        | Logs
+        = link_to logs_ontology_path, class: 'tt icon-ar icon-ar-round icon-ar-sm', style: 'margin-left:1em', title: 'Show All' do
+          i.fa.fa-list
+      == render partial: 'list_logs'

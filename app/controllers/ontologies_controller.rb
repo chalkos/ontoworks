@@ -3,7 +3,7 @@ class OntologiesController < ApplicationController
 
   # raise an exception if authorize has not yet been called
   after_action :verify_authorized
-  before_action :set_ontology, only: [:show, :edit, :update, :destroy, :download, :change_code]
+  before_action :set_ontology, only: [:show, :edit, :update, :destroy, :download, :change_code, :logs]
 
   # GET /ontologies
   # GET /ontologies.json
@@ -17,6 +17,11 @@ class OntologiesController < ApplicationController
   # GET /ontologies/1.json
   def show
     authorize_present @ontology
+    if user_owns_ontology(@ontology)
+      @logs = Log.where(ontology: @ontology.id).order(created_at: :desc).first(10)
+    else
+      @logs = Log.where(ontology: @ontology.id, msg_type: Log.visitor_types).order(created_at: :desc).first(10)
+    end
   end
 
   # GET /ontologies/new
@@ -102,6 +107,11 @@ class OntologiesController < ApplicationController
     respond_to do |format|
       if @ontology.errors.empty? && @ontology.save
         @ontology.add_default_queries! Query
+
+        log = Log.new(ontology_id: @ontology.id)
+        log.ontologycreate!
+        log.save
+
         format.html { redirect_to @ontology, notice: 'Ontology was successfully created.' }
         format.json { render :show, status: :created, location: @ontology }
       else
@@ -115,9 +125,26 @@ class OntologiesController < ApplicationController
   # PATCH/PUT /ontologies/1.json
   def update
     authorize_present @ontology
+    desc = @ontology.desc
+    pub = @ontology.public
+    sha = @ontology.shared
 
     respond_to do |format|
       if @ontology.update(ontology_params.slice(:desc, :public, :shared))
+        #Log changes
+        if(desc != @ontology.desc)
+          log = Log.new(ontology_id: @ontology.id)
+          log.updatedesc!; log.save
+        end
+        if(pub != @ontology.public)
+          log = Log.new(ontology_id: @ontology.id, helper: @ontology.public)
+          log.updatepublic!; log.save
+        end
+        if(sha != @ontology.shared)
+          log = Log.new(ontology_id: @ontology.id,helper: @ontology.shared)
+          log.updateshared!; log.save
+        end
+        #respond
         format.html { redirect_to @ontology, notice: 'Ontology was successfully updated.' }
         format.json { render :show, status: :ok, location: @ontology }
       else
@@ -139,9 +166,19 @@ class OntologiesController < ApplicationController
     require 'fileutils'
     FileUtils.rm_r dir
 
+    @ontology.destroy
     respond_to do |format|
       format.html { redirect_to ontologies_url, notice: 'Ontology was successfully destroyed.' }
       format.json { head :no_content }
+    end
+  end
+
+  def logs
+    authorize_present @ontology
+    if user_owns_ontology(@ontology)
+      @logs = Log.where(ontology: @ontology.id).order(created_at: :desc)
+    else
+      @logs = Log.where(ontology: @ontology.id, msg_type: Log.visitor_types).order(created_at: :desc)
     end
   end
 
@@ -169,10 +206,16 @@ class OntologiesController < ApplicationController
 
   # GET /ontologies/1/change_code
   def change_code
+    log = Log.new(ontology_id: @ontology.id)
+    log.codechange!
+    log.from_code = @ontology.code
+
     authorize_present @ontology
     old_location = @ontology.tdb_dir
     generate_code! @ontology
 
+    log.to_code = @ontology.code
+    log.save
     require 'fileutils'
     FileUtils.mv(old_location, @ontology.tdb_dir)
 
