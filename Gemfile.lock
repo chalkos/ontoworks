@@ -209,6 +209,7 @@ DEPENDENCIES
   jquery-rails
   jquery-turbolinks
   lograge
+  nokogiri
   puma
   pundit
   rails (= 4.2.0)
