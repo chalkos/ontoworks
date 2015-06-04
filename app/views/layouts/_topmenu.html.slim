@@ -46,30 +46,30 @@ header#header-full-top.hidden-xs.header-full
             = link_to destroy_user_session_path, class: 'tb tt-inline google-plus', title: 'Sign out', method: :delete do
               i.fa.fa-power-off
           /li
-          /  a.facebook href="#" 
+          /  a.facebook href="#"
           /    i.fa.fa-facebook
           /li
-          /  a.google-plus href="#" 
+          /  a.google-plus href="#"
           /    i.fa.fa-google-plus
           /li
-          /  a.instagram href="#" 
+          /  a.instagram href="#"
           /    i.fa.fa-instagram
           /li
-          /  a.vine href="#" 
+          /  a.vine href="#"
           /    i.fa.fa-vine
           /li
-          /  a.linkedin href="#" 
+          /  a.linkedin href="#"
           /    i.fa.fa-linkedin
           /li
-          /  a.flickr href="#" 
+          /  a.flickr href="#"
           /    i.fa.fa-flickr
   /! container
 /! header-full
-nav#header.navbar.navbar-static-top.navbar-default.navbar-header-full.navbar-dark role="navigation" 
+nav#header.navbar.navbar-static-top.navbar-default.navbar-header-full.navbar-dark role="navigation"
   .container
     /! Brand and toggle get grouped for better mobile display
     .navbar-header
-      button.navbar-toggle data-target="#bs-example-navbar-collapse-1" data-toggle="collapse" type="button" 
+      button.navbar-toggle data-target="#bs-example-navbar-collapse-1" data-toggle="collapse" type="button"
         span.sr-only Toggle navigation
         i.fa.fa-bars
       = link_to root_path, class: 'navbar-brand hidden-lg hidden-md hidden-sm active' do
@@ -81,5 +81,12 @@ nav#header.navbar.navbar-static-top.navbar-default.navbar-header-full.navbar-dar
         = nav_link 'Home', root_path
         = nav_link 'Ontologies', ontologies_path
         = nav_link 'New Ontology', new_ontology_path
+
+        - if not user_signed_in?
+          = nav_link 'Login', new_user_session_path, 'showhide'
+          = nav_link 'Register', new_user_registration_path, 'showhide'
+        - else
+          = nav_link 'Edit Profile', edit_user_registration_path, 'showhide'
+          = nav_link 'Sign Out', destroy_user_session_path, 'showhide', :delete
     /! navbar-collapse
   /! container
