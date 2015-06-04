@@ -82,6 +82,16 @@ class QueriesController < ApplicationController
 
   # POST /run
   def run
+    aux = params
+    str = params.keys[0]
+
+    xml = Nokogiri::XML(str)
+    if xml.errors.empty?
+      params = Hash.from_xml(xml.to_s).deep_symbolize_keys()
+    else
+      params = aux
+    end
+
     # Get a query
     @query = Query.new
     @query.content = request.post? ? params[:query][:content] : default_query_content
