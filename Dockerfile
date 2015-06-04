@@ -1,8 +1,14 @@
 FROM centos:latest
 MAINTAINER Bruno Ferreira "docker@chalkos.net"
 
-# create user
-RUN useradd -ms /bin/bash ontoworks
+# Before building, this needs to be changed to whatever UID and GID
+# the host is using for this file
+# to get the UID use: ls -n Dockerfile | cut -d' ' -f3
+# to get the GID use: ls -n Dockerfile | cut -d' ' -f4
+ENV owUID=1000 owGID=100
+
+# create group and user
+RUN groupadd -fg$owGID ontoworks && useradd -u$owUID -g$owGID -ms /bin/bash ontoworks
 
 # copy rails files
 ADD . /home/ontoworks/webserver/
@@ -13,6 +19,7 @@ RUN yum makecache && yum install -y \
   git \
   java-1.7.0-openjdk \
   postgresql-jdbc \
+  sendmail \
   tar \
   unzip \
   zip \
