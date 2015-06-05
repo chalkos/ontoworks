@@ -205,11 +205,10 @@ DEPENDENCIES
   coffee-rails (~> 4.1.0)
   devise
   font-awesome-rails
-  jena-jruby
+  jena-jruby!
   jquery-rails
   jquery-turbolinks
   lograge
-  nokogiri
   puma
   pundit
   rails (= 4.2.0)
