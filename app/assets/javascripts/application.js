@@ -28,5 +28,6 @@
 //
 //= require custom
 //
+//= require autosize
 //
 //= require turbolinks
