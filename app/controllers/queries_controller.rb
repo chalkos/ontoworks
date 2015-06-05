@@ -82,19 +82,6 @@ class QueriesController < ApplicationController
 
   # POST /run
   def run
-    if request.content_type =~ /\/xml$/ then
-      xmlparams = Hash.from_xml(request.body.read)
-
-      # only copy safe parameters
-      if xmlparams.has_key? 'query' then
-        params[:query] = {
-          content: xmlparams['query']['content'] || default_query_content,
-          output:  xmlparams['query']['output']  || default_query_output,
-          timeout: xmlparams['query']['timeout'] || default_query_timeout
-        }
-      end
-    end
-
     # Get a query
     @query = Query.new
     @query.content = request.post? ? params[:query][:content] : default_query_content
