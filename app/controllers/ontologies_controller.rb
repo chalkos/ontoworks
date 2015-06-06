@@ -90,6 +90,13 @@ class OntologiesController < ApplicationController
       #read the RDF/XML file
       begin
         model.read(input, nil)
+
+        prefixes = Hash model.getNsPrefixMap()
+        @ontology.prefixes = prefixes.except('').keys.sort.inject('') do |memo,key|
+          memo << "PREFIX #{key}: <#{prefixes[key]}>\n"
+        end
+        @ontology.prefixes << "PREFIX : <#{prefixes['']}>\n" if prefixes.has_key? ''
+        @ontology.prefixes.chomp!
       rescue Exception => e
         @ontology.errors.add(:file, "An error occurred while importing the ontology: " + e.to_s)
         FileUtils.remove_dir(@ontology.tdb_dir)

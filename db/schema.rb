@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150511182709) do
+ActiveRecord::Schema.define(version: 20150606154001) do
 
   create_table "logs", force: :cascade do |t|
     t.integer  "ontology_id"
@@ -37,6 +37,7 @@ ActiveRecord::Schema.define(version: 20150511182709) do
     t.integer  "user_id"
     t.boolean  "public",                 default: false
     t.boolean  "shared",                 default: false
+    t.text     "prefixes",               default: "",    null: false
   end
 
   add_index "ontologies", ["code"], name: "index_ontologies_on_code", unique: true
