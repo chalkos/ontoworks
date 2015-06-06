@@ -11,16 +11,29 @@ class OntologiesController < ApplicationController
     @my_ontologies = Ontology.where(user_id: current_user.id) if user_signed_in?
     @public_ontologies = Ontology.eager_load(:user).where(public: true)
     authorize Ontology
+
+    respond_to do |format|
+      format.html
+      format.json  { render json: @public_ontologies }
+      format.xml
+    end
   end
 
   # GET /ontologies/1
   # GET /ontologies/1.json
   def show
     authorize_present @ontology
+
     if user_owns_ontology(@ontology)
       @logs = Log.where(ontology: @ontology.id).order(created_at: :desc).first(10)
     else
       @logs = Log.where(ontology: @ontology.id, msg_type: Log.visitor_types).order(created_at: :desc).first(10)
+    end
+
+    respond_to do |format|
+      format.html
+      format.json  { render json: @ontology }
+      format.xml
     end
   end
 

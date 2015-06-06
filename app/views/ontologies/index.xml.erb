@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ontologies>
+  <% @public_ontologies.each do |p| %>
+    <%= render 'info', ontology: p %>
+  <% end %>
+</ontologies>
