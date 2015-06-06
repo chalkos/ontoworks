@@ -91,11 +91,9 @@ class OntologiesController < ApplicationController
       begin
         model.read(input, nil)
 
-        prefixes = Hash model.getNsPrefixMap()
-        @ontology.prefixes = prefixes.keys.sort.inject('') do |memo,key|
-          memo << "PREFIX #{key}: <#{prefixes[key]}>\n"
+        Hash(model.getNsPrefixMap()).each_pair do |name, uri|
+          @ontology.prefixes.build(name: name, uri: uri)
         end
-        @ontology.prefixes.chomp!
       rescue Exception => e
         @ontology.errors.add(:file, "An error occurred while importing the ontology: " + e.to_s)
         FileUtils.remove_dir(@ontology.tdb_dir)
