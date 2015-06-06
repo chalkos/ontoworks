@@ -5,12 +5,12 @@
     = f.label :content, 'Run a query on this ontology'
     = f.text_area :content, class: 'form-control monospace', spellcheck: false, rows: '5', value: (@query.nil? ? default_query_content : @query.content)
 
-  - if options.include? :prefixes
-    .form-inline style="margin-bottom:1em"
-      select.form-control#prefixes_select
-        - @ontology.prefixes.each do |prefix|
-          option value="#{prefix.to_s}" =reduce_string(prefix.to_s, 60)
-      button.btn.btn-ar.btn-info#prefixes_add style="margin-left:1em" type="button" Add Prefix
+  .form-inline style="margin-bottom:1em"
+    select.form-control#prefixes_select
+      - @ontology.prefixes.each do |prefix|
+        option value="#{prefix.to_s}" =reduce_string(prefix.to_s, 60)
+    button.btn.btn-ar.btn-info#prefixes_add style="margin-left:1em" type="button" Add Prefix
+    - if options.include? :prefixes_add_all
       button.btn.btn-ar.btn-info#prefixes_add_all style="margin-left:1em" type="button" Add All
 
   .form-inline
