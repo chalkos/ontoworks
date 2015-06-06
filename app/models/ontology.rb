@@ -2,7 +2,7 @@ class Ontology < ActiveRecord::Base
   include OntologiesHelper
 
   has_many :queries
-  has_many :prefixes
+  has_many :prefixes, -> { order(name: :asc) }
   belongs_to :user
 
   validates :public, :shared, inclusion: [true, 1, '1', 't', 'T', 'true', 'TRUE', 'on', 'ON', false, 0, '0', 'f', 'F', 'false', 'FALSE', 'off', 'OFF']

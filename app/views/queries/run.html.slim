@@ -13,9 +13,9 @@
         = @ontology.name
   .col-md-9
     - if user_signed_in?
-      = render 'form_run_query', options: [:save]
+      = render 'form_run_query', options: [:save, :prefixes]
     - else
-      = render 'form_run_query'
+      = render 'form_run_query', options: [:prefixes]
   .col-md-3
     br/
     section

@@ -1,4 +1,26 @@
 $(document).ready(function(){
+  $("#prefixes_add").click(function(){
+    $("#query_content").val(function(index, value){
+      return $("#prefixes_select").val() + "\n" + value
+    });
+
+    autosize.update($("#query_content"));
+  });
+
+  $("#prefixes_add_all").click(function(){
+    var lines = [];
+
+    $('#prefixes_select option').each(function() {
+        lines.push($(this).val());
+    });
+
+    $("#query_content").val(function(index, value){
+      return lines.join("\n") + "\n" + value
+    });
+
+    autosize.update($("#query_content"));
+  });
+
   $("#query_start_save").click(function(){
     $(this).hide("fast");
     $("#query_saving").show("fast");
