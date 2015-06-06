@@ -9,9 +9,9 @@
     select.form-control#prefixes_select
       - @ontology.prefixes.each do |prefix|
         option value="#{prefix.to_s}" =reduce_string(prefix.to_s, 60)
-    button.btn.btn-ar.btn-info#prefixes_add style="margin-left:1em" type="button" Add Prefix
+    button.btn.btn-ar.btn-default#prefixes_add style="margin-left:1em" type="button" Add Prefix
     - if options.include? :prefixes_add_all
-      button.btn.btn-ar.btn-info#prefixes_add_all style="margin-left:1em" type="button" Add All
+      button.btn.btn-ar.btn-default#prefixes_add_all style="margin-left:1em" type="button" Add All
 
   .form-inline
     .form-group
