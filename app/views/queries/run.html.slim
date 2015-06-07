@@ -65,7 +65,17 @@
                     - unless row[col].nil?
                       = format_cell(row[col])
                       - if row[col]['type'] == 'uri'
-                        =  link_to result_cell(row[col]), ontology_queries_run_path(@ontology, :uri => result_cell(row[col])), method: :get
+                        span title= namespace(result_cell(row[col]))
+                          = oclude(result_cell(row[col]))
+                        =  link_to last(result_cell(row[col])), ontology_queries_run_path(@ontology, :uri => result_cell(row[col])), method: :get
                       - else
-                        b
-                          = result_cell(row[col])
+                        - if row[col]['type'] == 'typed-literal'
+                          b
+                            = result_cell(row[col])
+                          span style="margin-left:1em" title= namespace(row[col]['datatype'])
+                            == "^^"
+                            = oclude(row[col]['datatype'])
+                          = last(row[col]['datatype'])
+                        - else
+                          b
+                            = result_cell(row[col])
