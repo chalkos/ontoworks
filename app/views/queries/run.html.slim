@@ -65,7 +65,9 @@
                     - unless row[col].nil?
                       = format_cell(row[col])
                       - if row[col]['type'] == 'uri'
-                        =  link_to result_cell(row[col]), ontology_queries_run_path(@ontology, :uri => result_cell(row[col])), method: :get
+                        span title= namespace(row[col])
+                          = oclude(row[col])
+                        =  link_to last(row[col]), ontology_queries_run_path(@ontology, :uri => result_cell(row[col])), method: :get
                       - else
                         b
                           = result_cell(row[col])

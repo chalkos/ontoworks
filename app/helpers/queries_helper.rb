@@ -23,6 +23,18 @@ module QueriesHelper
     text = cell['value'].to_s || '_error_'
   end
 
+  def namespace(cell)
+    text = result_cell(cell).rpartition('#').first
+  end
+
+  def oclude(cell)
+    text = namespace(cell).rpartition('/').last
+  end
+
+  def last(cell)
+    text = "#" + result_cell(cell).rpartition('#').last
+  end
+
   def default_query_content
     "SELECT DISTINCT ?class WHERE {\n [] a ?class\n} ORDER BY ?class"
   end
