@@ -199,22 +199,16 @@ class OntologiesController < ApplicationController
   def download
     authorize_present @ontology
 
-    @type = params[:type]
-    case @type
-    when "TURTLE"; ext = ".ttl"
-    when "RDF/JSON"; ext = ".json"
-    when "N-TRIPLES"; ext = ".nt"
-    when "RDF/XML-ABBREV"; ext= ".rdf"
-    else
-      ext = ".rdf"
-      @type = "RDF/XML-ABBREV"
-    end
+    @type, ext = download_defs(params)
+    onto_data = write_ontology @type
+
     friendly_name = @ontology.name.gsub(/[^\w\s_-]+/, '').gsub(/(^|\b\s)\s+($|\s?\b)/, '\\1\\2').gsub(/\s+/, '_') + ext
 
-    name = write_ontology @type
-    file = File.open(name, "r")
-    send_data file.read, :filename => friendly_name, :type =>"text/plain"
-    FileUtils.rm(name)
+    if params[:download][:with] == "0"
+      send_data onto_data, :filename => friendly_name, :type =>"text/plain"
+    else
+      zip_ontology_data(friendly_name,onto_data, @ontology.queries)
+    end
   end
 
   # GET /ontologies/1/change_code
@@ -261,17 +255,29 @@ class OntologiesController < ApplicationController
     dataset.begin(Jena::Query::ReadWrite::READ)
     model = dataset.getDefaultModel()
 
-    #create filename with timestamp to minimise same filename problems
-    tmpName = @ontology.name + "_" + Time.now.utc.iso8601
-    tmpName = tmpName.gsub(/[^\w\s_-]+/, '').gsub(/(^|\b\s)\s+($|\s?\b)/, '\\1\\2').gsub(/\s+/, '_')
-    tmpName = "tmp/" + tmpName
-
-    bw = java.io.BufferedWriter.new(java.io.FileWriter.new(tmpName))
-    model.write(bw, out_format)
-
-    bw.close
+    out = StringIO.new
+    model.write(out.to_outputstream, out_format)
     dataset.end()
-    tmpName
+
+    return out.string
+  end
+
+  def zip_ontology_data(friendly_name, onto_data, queries)
+    require 'zip'
+
+    zipio = Zip::OutputStream.write_buffer do |zip|
+      zip.put_next_entry friendly_name
+      zip.write onto_data
+
+      queries.each do |query|
+        zip.put_next_entry name_file(query)
+        zip.write description(query)
+      end
+    end
+
+    zipio.rewind
+    binary_data = zipio.sysread
+    send_data binary_data, :filename => "#{friendly_name}.zip", :type => "application/zip"
   end
 
   def generate_code!(ontology)
