@@ -12,10 +12,6 @@ module QueriesHelper
     # (optional but if supplied it must not be empty)
     text << "@#{cell['lang']}" if cell['lang']
 
-    # datatype - the datatype URI of the
-    # literal value (optional)
-    text << "^^#{cell['datatype']} " if cell['datatype']
-
     text
   end
 
@@ -23,16 +19,16 @@ module QueriesHelper
     text = cell['value'].to_s || '_error_'
   end
 
-  def namespace(cell)
-    text = result_cell(cell).rpartition('#').first
+  def namespace(input)
+    text = input.rpartition('#').first
   end
 
-  def oclude(cell)
-    text = namespace(cell).rpartition('/').last
+  def oclude(input)
+    text = namespace(input).rpartition('/').last
   end
 
-  def last(cell)
-    text = "#" + result_cell(cell).rpartition('#').last
+  def last(input)
+    text = "#" + input.rpartition('#').last
   end
 
   def default_query_content
