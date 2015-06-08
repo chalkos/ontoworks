@@ -1,12 +1,18 @@
 $(document).ready(function(){
   $("#prefixes_add").click(function(){
     $("#query_content").val(function(index, value){
+      var options = $("#prefixes_select option");
       var sel = $("#prefixes_select")[0];
       var ind = sel.selectedIndex;
-      while(sel[ind].parentNode.nodeName == "SPAN"){
-        ind++;
-      }
-      return sel[ind].getAttribute('value') + "\n" + value
+      var new_index = 0;
+      var new_array = [];
+      for (var i = 0; i < options.length; i++) {
+        if(options[i].parentNode.nodeName != "SPAN"){
+          new_array[new_index] = options[i];
+          new_index++;
+        }
+      };
+      return new_array[ind].getAttribute('value') + "\n" + value;
     }).trigger("input");
 
     autosize.update($("#query_content"));
