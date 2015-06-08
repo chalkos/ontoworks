@@ -20,7 +20,7 @@
           .form-group
             = f.select :type, options_for_select([['RDF/XML', 'RDF/XML-ABBREV'], ['TURTLE'], ['RDF/JSON'], ['N-TRIPLES']]),  {}, { :class => 'form-control' }
           .checkbox
-            = f.check_box :with
+            = f.check_box :with, {}, "yes", "no"
             label
             |  with queries
             button.btn.btn-ar.btn-primary style="margin-left:1em" type="submit" Download

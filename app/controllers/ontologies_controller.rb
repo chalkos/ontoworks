@@ -204,7 +204,7 @@ class OntologiesController < ApplicationController
 
     friendly_name = @ontology.name.gsub(/[^\w\s_-]+/, '').gsub(/(^|\b\s)\s+($|\s?\b)/, '\\1\\2').gsub(/\s+/, '_') + ext
 
-    if params[:download][:with] == "0"
+    if params[:download][:with] == "no"
       send_data onto_data, :filename => friendly_name, :type =>"text/plain"
     else
       zip_ontology_data(friendly_name,onto_data, @ontology.queries)
