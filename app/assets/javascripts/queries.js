@@ -1,7 +1,12 @@
 $(document).ready(function(){
   $("#prefixes_add").click(function(){
     $("#query_content").val(function(index, value){
-      return $("#prefixes_select").val() + "\n" + value
+      var sel = $("#prefixes_select")[0];
+      var ind = sel.selectedIndex;
+      while(sel[ind].parentNode.nodeName == "SPAN"){
+        ind++;
+      }
+      return sel[ind].getAttribute('value') + "\n" + value
     }).trigger("input");
 
     autosize.update($("#query_content"));
