@@ -3,9 +3,9 @@
 
   .form-group
     = f.label :content, 'Run a query on this ontology'
-    = f.text_area :content, class: 'form-control monospace', spellcheck: false, rows: '5', value: (@query.nil? ? default_query_content : @query.content)
+    = f.text_area :content, class: 'form-control monospace', oninput: "checkPrefixes()", spellcheck: false, rows: '5', value: (@query.nil? ? default_query_content : @query.content)
 
-  .form-inline style="margin-bottom:1em"
+  .form-inline style="margin-bottom:1em" id="div_prefixes"
     select.form-control#prefixes_select
       - @ontology.prefixes.each do |prefix|
         option value="#{prefix.to_s}" =reduce_string(prefix.to_s, 60)

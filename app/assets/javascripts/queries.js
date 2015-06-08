@@ -2,7 +2,7 @@ $(document).ready(function(){
   $("#prefixes_add").click(function(){
     $("#query_content").val(function(index, value){
       return $("#prefixes_select").val() + "\n" + value
-    });
+    }).trigger("input");
 
     autosize.update($("#query_content"));
   });
@@ -11,12 +11,13 @@ $(document).ready(function(){
     var lines = [];
 
     $('#prefixes_select option').each(function() {
+      if(!$(this).parent().is("span")) //do not add hidden options
         lines.push($(this).val());
     });
 
     $("#query_content").val(function(index, value){
       return lines.join("\n") + "\n" + value
-    });
+    }).trigger("input");
 
     autosize.update($("#query_content"));
   });
@@ -128,4 +129,42 @@ $(document).ready(function(){
   });
 
   autosize($('textarea'));
+  checkPrefixes();
 });
+
+function checkPrefixes(){
+  var prefs = document.getElementById('prefixes_select').children;
+  var text = document.getElementById('query_content').value;
+  var active = 0;
+  for (index = 0; index < prefs.length; ++index) {
+    var node = prefs[index];
+    if(node.nodeName == "SPAN") //the hidden elements
+      node = node.children[0]; //fetch the option element
+
+    var value = node.value;
+    var menor = value.indexOf("<");
+    var maior = value.indexOf(">");
+    var subs = value.substring(menor, maior + 1);
+
+    if(text.indexOf(subs) > -1) //the prefix exists in the text
+      jQuery('#prefixes_select option[value="'+value+'"]').toggleOption(false);
+    else{
+      jQuery('#prefixes_select option[value="'+value+'"]').toggleOption(true);
+      active++;
+    }
+  }
+  if(active > 0)
+    $("#div_prefixes").show();
+  else $("#div_prefixes").hide();
+}
+
+jQuery.fn.toggleOption = function( show ) {
+    jQuery( this ).toggle( show );
+    if( show ) {
+        if( jQuery( this ).parent( 'span.toggleOption' ).length )
+            jQuery( this ).unwrap( );
+    } else {
+        if( jQuery( this ).parent( 'span.toggleOption' ).length == 0 )
+            jQuery( this ).wrap( '<span class="toggleOption" style="display: none;" />' );
+    }
+};
