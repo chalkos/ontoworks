@@ -8,6 +8,8 @@ gem "lograge"
 
 # project specific:
 gem 'jena-jruby', git: 'https://github.com/chalkos/jena-jruby.git', :tag => 'v0.7.0.fixtimeout'
+# using SPIN (jar) from http://spinrdf.org/
+# http://www.topquadrant.com/repository/spin/org/topbraid/spin/1.5.0-SNAPSHOT/spin-1.5.0-20150112.084011-1.jar
 
 # authentication
 gem 'devise'
