@@ -31,6 +31,11 @@ module QueriesHelper
     text = "#" + input.rpartition('#').last
   end
 
+  def user_owns_query(query)
+    return query.user_id == current_user.id if user_signed_in?
+    false
+  end
+
   def default_query_content
     "SELECT DISTINCT ?class WHERE {\n [] a ?class\n} ORDER BY ?class"
   end

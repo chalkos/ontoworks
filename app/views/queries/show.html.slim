@@ -4,8 +4,9 @@
       | Query
       = link_to ontology_queries_path(@ontology), class: 'tt icon-ar icon-ar-round icon-ar-sm', style: 'margin-left:1em', title: 'Back to query listing' do
           i.fa.fa-list
-      = link_to ontology_query_path(@ontology, @query), data: {:confirm => 'Are you sure?'}, :method => :delete, class: 'tt icon-ar icon-ar-round icon-ar-danger icon-ar-sm', title: 'Delete this query' do
-          i.fa.fa-trash
+      - if user_owns_query @query
+        = link_to ontology_query_path(@ontology, @query), data: {:confirm => 'Are you sure?'}, :method => :delete, class: 'tt icon-ar icon-ar-round icon-ar-danger icon-ar-sm', title: 'Delete this query' do
+            i.fa.fa-trash
     dl.dl-horizontal
       dt Name
       dd = @query.name
