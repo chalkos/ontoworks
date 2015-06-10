@@ -80,7 +80,8 @@ nav#header.navbar.navbar-static-top.navbar-default.navbar-header-full.navbar-dar
       ul.nav.navbar-nav
         = nav_link 'Home', root_path
         = nav_link 'Ontologies', ontologies_path
-        = nav_link 'New Ontology', new_ontology_path
+        - if user_signed_in?
+          = nav_link 'New Ontology', new_ontology_path
 
         - if not user_signed_in?
           = nav_link 'Login', new_user_session_path, 'showhide'
