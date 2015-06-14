@@ -144,7 +144,9 @@ $(document).ready(function(){
 });
 
 function checkPrefixes(){
-  var prefs = document.getElementById('prefixes_select').children;
+  var elem = document.getElementById('prefixes_select');
+  if(elem == null) return;
+  var prefs = elem.children;
   var text = document.getElementById('query_content').value;
   var active = 0;
   for (index = 0; index < prefs.length; ++index) {
