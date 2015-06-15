@@ -16,4 +16,14 @@ module ApplicationViewHelper
       .map(&:full_messages)
       .flatten
   end
+
+  # if str.length < maxlen returns the string itself
+  # else returns a string beginning and ending as the
+  # original but having (...) in the middle and a maximum length of maxlen
+  def reduce_string(str, maxlen, middle='[...]')
+    return str if str.length <= maxlen
+
+    maxlen -= middle.length
+    str[0...(maxlen/2)] + middle + str[(str.length-(maxlen/2)-(maxlen%2))...str.length]
+  end
 end
