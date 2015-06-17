@@ -13,6 +13,7 @@
  *= require_directory .
  *= require_self
  *= require font-awesome
+ *= require bootstrap3-switch
  *
  *= require style/style-blue.css
  *

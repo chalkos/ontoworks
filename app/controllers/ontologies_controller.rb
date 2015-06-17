@@ -202,7 +202,7 @@ class OntologiesController < ApplicationController
     @type, ext = download_defs(params)
     onto_data = write_ontology @type
 
-    friendly_name = @ontology.name.gsub(/[^\w\s_-]+/, '').gsub(/(^|\b\s)\s+($|\s?\b)/, '\\1\\2').gsub(/\s+/, '_') + ext
+    friendly_name = name_file(@ontology.name, ext)
 
     if params[:download][:with] == "no"
       send_data onto_data, :filename => friendly_name, :type =>"text/plain"
@@ -270,7 +270,7 @@ class OntologiesController < ApplicationController
       zip.write onto_data
 
       queries.each do |query|
-        zip.put_next_entry name_file(query)
+        zip.put_next_entry name_query(query)
         zip.write description(query)
       end
     end

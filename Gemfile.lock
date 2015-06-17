@@ -55,6 +55,7 @@ GEM
     arel (6.0.0)
     bcrypt (3.1.10)
     bcrypt (3.1.10-java)
+    bootstrap-switch-rails (3.3.2)
     builder (3.2.2)
     coffee-rails (4.1.0)
       coffee-script (>= 2.2.0)
@@ -202,6 +203,7 @@ PLATFORMS
 DEPENDENCIES
   active_model_serializers
   activerecord-jdbcsqlite3-adapter
+  bootstrap-switch-rails
   coffee-rails (~> 4.1.0)
   devise
   font-awesome-rails

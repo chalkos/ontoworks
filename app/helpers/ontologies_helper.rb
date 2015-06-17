@@ -18,11 +18,11 @@ module OntologiesHelper
   end
 
   def description(query)
-    "\##{query.name}\n\##{query.desc}\n\##{query.user.name}\n#{query.content}"
+    "\#Name: #{query.name}\n\#Description: #{query.desc}\n\#Author: #{query.user.name}\n#{query.content}"
   end
 
-  def name_file(query)
-    "queries/query#{query.id}.txt"
+  def name_query(query)
+    "queries/#{query.id}_" + name_file(query.name,'.rq')
   end
 
   def download_defs(params)
@@ -39,5 +39,9 @@ module OntologiesHelper
     end
 
     return type, ext
+  end
+
+  def name_file(name, ext)
+    name.gsub(/[^\w\s_-]+/, '').gsub(/(^|\b\s)\s+($|\s?\b)/, '\\1\\2').gsub(/\s+/, '_') + ext
   end
 end

@@ -26,6 +26,9 @@
 //= require buttons
 //= require slidebars
 //
+//= require bootstrap-switch
+//= require ontologies
+//
 //= require custom
 //
 //= require autosize

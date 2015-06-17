@@ -7,10 +7,10 @@
 
   .form-inline
     .form-group
-      label for="timeout" Timeout
+      label for="query_timeout" Timeout
       span style="font-size:10px; margin-left:2px" (seconds)
       input.form-control#query_timeout placeholder="30" size="5" style="margin-left:1em; margin-right:1em" type="text" name="query[timeout]"
-      label for="output" Output type
+      label for="query_output" Output type
       select.form-control style="margin-left:1em" name="query[output]"
         = options_for_select([['HTML Table', 'HTML'], ['XML'], ['JSON'], ['CSV'], ['Plain Text', 'TXT']])
 
