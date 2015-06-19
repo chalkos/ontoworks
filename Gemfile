@@ -21,6 +21,9 @@ gem 'slim-rails'
 # font-awesome has a gem, so let's use it
 gem "font-awesome-rails"
 
+# provides the bootstrap-switch plugin
+gem "bootstrap-switch-rails"
+
 # extract zip contents
 gem 'rubyzip'
 

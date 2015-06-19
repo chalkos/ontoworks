@@ -16,12 +16,14 @@
       dd
         pre= @ontology.desc
       dt Download as
-      dd  = form_for :type, url: download_ontology_path(@ontology), html: { role: 'form' , method: 'get'} do |f|
-        .form-inline
+      dd  = form_for :download, url: download_ontology_path(@ontology), html: { role: 'form' , method: 'get', class: 'form-inline'} do |f|
           .form-group
-            select.form-control name="type"
-              = options_for_select([['RDF/XML', 'RDF/XML-ABBREV'], ['TURTLE'], ['RDF/JSON'], ['N-TRIPLES']])
-            button.btn.btn-ar.btn-primary style="margin-left:1em" type="submit" Download
+            = f.select :type, options_for_select([['RDF/XML', 'RDF/XML-ABBREV'], ['TURTLE'], ['RDF/JSON'], ['N-TRIPLES']]),  {}, { :class => 'form-control' }
+          .form-group
+            input name="download[with]" type="hidden" value="no"
+            = f.check_box :with, { include_hidden: false }, "yes"
+
+          button.btn.btn-default.btn-primary type="submit" Download
       dt Author
       dd= @ontology.user.name
     - if user_owns_ontology @ontology
@@ -60,10 +62,12 @@
     .row
       .col-lg-12.col-md-12.col-sm-12.col-xs-12
         == render partial: '/queries/form_run_query'
-  .row
-    .col-lg-12.col-md-12.col-sm-12.col-xs-12
-      h1.section-title
-        | Logs
-        = link_to logs_ontology_path, class: 'tt icon-ar icon-ar-round icon-ar-sm', style: 'margin-left:1em', title: 'Show All' do
-          i.fa.fa-list
-      == render partial: 'list_logs'
+
+  .col-lg-12.col-md-12.col-sm-12.col-xs-12
+    .row
+      .col-lg-12.col-md-12.col-sm-12.col-xs-12
+        h1.section-title
+          | Logs
+          = link_to logs_ontology_path, class: 'tt icon-ar icon-ar-round icon-ar-sm', style: 'margin-left:1em', title: 'Show All' do
+            i.fa.fa-list
+    == render partial: 'list_logs'
