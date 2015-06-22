@@ -12,6 +12,7 @@ RUN groupadd -fg$owGID ontoworks && useradd -u$owUID -g$owGID -ms /bin/bash onto
 
 # copy rails files
 ADD . /home/ontoworks/webserver/
+RUN /bin/bash -l -c "chown -R ontoworks /home/ontoworks/webserver"
 
 # install dependencies, the last line are RVM depencencies
 RUN yum makecache && yum install -y \
