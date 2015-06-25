@@ -1,16 +1,8 @@
 module QueriesHelper
   def format_cell(cell)
-    # value - the lexical value of the object
-    # (required, full URIs should be used, not qnames)
-    # text = cell['value'].to_s || '_error_'
-
     # type - one of 'uri', 'literal' or 'bnode'
     # (required and must be lowercase)
-    text = "[#{cell['type']}] " if cell['type']
-
-    # lang - the language of a literal value
-    # (optional but if supplied it must not be empty)
-    text << "@#{cell['lang']}" if cell['lang']
+    text = "[#{cell['type']}]  " if cell['type']
 
     text
   end
@@ -29,6 +21,10 @@ module QueriesHelper
 
   def last(input)
     text = "#" + input.rpartition('#').last
+  end
+
+  def lang(cell)
+      text = "@#{cell['xml:lang']}"  if cell['xml:lang']
   end
 
   def user_owns_query(query)
