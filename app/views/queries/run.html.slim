@@ -72,10 +72,12 @@
                         - if row[col]['type'] == 'typed-literal'
                           b
                             = result_cell(row[col])
-                          span style="margin-left:1em" title= namespace(row[col]['datatype'])
-                            == "^^"
-                            = oclude(row[col]['datatype'])
-                          = last(row[col]['datatype'])
+                          small
+                            span title= namespace(row[col]['datatype'])
+                              == "^^"
+                              = oclude(row[col]['datatype'])
+                            = last(row[col]['datatype'])
                         - else
                           b
                             = result_cell(row[col])
+                          = lang(row[col])
