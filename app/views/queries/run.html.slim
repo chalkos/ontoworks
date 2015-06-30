@@ -51,7 +51,7 @@
         | Query results
         small
           |  &ndash;
-          = @query.sparql['results']['bindings'].count.to_s + " matches"
+          =< @query.sparql['results']['bindings'].count.to_s + " matches"
 
       .table-responsive
         table.table#query-results
