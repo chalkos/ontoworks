@@ -16,11 +16,19 @@ module QueriesHelper
   end
 
   def oclude(input)
-    text = namespace(input).rpartition('/').last
+    text = namespace(input)
+    res = nil
+    @ontology.prefixes.each do |x|
+        res = x.name if x.uri.include? text
+    end
+    if res == nil or res == ""
+      res = text.rpartition('/').last
+    end
+    res + ":"
   end
 
   def last(input)
-    text = "#" + input.rpartition('#').last
+    text = input.rpartition('#').last
   end
 
   def lang(cell)
