@@ -18,8 +18,9 @@ module QueriesHelper
   def oclude(input)
     text = namespace(input)
     res = nil
+    #search the prefixes of this ontology
     @ontology.prefixes.each do |x|
-        res = x.name if x.uri.include? text
+      res = x.name if x.uri.include? text
     end
     if res == nil or res == ""
       res = text.rpartition('/').last
