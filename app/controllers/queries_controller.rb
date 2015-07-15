@@ -182,7 +182,7 @@ class QueriesController < ApplicationController
 
     # Get ontology from the URL
     def get_ontology
-      @ontology = Ontology.where(code: params[:ontology_code]).first
+      @ontology = Ontology.eager_load(:prefixes).where(code: params[:ontology_code]).first
     end
 
     # Auxiliar Method
