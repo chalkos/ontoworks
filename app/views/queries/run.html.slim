@@ -49,7 +49,9 @@
     .col-lg-12.col-md-12.col-sm-12.col-xs-12
       h1.section-title
         | Query results
-        small = @query.sparql['results']['bindings'].count.to_s + " matches"
+        small
+          |  &ndash;
+          =< @query.sparql['results']['bindings'].count.to_s + " matches"
 
       .table-responsive
         table.table#query-results

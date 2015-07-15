@@ -18,7 +18,7 @@ module OntologiesHelper
   end
 
   def description(query)
-    "\#Name: #{query.name}\n\#Description: #{query.desc}\n\#Author: #{query.user.name}\n#{query.content}"
+    "\#Name: #{query.name}\n\#Description: #{query.desc.gsub("\n"," ")}\n\#Author: #{query.user.name}\n#{query.content}"
   end
 
   def name_query(query)
