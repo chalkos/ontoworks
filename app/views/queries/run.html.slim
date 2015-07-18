@@ -10,7 +10,7 @@
     p.lead.lead-sm
       strong Ontology:
       = link_to ontology_path(@ontology) do
-        = @ontology.name
+        =< @ontology.name
   .col-md-9
     - if user_signed_in?
       = render 'form_run_query', options: [:save, :prefixes_add_all]
