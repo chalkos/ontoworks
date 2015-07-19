@@ -6,7 +6,7 @@
     = f.text_area :content, class: 'form-control monospace', oninput: "checkPrefixes()", spellcheck: false, rows: '5', value: (@query.nil? ? default_query_content : @query.content)
 
   .form-inline style="margin-bottom:1em" id="div_prefixes"
-    select.form-control#prefixes_select style="max-width:76%;min-width:76%"
+    select.form-control#prefixes_select style="max-width:73%;min-width:73%"
       - @ontology.prefixes.each do |prefix|
         option value="#{prefix.to_s}" =reduce_string(prefix.to_s, 60)
     button.btn.btn-ar.btn-default#prefixes_add style="margin-left:1em" type="button" Add Prefix
