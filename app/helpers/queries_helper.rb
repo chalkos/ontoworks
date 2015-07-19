@@ -58,7 +58,15 @@ module QueriesHelper
   end
 
   def query_navigate(uri)
-    "SELECT * WHERE {\n  {?subject ?predicate <#{uri}>} UNION\n  {?subject <#{uri}> ?object} UNION\n  {<#{uri}> ?predicate ?object}\n}"
+    return "SELECT" +
+        "  (COALESCE(?subj, <#{uri}>) AS ?subject)\n" +
+        "  ?predicate" +
+        "  (COALESCE(?obj, <#{uri}>) AS ?object)\n" +
+        "WHERE {\n" +
+        "  {?subj ?predicate <#{uri}>} UNION\n" +
+        "  {?subj <#{uri}> ?obj} UNION\n" +
+        "  {<#{uri}> ?predicate ?obj}\n"+
+        "}"
   end
 
   def without_csrf

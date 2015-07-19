@@ -63,8 +63,10 @@
             - @query.sparql['results']['bindings'].each do |row|
               tr
                 - @query.sparql['head']['vars'].each do |col|
-                  td
-                    - unless row[col].nil?
+                  - if row[col].nil?
+                    td
+                  - else
+                    td style=("text-decoration:underline" if @uri == result_cell(row[col]))
                       = format_cell(row[col])
                       - if row[col]['type'] == 'uri'
                         span title= namespace(result_cell(row[col]))

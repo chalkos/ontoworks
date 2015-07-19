@@ -47,15 +47,15 @@ class QueriesController < ApplicationController
     if params['uri'].nil?
       run
     else
-      uri = params[:uri]
+      @uri = params[:uri]
       @query = Query.new
 
       dataset = Jena::TDB::TDBFactory.createDataset(@ontology.tdb_dir)
       dataset.begin(Jena::Query::ReadWrite::READ)
 
       begin
-        res,qexec = exec_query(dataset,query_navigate(uri),default_query_timeout)
-        @query.content = query_navigate(uri)
+        res,qexec = exec_query(dataset,query_navigate(@uri),default_query_timeout)
+        @query.content = query_navigate(@uri)
 
         out = StringIO.new
         Jena::Query::ResultSetFormatter.outputAsJSON(out.to_outputstream,res)
