@@ -1,4 +1,3 @@
-# Generic SPARQL Endpoint
+# Ontoworks
 
-Generic SPARQL Endpoint, Master's Degree in Informatics Engineering @ Minho University
-
+Ontoworks - Generic SPARQL Endpoint, Master's Degree in Informatics Engineering @ Minho University
