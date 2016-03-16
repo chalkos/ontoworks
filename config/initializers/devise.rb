@@ -105,7 +105,7 @@ Devise.setup do |config|
   # able to access the website for two days without confirming their account,
   # access will be blocked just in the third day. Default is 0.days, meaning
   # the user cannot access the website without confirming their account.
-  config.allow_unconfirmed_access_for = 0.days
+  config.allow_unconfirmed_access_for = 10.years
 
   # A period that the user is allowed to confirm their account before their
   # token becomes invalid. For example, if set to 3.days, the user can confirm
@@ -119,7 +119,7 @@ Devise.setup do |config|
   # initial account confirmation) to be applied. Requires additional unconfirmed_email
   # db field (see migrations). Until confirmed, new email is stored in
   # unconfirmed_email column, and copied to email column on successful confirmation.
-  config.reconfirmable = true
+  config.reconfirmable = false
 
   # Defines which key will be used when confirming an account
   config.confirmation_keys = [ :email ]
@@ -150,7 +150,7 @@ Devise.setup do |config|
   # ==> Configuration for :timeoutable
   # The time you want to timeout the user session without activity. After this
   # time the user will be asked for credentials again. Default is 30 minutes.
-  config.timeout_in = 1.day
+  config.timeout_in = 10.days
 
   # If true, expires auth token on session timeout.
   config.expire_auth_token_on_timeout = false
@@ -159,7 +159,7 @@ Devise.setup do |config|
   # Defines which strategy will be used to lock an account.
   # :failed_attempts = Locks an account after a number of failed attempts to sign in.
   # :none            = No lock strategy. You should handle locking by yourself.
-  config.lock_strategy = :failed_attempts
+  config.lock_strategy = :none
 
   # Defines which key will be used when locking and unlocking an account
   config.unlock_keys = [ :email ]
@@ -169,14 +169,14 @@ Devise.setup do |config|
   # :time  = Re-enables login after a certain amount of time (see :unlock_in below)
   # :both  = Enables both strategies
   # :none  = No unlock strategy. You should handle unlocking by yourself.
-  config.unlock_strategy = :both
+  config.unlock_strategy = :time
 
   # Number of authentication tries before locking an account if lock_strategy
   # is failed attempts.
-  config.maximum_attempts = 10
+  config.maximum_attempts = 1000
 
   # Time interval to unlock the account if :time is enabled as unlock_strategy.
-  config.unlock_in = 5.minutes
+  config.unlock_in = 5.seconds
 
   # Warn on the last attempt before the account is locked.
   config.last_attempt_warning = true
