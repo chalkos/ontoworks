@@ -130,7 +130,7 @@ echo "Rake 10.4.2 instalado"
 echo "###############################################################"
 
 egrep --color 'Mem|Cache|Swap' /proc/meminfo
-su - vagrant -c 'cd /home/vagrant/; git clone https://github.com/chalkos/ontoworks.git'
+su - vagrant -c 'cd /home/vagrant/; git clone https://github.com/chalkos/ontoworks.git; git checkout vagrant; git pull'
 egrep --color 'Mem|Cache|Swap' /proc/meminfo
 echo "###############################################################"
 echo "Checked out repository"
