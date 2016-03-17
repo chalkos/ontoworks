@@ -1,3 +1,6 @@
+#vagrant
+.vagrant/
+
 ### project specific
 /db/tdb
 /public/assets
